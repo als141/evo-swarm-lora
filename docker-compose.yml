@@ -1,0 +1,47 @@
+services:
+  trainer:
+    build: .
+    image: evo-swarm-lora-agents:latest
+    container_name: evo-trainer
+    tty: true
+    stdin_open: true
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./:/workspace
+      - hf-cache:/workspace/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    command: bash
+
+  vllm:
+    image: vllm/vllm-openai:latest
+    container_name: vllm-qwen3
+    ports:
+      - "8000:8000"
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+      - hf-cache:/root/.cache/huggingface
+      - ./adapters:/adapters
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    command: >
+      bash -lc "vllm serve Qwen/Qwen3-4B-Instruct-2507
+      --port 8000
+      --max-model-len 32768
+      --tensor-parallel-size 1
+      --enable_lora
+      --max_loras 8
+      --max_lora_rank 64
+      --lora-modules persona_a:/adapters/persona_a persona_b:/adapters/persona_b persona_c:/adapters/persona_c"
+
+volumes:
+  hf-cache:

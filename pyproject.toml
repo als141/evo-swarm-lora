@@ -1,0 +1,41 @@
+[project]
+name = "evo-swarm-lora-agents"
+version = "0.1.0"
+description = "Evolutionary swarm intelligence for cooperative optimization of LoRA-LLM agent populations (Qwen3-4B)."
+readme = "README.md"
+requires-python = ">=3.12"
+
+dependencies = [
+  "torch>=2.6.0",
+  "transformers>=4.51.0",
+  "accelerate>=1.0.0",
+  "peft>=0.17.1",
+  "bitsandbytes>=0.48.1",
+  "trl>=0.15.0",
+  "datasets>=3.0.0",
+  "safetensors>=0.4.5",
+  "huggingface-hub>=0.24.7",
+  "evaluate>=0.4.2",
+  "scikit-learn>=1.5.0",
+  "numpy>=2.1.0",
+  "pydantic>=2.8.0",
+  "typer>=0.12.3",
+  "tqdm>=4.66.4",
+  "rich>=13.7.1",
+  "jinja2>=3.1.4",
+  "uvicorn>=0.30.0",
+  "fastapi>=0.114.0",
+  "openai>=1.40.0",
+]
+
+[dependency-groups]
+dev = [
+  "ruff>=0.14.1",
+  "pytest>=8.3.1",
+  "pytest-cov>=5.0.0",
+  "ipykernel>=6.29.5",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
