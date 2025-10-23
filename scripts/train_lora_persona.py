@@ -2,7 +2,7 @@ import argparse
 import os
 
 from datasets import load_dataset
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from peft import LoraConfig, get_peft_model
 from trl import SFTConfig, SFTTrainer
 import torch
@@ -54,13 +54,16 @@ def parse_args() -> argparse.Namespace:
 def main():
     args = parse_args()
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL, trust_remote_code=True)
-    model = AutoModelForCausalLM.from_pretrained(
-        BASE_MODEL,
-        torch_dtype=torch.bfloat16,
+    quant_cfg = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_quant_type="nf4",
         bnb_4bit_compute_dtype=torch.bfloat16,
         bnb_4bit_use_double_quant=True,
+    )
+    model = AutoModelForCausalLM.from_pretrained(
+        BASE_MODEL,
+        dtype=torch.bfloat16,
+        quantization_config=quant_cfg,
         device_map="auto",
     )
 
@@ -87,17 +90,16 @@ def main():
         save_steps=200,
         bf16=True,
         optim="paged_adamw_32bit",
-        max_seq_length=2048,
         gradient_checkpointing=True,
         packing=False,
+        dataset_text_field="text",
     )
 
     trainer = SFTTrainer(
         model=model,
         args=training_config,
         train_dataset=dataset,
-        tokenizer=tokenizer,
-        dataset_text_field="text",
+        processing_class=tokenizer,
     )
     trainer.train()
 
