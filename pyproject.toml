@@ -3,7 +3,7 @@ name = "evo-swarm-lora-agents"
 version = "0.1.0"
 description = "Evolutionary swarm intelligence for cooperative optimization of LoRA-LLM agent populations (Qwen3-4B)."
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.13"
 
 dependencies = [
   "torch>=2.6.0",
@@ -26,6 +26,7 @@ dependencies = [
   "uvicorn>=0.30.0",
   "fastapi>=0.114.0",
   "openai>=1.40.0",
+  "google-cloud-aiplatform>=1.66.0",
 ]
 
 [dependency-groups]
@@ -34,6 +35,9 @@ dev = [
   "pytest>=8.3.1",
   "pytest-cov>=5.0.0",
   "ipykernel>=6.29.5",
+]
+eval = [
+  "lm-eval>=0.4.3",
 ]
 
 [tool.ruff]

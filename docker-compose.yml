@@ -38,10 +38,10 @@ services:
       --port 8000
       --max-model-len 32768
       --tensor-parallel-size 1
-      --enable_lora
+      --enable-lora
       --max_loras 8
       --max_lora_rank 64
-      --lora-modules persona_a:/adapters/persona_a persona_b:/adapters/persona_b persona_c:/adapters/persona_c"
+      --lora-modules persona_a=/adapters/persona_a persona_b=/adapters/persona_b persona_c=/adapters/persona_c"
 
 volumes:
   hf-cache:
