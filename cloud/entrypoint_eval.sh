@@ -13,6 +13,14 @@ GPU_UTIL="${VLLM_GPU_MEMORY_UTILIZATION:-0.90}"
 
 export VLLM_ALLOW_RUNTIME_LORA_UPDATING=True
 
+# Vertex ホストのドライバが古い場合に備え、CUDA forward-compat ライブラリを有効化
+if [ -d /usr/local/cuda/compat ]; then
+  export LD_LIBRARY_PATH="/usr/local/cuda/compat:${LD_LIBRARY_PATH:-}"
+  echo "[entrypoint] enabled CUDA compat libs"
+fi
+echo "[entrypoint] GPU visibility check:"
+nvidia-smi || echo "[entrypoint] WARNING: nvidia-smi failed"
+
 echo "[entrypoint] starting vLLM: model=${MODEL} port=${PORT} dtype=${DTYPE}"
 python3 -m vllm.entrypoints.openai.api_server \
   --model "${MODEL}" \

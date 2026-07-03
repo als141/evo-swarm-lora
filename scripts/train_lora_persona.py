@@ -55,6 +55,11 @@ def main():
     args = parse_args()
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL, trust_remote_code=True)
     use_cuda = torch.cuda.is_available()
+    if not use_cuda and os.environ.get("ALLOW_CPU_TRAINING") != "1":
+        raise RuntimeError(
+            "CUDA is not available. CPU へのサイレントフォールバックは禁止（実験が無効になる）。"
+            "意図的に CPU で動かす場合は ALLOW_CPU_TRAINING=1 を設定すること。"
+        )
     device_str = "cuda" if use_cuda else "cpu"
     print(f"[info] Loading base model on {device_str}.")
 

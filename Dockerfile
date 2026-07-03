@@ -23,9 +23,11 @@ COPY pyproject.toml README.md ./
 RUN uv venv -p 3.12 && . .venv/bin/activate && uv sync --no-dev
 ENV PATH="/workspace/.venv/bin:${PATH}"
 
+# Vertex AI の GPU ホストはドライバが CUDA 12.2 相当（535系）のため、
+# cu124 ではなく cu118 ビルドを使う（12.2 >= 11.8 でネイティブ動作）
 RUN . .venv/bin/activate && pip install --no-cache-dir \
-    --index-url https://download.pytorch.org/whl/cu124 \
-    torch==2.6.0+cu124 torchvision==0.21.0+cu124 torchaudio==2.6.0+cu124
+    --index-url https://download.pytorch.org/whl/cu118 \
+    torch==2.6.0+cu118 torchvision==0.21.0+cu118 torchaudio==2.6.0+cu118
 
 RUN mkdir -p $HF_HOME
 
