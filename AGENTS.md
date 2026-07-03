@@ -134,6 +134,13 @@ uv run python scripts/ping_vllm_persona.py --persona persona_a
 
 ## 研究ログ（随時追記・新しいものを上に）
 
+### 2026-07-04: 進化ループ本番完了（6世代）— 開発セットでチーム精度+12pt
+- **run001 進化ジョブ成功**（A100 Spot、約3.5h、6世代×3役割×2個体、適応度=厳密Shapley×fitness sharing、MMLU-Pro固定100問）。
+- **結果**: チーム精度 gen0 0.56 → gen5 0.68（開発セット上、選抜ノイズ含む）。最終チームは全役割が進化産の子個体（gen4_critic_child / gen5_pragmatist_child / gen5_explorer_child）。
+- **特筆すべき挙動**: gen0でpragmatist役はsolo精度最低(0.49)の個体がチーム精度最大(0.63)でShapley選抜された = 「協調寄与適応度が個体性能のみでは拾えない個体を選ぶ」という本研究の主張の実例。修論考察の材料。
+- スモークテストで厳密Shapleyの効率性（Σφ=チーム精度）を実測確認済み。GSM8Kは8/8全問正解で飽和を実地確認（主ベンチから外した判断の裏付け）。
+- **最終評価バッテリー投入**（63エントリ=7条件×3ベンチ×3シード、適応度セット100問はMMLU-Pro評価から除外済み）。完了後に統計分析→修論結果章へ。
+
 ### 2026-07-03: 【重要】VertexのGPUドライバはCUDA 12.2相当 — cu124以降のtorchはCPUフォールバックする
 - **症状**: T4学習ジョブが極端に遅い+初回はRAM不足で失敗。ログに `CUDA initialization: The NVIDIA driver on your system is too old (found version 12020)` → torch cu124 が初期化できず**サイレントにCPU学習**していた。
 - **対処**: (1) trainer イメージの torch を **cu118 ビルド**に変更（ドライバ12.2でネイティブ動作）。(2) `train_lora_persona.py` は CUDA 不可なら即エラーに変更（`ALLOW_CPU_TRAINING=1` でのみ CPU 許可）。(3) eval イメージ（vLLM は cu124/cu128 ビルド）は entrypoint で `/usr/local/cuda/compat` を LD_LIBRARY_PATH に追加+`nvidia-smi` ログ出力。**A100ホストのドライバも535系ならvLLMが同じ問題を踏む可能性**があり、スモークテストの nvidia-smi 出力で確認する。ダメなら vLLM の cu118 系イメージ/自前ビルドへ切替。
