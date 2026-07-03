@@ -1,0 +1,119 @@
+\documentclass[12pt, a4j]{jreport}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amssymb}
+\usepackage{bm}
+%\usepackage{titlesec}
+\usepackage{multirow}
+\usepackage[titletoc]{appendix} 
+
+\renewcommand{\bibname}{参考文献}
+    
+\newcommand\subcaption[1]{\begin{center}#1\end{center}}
+\renewcommand{\baselinestretch}{1.2}
+
+
+
+\begin{document}
+\thispagestyle{empty}
+
+%-----------------------------------
+%   表紙
+%-----------------------------------
+\begin{center}
+\large{令和〇年度 修士論文}\\
+\vspace{6cm}
+\Large{修論テーマ（和文）}\\
+\vspace{5mm}
+\normalsize{Master's theme (English)}\\
+\vspace{5cm}
+\西暦\today
+\\
+\large{指導教員　余俊　助教}\\
+\vspace{1cm}
+%\large{新潟大学　工学部　工学科\\ 知能情報システムプログラム}\\
+\large{新潟大学　自然科学研究科\\電気情報工学専攻　情報工学コース}\\
+\vspace{10mm}
+\large{学生番号　氏名}\\
+\large{Name}\\
+\vspace{10mm}
+\end{center}
+
+\clearpage
+\phantom{s}\thispagestyle{empty}
+\clearpage
+
+\pagestyle{empty}
+
+
+% -------------------------------------
+% 概要
+% -------------------------------------
+\include{abstract}
+
+
+%======================
+%   目次
+%======================
+\tableofcontents
+
+
+%======================
+%   第1章
+%======================
+\include{Sec1}
+
+%======================
+%   第2章
+%======================
+\include{Sec2}
+
+%======================
+%   第3章
+%======================
+\include{Sec3}
+
+%======================
+%   第４章
+%======================
+\include{Sec4}
+
+%======================
+%   第5章
+%======================
+\include{Sec5}
+
+%======================
+%   第6章
+%======================
+\include{Sec6}
+
+%===============================
+% 謝辞
+%==============================
+\include{Thanks}
+
+
+%===============================
+% 参考文献
+%==============================
+\newpage
+{
+%\bibliographystyle{plain}
+%\bibliographystyle{abbrv}
+\bibliographystyle{unsrt}
+\footnotesize
+\addtolength{\itemsep}{-1em}
+\clearpage
+%\phantomsection
+\addcontentsline{toc}{chapter}{参考文献}
+\bibliography{refer}
+}
+
+
+
+\end{document}
+
+
