@@ -15,7 +15,8 @@ set -euo pipefail
 
 PROJECT="research-501308"
 REGION="us-central1"
-BUCKET="gs://evo-swarm-lora-research-501308"
+# ジョブと同リージョン（us-central1）のバケットが必須（Vertexの制約）
+BUCKET="gs://evo-swarm-lora-usc1-research-501308"
 IMAGE_PREFIX="us-central1-docker.pkg.dev/${PROJECT}/evo-swarm"
 
 JOB_TYPE="${1:?usage: submit_job.sh <train|evolution|eval> <run_id> [driver args...]}"
@@ -24,7 +25,7 @@ shift 2
 EXTRA_ARGS=("$@")
 
 RUN_URI="${BUCKET}/experiments/${RUN_ID}"
-GCS_MOUNT="/gcs/evo-swarm-lora-research-501308/experiments/${RUN_ID}"
+GCS_MOUNT="/gcs/evo-swarm-lora-usc1-research-501308/experiments/${RUN_ID}"
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 CONFIG_FILE=$(mktemp /tmp/vertex-job-XXXX.yaml)
 
@@ -34,7 +35,7 @@ case "${JOB_TYPE}" in
     cat > "${CONFIG_FILE}" <<EOF
 workerPoolSpecs:
   - machineSpec:
-      machineType: n1-standard-8
+      machineType: n1-highmem-8
       acceleratorType: NVIDIA_TESLA_T4
       acceleratorCount: 1
     replicaCount: 1

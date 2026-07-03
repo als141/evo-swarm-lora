@@ -113,6 +113,7 @@ uv run python scripts/ping_vllm_persona.py --persona persona_a
 | プロジェクト | `research-501308`（課金アカウント 017D39-1B6DE0-7AD4AB にリンク済み） |
 | リージョン | asia-northeast1（既定） |
 | GCSバケット | `gs://evo-swarm-lora-research-501308`（asia-northeast1、成果物・LoRAアダプタ保存先） |
+| GCSバケット(実験用) | `gs://evo-swarm-lora-usc1-research-501308`（us-central1。**Vertexジョブは同リージョンバケット必須**のため実験成果物はこちら） |
 | 認証 | ユーザー認証 + ADC 設定済み（コードは `aiplatform.init()` / `storage.Client()` を引数なしで呼ぶADC前提） |
 | 有効化済みAPI | aiplatform / storage / artifactregistry / compute / cloudbuild / billingbudgets |
 
@@ -132,6 +133,13 @@ uv run python scripts/ping_vllm_persona.py --persona persona_a
 ---
 
 ## 研究ログ（随時追記・新しいものを上に）
+
+### 2026-07-03: クラウド実験開始とインフラの学び
+- **学習ジョブ失敗→修正**: n1-standard-8(30GB RAM)+T4 で「Replicas low on memory」により FAILED → **n1-highmem-8(52GB) に変更**して解決方向。
+- **Vertexの制約**: baseOutputDirectory のバケットはジョブと同リージョン必須 → `gs://evo-swarm-lora-usc1-research-501308`(us-central1) を新設し実験成果物はここに置く。
+- **vLLM更新**: 最新安定版 v0.24.0 (2026-06-29) を確認。eval イメージを ARG 化し、v0.8.5(既定) と v0.24.0(eval:v024) の両方をビルド。スモークで比較して本番採用を決める。
+- **評価バグ修正**: run_eval.py の --task choices が旧タスク名のままで新ベンチが実行不能だった問題を修正（修論3-4章起草エージェントのコード照合で発見）。適応度セットと最終評価の重複排除 (--exclude-items-file) も実装。
+- 修論ドラフト第1-4章を docs/thesis/ に起草完了（実験結果非依存部分）。2026年文献の書誌情報は最終稿前に原典確認要。
 
 ### 2026-07-03: 修論 第3章・第4章ドラフト起草
 - `docs/thesis/03_method.md`（提案手法、数式・記号表・Algorithm 1 付き）と `docs/thesis/04_experimental_setup.md`（実験設定、比較8条件・ハイパラ表5点付き）を新規作成。research_design.md §3-§7 と実装（`src/evolve/loop.py`, `src/evalx/{shapley,debate,tasks}.py`, `src/models/lora_ops.py`, `scripts/run_evolution.py`, `scripts/run_eval.py`, `scripts/cloud/*`）に一致させて記述。未実施の実験結果への言及なし。

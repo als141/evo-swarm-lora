@@ -20,9 +20,9 @@
     "args": [
       "--task", "gsm8k", "--n", "8", "--seed", "42", "--mode", "team", "--rounds", "1",
       "--load-adapters",
-      "critic=/gcs/evo-swarm-lora-research-501308/experiments/run001/training/model/adapters/persona_a",
-      "pragmatist=/gcs/evo-swarm-lora-research-501308/experiments/run001/training/model/adapters/persona_b",
-      "explorer=/gcs/evo-swarm-lora-research-501308/experiments/run001/training/model/adapters/persona_c",
+      "critic=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/training/model/adapters/persona_a",
+      "pragmatist=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/training/model/adapters/persona_b",
+      "explorer=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/training/model/adapters/persona_c",
       "--agents", "critic=critic", "pragmatist=pragmatist", "explorer=explorer",
       "--save-transcripts"
     ]
@@ -32,9 +32,9 @@
     "args": [
       "--task", "mmlu_pro", "--n", "8", "--seed", "42", "--mode", "coalitions", "--rounds", "1",
       "--load-adapters",
-      "critic=/gcs/evo-swarm-lora-research-501308/experiments/run001/training/model/adapters/persona_a",
-      "pragmatist=/gcs/evo-swarm-lora-research-501308/experiments/run001/training/model/adapters/persona_b",
-      "explorer=/gcs/evo-swarm-lora-research-501308/experiments/run001/training/model/adapters/persona_c",
+      "critic=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/training/model/adapters/persona_a",
+      "pragmatist=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/training/model/adapters/persona_b",
+      "explorer=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/training/model/adapters/persona_c",
       "--agents", "critic=critic", "pragmatist=pragmatist", "explorer=explorer"
     ]
   }

@@ -1,7 +1,9 @@
 # 評価・進化ジョブ用イメージ (Vertex AI Custom Job / Spot A100 想定)
 # vLLM OpenAI 互換サーバ + 本リポジトリの評価/進化ドライバを同梱する。
-# Qwen3-4B-Instruct-2507 の公式推奨 (vLLM >= 0.8.5) に合わせてタグを固定。
-FROM vllm/vllm-openai:v0.8.5
+# 既定は Qwen3-4B-Instruct-2507 の公式推奨最低版 (v0.8.5)。
+# 最新版は --build-arg VLLM_TAG=v0.24.0-ubuntu2404 等で差し替え可能。
+ARG VLLM_TAG=v0.8.5
+FROM vllm/vllm-openai:${VLLM_TAG}
 
 ENV PYTHONUNBUFFERED=1 \
     HF_HOME=/workspace/.cache/huggingface \

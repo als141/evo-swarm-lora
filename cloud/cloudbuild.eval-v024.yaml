@@ -1,0 +1,22 @@
+# vLLM v0.24.0 ベースの eval イメージを eval:v024 タグでビルドする（新旧比較用）
+#   gcloud builds submit --config cloud/cloudbuild.eval-v024.yaml .
+substitutions:
+  _REGION: us-central1
+  _REPO: evo-swarm
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - --build-arg
+      - VLLM_TAG=v0.24.0-ubuntu2404
+      - -t
+      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/eval:v024
+      - -f
+      - cloud/Dockerfile.eval
+      - .
+images:
+  - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/eval:v024
+options:
+  machineType: E2_HIGHCPU_8
+  diskSizeGb: 200
+timeout: 3600s
