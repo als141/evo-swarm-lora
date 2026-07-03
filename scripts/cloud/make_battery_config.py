@@ -50,6 +50,11 @@ def main() -> None:
     parser.add_argument("--seeds", nargs="+", type=int, default=[1, 2, 3])
     parser.add_argument("--rounds", type=int, default=1)
     parser.add_argument("--sc-k", type=int, default=9)
+    parser.add_argument(
+        "--fitness-log",
+        default=None,
+        help="進化の run_log.json パス（GCSマウント）。fitness_items を mmlu_pro 評価から除外する",
+    )
     parser.add_argument("--out", required=True)
     args = parser.parse_args()
 
@@ -60,7 +65,13 @@ def main() -> None:
 
     entries = []
     for task, n in BENCHMARKS:
+        exclude_args = (
+            ["--exclude-items-file", args.fitness_log]
+            if (args.fitness_log and task == "mmlu_pro")
+            else []
+        )
         for seed in args.seeds:
+            batch_start = len(entries)
             suffix = f"{task}_s{seed}"
             common = {"task": task, "n": n, "seed": seed, "rounds": args.rounds}
 
@@ -115,6 +126,11 @@ def main() -> None:
                     adapters={f"sf_{r}": p for r, p in ablation.items()},
                     agents={r: f"sf_{r}" for r in ROLES},
                 ))
+
+            # 適応度セットとの重複排除（mmlu_pro のみ該当）
+            if exclude_args:
+                for entry in entries[batch_start:]:
+                    entry["args"].extend(exclude_args)
 
     Path(args.out).write_text(json.dumps(entries, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"[info] wrote {len(entries)} battery entries to {args.out}")

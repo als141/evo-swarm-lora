@@ -33,7 +33,7 @@ from src.evalx.client import ChatClient, GenerationConfig
 from src.evalx.debate import AgentSpec, majority_vote, run_debate, solo_answer
 from src.evalx.parallel import parallel_map
 from src.evalx.shapley import all_coalitions, shapley_values
-from src.evalx.tasks import load_task, score_predictions
+from src.evalx.tasks import TASK_LOADERS, load_task, score_predictions
 
 
 class ProgressCache:
@@ -162,7 +162,7 @@ def evaluate_team(
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--base-url", required=True)
-    parser.add_argument("--task", default="gsm8k", choices=["gsm8k", "mmlu", "arc_challenge"])
+    parser.add_argument("--task", default="gsm8k", choices=sorted(TASK_LOADERS))
     parser.add_argument("--n", type=int, default=200)
     parser.add_argument("--seed", type=int, default=42, help="問題サンプリングと同点処理のシード")
     parser.add_argument("--rounds", type=int, default=2, help="独立回答後の debate ラウンド数")
@@ -190,6 +190,11 @@ def main() -> None:
         default=None,
         help="問題単位の逐次キャッシュを置くディレクトリ（Spot プリエンプト後の再開用）",
     )
+    parser.add_argument(
+        "--exclude-items-file",
+        default=None,
+        help="除外する item_id リスト（JSON。進化の fitness_items 等）。最終評価と適応度セットの重複排除用",
+    )
     args = parser.parse_args()
 
     client = ChatClient(base_url=args.base_url)
@@ -206,7 +211,20 @@ def main() -> None:
 
     persona_map = {} if args.no_persona_prompt else {**PERSONAS, **ROLE_PERSONAS}
     agents = parse_agents(args.agents, persona_map)
-    task = load_task(args.task, n=args.n, seed=args.seed)
+
+    excluded: set[str] = set()
+    if args.exclude_items_file:
+        payload_ex = json.loads(Path(args.exclude_items_file).read_text(encoding="utf-8"))
+        raw_ids = payload_ex["fitness_items"] if isinstance(payload_ex, dict) else payload_ex
+        excluded = set(raw_ids)
+
+    if excluded:
+        # 除外分を見込んで多めにロードし、フィルタ後に n 件へ切り詰める
+        task = load_task(args.task, n=args.n + len(excluded), seed=args.seed)
+        task.items = [item for item in task.items if item.item_id not in excluded][: args.n]
+        print(f"[info] excluded {len(excluded)} fitness items; kept {len(task.items)}")
+    else:
+        task = load_task(args.task, n=args.n, seed=args.seed)
     print(f"[info] task={task.name} n={len(task.items)} agents={[a.name for a in agents]} mode={args.mode}")
 
     started = time.time()

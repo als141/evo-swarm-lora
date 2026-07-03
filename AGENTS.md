@@ -133,6 +133,21 @@ uv run python scripts/ping_vllm_persona.py --persona persona_a
 
 ## 研究ログ（随時追記・新しいものを上に）
 
+### 2026-07-03: 修論 第3章・第4章ドラフト起草
+- `docs/thesis/03_method.md`（提案手法、数式・記号表・Algorithm 1 付き）と `docs/thesis/04_experimental_setup.md`（実験設定、比較8条件・ハイパラ表5点付き）を新規作成。research_design.md §3-§7 と実装（`src/evolve/loop.py`, `src/evalx/{shapley,debate,tasks}.py`, `src/models/lora_ops.py`, `scripts/run_evolution.py`, `scripts/run_eval.py`, `scripts/cloud/*`）に一致させて記述。未実施の実験結果への言及なし。
+- **執筆中に確認した実装事実（論文に反映済み）**:
+  - 世代あたり連合評価数は共有キャッシュで `7 + 4×非代表候補数` = 19（K=2）。キャッシュは世代内のみ（`CoalitionEvaluator` を毎世代再生成）。LLM呼び出しは R=1・100問で 6,600回/世代、6世代で約4.0×10⁴回。
+  - debate 各ラウンドは対話履歴なしの単一ターン呼び出しで、**他者の直前発話のみ提示（自己発話は再提示しない）**。プロンプト文言 "keep or change your previous answer" と文脈の不一致に注意。
+  - 適応度セット（MMLU-Pro seed 777・100問）と最終評価（seed 1-3）は**シード分離のみで排他抽出は未実装**。母集合約12,000問のため期待重複 ~4問/500問。厳密非重複には除外フィルタの実装が必要（論文では正直に「シード分離・偶発重複ありうる」と記述）。
+  - SC@9 と debate（既定 rounds=1 → 6生成/問）の関係は「SC@9 がベースライン有利の保守的計算量マッチ」と明記。
+- **発見したコードのギャップ（未修正・要対応）**: `scripts/run_eval.py` の `--task` argparse choices が `["gsm8k", "mmlu", "arc_challenge"]` のままで `tasks.py` の TASK_LOADERS（mmlu_pro/math500/supergpqa 含む、"mmlu" は存在しない）と不整合。battery 設定は `--task mmlu_pro` 等を渡すため**現状のままでは最終評価が argparse エラーで走らない**。choices を `sorted(TASK_LOADERS)` に修正すべき。
+
+### 2026-07-03: 修論 第1章・第2章ドラフト起草
+- `docs/thesis/01_introduction.md`（序論、本文約5,000字）と `docs/thesis/02_related_work.md`（関連研究、本文約10,000字）を新規作成。
+- 素材は `docs/research_design.md` と `docs/literature_notes.md` のみに限定。数値は文献ノート記載のもののみ使用し、進行中の実験結果には一切言及していない。
+- 第2章の構成: 2.1 MAD（原典→批判→成功条件、4B級で素のdebateが機能しない可能性の緊張関係を明示）/ 2.2 マージ理論（交差項問題・KnOTS）/ 2.3 進化的最適化（表2.1: Sakana→LoraHub→Model Swarms→GENOME→EvoPref→PopuLoRA 対比）/ 2.4 適応度設計理論（Shapley・共進化・QD・fitness sharing）/ 2.5 位置づけ（research_design §2 の表を発展させた表2.2）。
+- **要フォロー**: 2026年文献（PopuLoRA 2605.16727 / EvoPref 2605.09777 / EvoMAS 2602.06511 / Meta-Team 2605.29790 / Cost of Consensus 2605.00914 / Demystifying MAD 2601.19921）の著者名・正式タイトルは暫定表記。最終稿前に原典確認と novelty 再検索を行い、参考文献リストと表2.2を更新すること。
+
 ### 2026-07-03: 研究設計の全面確定と実験基盤の再構築（docs/research_design.md 参照）
 - **旧評価系の廃止**: `evaluate_debate.py` の fitness（投票スコア=confidence 0.6固定+引用数+回答文字数）は学術的に無効と判断。2025-11-01 の gen0→gen1「改善」は回答長の増加が主因であり、以後この結果は主張に使わない。
 - **適応度の再設計（理論的根拠つき）**: fitness = 代表チーム文脈での**厳密Shapley値**（3エージェント=全7連合を実測、近似不要）× fitness sharing（Goldberg & Richardson 1987、乗法ペナルティ）。多様性の加重「加算」はQD文献（MAP-Elites）とアンサンブル統一理論（Wood+ JMLR23）の双方が批判するため不採用。理論的骨格は協調的共進化（Potter & De Jong 1994）+ PBT。
