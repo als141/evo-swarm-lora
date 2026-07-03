@@ -14,10 +14,13 @@ GPU_UTIL="${VLLM_GPU_MEMORY_UTILIZATION:-0.90}"
 export VLLM_ALLOW_RUNTIME_LORA_UPDATING=True
 
 # Vertex ホストのドライバが古い場合に備え、CUDA forward-compat ライブラリを有効化
-if [ -d /usr/local/cuda/compat ]; then
-  export LD_LIBRARY_PATH="/usr/local/cuda/compat:${LD_LIBRARY_PATH:-}"
-  echo "[entrypoint] enabled CUDA compat libs"
-fi
+for compat_dir in /usr/local/cuda/compat /usr/local/cuda-*/compat; do
+  if [ -d "${compat_dir}" ]; then
+    export LD_LIBRARY_PATH="${compat_dir}:${LD_LIBRARY_PATH:-}"
+    echo "[entrypoint] enabled CUDA compat libs: ${compat_dir}"
+    break
+  fi
+done
 echo "[entrypoint] GPU visibility check:"
 nvidia-smi || echo "[entrypoint] WARNING: nvidia-smi failed"
 

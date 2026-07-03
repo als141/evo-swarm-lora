@@ -24,10 +24,15 @@ RUN uv venv -p 3.12 && . .venv/bin/activate && uv sync --no-dev
 ENV PATH="/workspace/.venv/bin:${PATH}"
 
 # Vertex AI の GPU ホストはドライバが CUDA 12.2 相当（535系）のため、
-# cu124 ではなく cu118 ビルドを使う（12.2 >= 11.8 でネイティブ動作）
-RUN . .venv/bin/activate && pip install --no-cache-dir \
+# cu124 ではなく cu118 ビルドを使う（12.2 >= 11.8 でネイティブ動作）。
+# 注意: uv の venv には pip が無く、素の `pip install` はシステム Python 3.10 に
+# 入ってしまう（過去の事故原因）。必ず `uv pip` で venv を対象にする。
+RUN uv pip install --python .venv/bin/python --no-cache \
     --index-url https://download.pytorch.org/whl/cu118 \
     torch==2.6.0+cu118 torchvision==0.21.0+cu118 torchaudio==2.6.0+cu118
+
+# ビルド時にジョブ実行系（venv）の torch が cu118 であることを保証する
+RUN .venv/bin/python -c "import torch; v=torch.__version__; print('venv torch:', v); assert '+cu118' in v, v"
 
 RUN mkdir -p $HF_HOME
 
