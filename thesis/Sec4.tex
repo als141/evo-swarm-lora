@@ -1,0 +1,302 @@
+% ------------------------------------------------------------------------
+% -*-TeX-*- -*-Hard-*- Smart Wrapping
+% ------------------------------------------------------------------------
+
+
+\chapter{評価実験}
+\label{cha:4}
+
+本章では，第\ref{cha:3}章の提案手法を検証するための実装，ベンチマークと評価プロトコル，比較条件，統計設計，およびハイパーパラメータを述べる．本章の記述はすべて公開実装（\texttt{scripts/train\_lora\_persona.py}，\texttt{scripts/run\_evolution.py}，\texttt{scripts/run\_eval.py}，\texttt{scripts/run\_eval\_battery.py}，\texttt{scripts/cloud/}）と一致する．未実施の実験結果には言及しない．
+
+\section{実装}
+\label{sec:4.1}
+
+\subsection{ベースモデルとQLoRA学習}
+\label{sec:4.1.1}
+
+ベースモデルには\textbf{Qwen3-4B-Instruct-2507}\cite{qwen2025qwen3}（Apache-2.0，Hugging Face上でゲートなし公開）を用いる．4B級を選ぶ理由は，（i）同規模帯では「素のdebateが性能を悪化させうる」ことが報告されており\cite{zhang2025debate,cost2026consensus}，チームレベル選択圧がdebateを機能させるかというRQの検証に適した困難条件であること，（ii）公表ベンチマーク値（MMLU-Pro 69.6，SuperGPQA 42.8）に改善余地が残ること，（iii）進化ループで多数のLoRAを単一GPU上に同時サービングできる計算規模であることによる．
+
+世代0の3個体（critic / pragmatist / explorer）は，役割別SFTデータ（各60会話例，JSONL形式，チャットテンプレート適用）を用いた\textbf{QLoRA}\cite{dettmers2023qlora}で学習する．設定は以下のとおりである．
+
+\begin{itemize}
+\item \textbf{量子化}: ベースモデルを4bit NF4（double quantization有効）でロードし，計算dtypeはGPUに応じてbfloat16（A100等）またはfloat16（T4，compute capability 7.5のためbf16非対応）へ自動フォールバックする．
+\item \textbf{LoRA構成}: rank $r = 32$，$\alpha_{\mathrm{LoRA}} = 2r = 64$，dropout 0.05，対象モジュールは全層の\texttt{q\_proj, k\_proj, v\_proj, o\_proj, gate\_proj, up\_proj, down\_proj}の7種．
+\item \textbf{最適化}: 学習率$2 \times 10^{-4}$，エポック数3（Vertex AIジョブ投入設定．学習スクリプト単体の既定値は1），デバイスあたりバッチサイズ1，勾配累積16，\texttt{paged\_adamw\_32bit}，gradient checkpointing有効（学習時はKVキャッシュを無効化して競合を回避），packing無効．
+\item \textbf{再現性}: グローバルシード1234（Python / NumPy / PyTorch / CUDAを統一固定）．学習コマンド・シード・ハードウェア構成は\texttt{metadata.json}として成果物に同梱する．
+\end{itemize}
+
+各役割のペルソナは，SFTにより重み空間に焼き込まれると同時に，推論時にも短い役割記述（例: 批判的検証者「厳密な検証を重視する批判的思考家．反証・例外・境界条件に敏感」）をシステムプロンプトとして与える．
+
+\subsection{vLLM Multi-LoRAサービング}
+\label{sec:4.1.2}
+
+全推論（進化ループの連合評価・最終評価とも）はvLLM\cite{kwon2023efficient}のOpenAI互換APIを通じて行う．サーバは\texttt{--enable-lora}，\texttt{--max\_loras 8}，\texttt{--max\_lora\_rank 64}，\texttt{--max-model-len 32768}，tensor並列1で起動し，ベースモデルを1つだけGPUに常駐させたまま，リクエストの\texttt{model}フィールドでLoRAアダプタを問い合わせ単位に切り替える．進化ループで世代ごとに生成される子アダプタは，動的LoRAロードAPI（\texttt{/v1/load\_lora\_adapter}，\texttt{VLLM\_ALLOW\_RUNTIME\_LORA\_UPDATING=True}）でサーバ再起動なしに登録する．
+
+生成パラメータは全条件共通でtemperature 0.7，top-p 0.9，最大512トークン，シード指定付きとする（エージェント$\times$ラウンド，およびSelf-Consistencyのサンプル添字ごとに決定的にオフセット．第\ref{cha:3}章\ref{sec:3.2}節）．クライアントは問題単位で16並列のリクエストを発行し，vLLMサーバ側の連続バッチングでGPU利用率を確保する．API呼び出しは最大3回の線形バックオフ付きリトライで保護する．
+
+\subsection{Vertex AI Spot構成とプリエンプション耐性}
+\label{sec:4.1.3}
+
+計算はGCP Vertex AI Custom Trainingの\textbf{Spot（プリエンプティブル）ジョブ}として実行する（プロジェクトのクォータ上，オンデマンドGPU VMは利用不可）．工程ごとの構成を表\ref{tab:4.vertex}に示す．
+
+\begin{table}[htbp]
+\caption{Vertex AI Spotジョブの工程別マシン構成}
+\label{tab:4.vertex}
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{|p{3.2cm}|p{4.4cm}|p{5.8cm}|}
+\hline
+工程 & マシン構成 & 理由 \\
+\hline
+QLoRA学習（世代0） & \texttt{n1-standard-8} + NVIDIA T4 $\times$1（Spot） & 4bit量子化により6GB級で学習可能．fp16フォールバックで対応 \\
+\hline
+進化ループ／最終評価 & \texttt{a2-highgpu-1g}（A100 40GB $\times$1，Spot，us-central1） & vLLMのMulti-LoRAカーネル（Punica/Triton）がcompute capability $\geq 8.0$を要求しT4では動作しないため \\
+\hline
+\end{tabular}
+\end{table}
+
+成果物（アダプタ・評価JSON・世代ログ）はGCSバケットにCloud Storage FUSEマウント（\texttt{/gcs/...}）経由で保存する．Spotはいつでもプリエンプトされうるため，すべての評価ランナーは\textbf{問題単位の逐次JSONLキャッシュ}を持ち，再実行時には評価済み問題IDをスキップして途中から再開する．最終評価は複数条件を1ジョブにまとめるバッテリードライバで実行し，完了済みエントリのJSONが存在すれば条件ごとスキップする．進化ループも世代ごとに全ログをJSONへ書き出し，任意の世代から再開可能である．
+
+\section{ベンチマークと評価プロトコル}
+\label{sec:4.2}
+
+\subsection{ベンチマーク選定}
+\label{sec:4.2.1}
+
+最終評価は表\ref{tab:4.bench}に示す3ベンチマークで行う．いずれもHugging Face上でゲートなしに取得できる（認証トークン不要の方針を維持する）．
+
+\begin{table}[htbp]
+\caption{最終評価に用いるベンチマーク}
+\label{tab:4.bench}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{|p{3.1cm}|p{3.1cm}|p{1.2cm}|p{5.6cm}|}
+\hline
+ベンチマーク & 抽出方法 & 問題数 & 選定根拠 \\
+\hline
+MMLU-Pro\cite{wang2024mmlupro} & test分割から固定ランダム抽出 & 500 & ベースの公表値69.6で飽和しておらず，MADによる改善報告と接続可能．10択で当て推量の影響が小さい \\
+\hline
+MATH-500\cite{lightman2023lets,hendrycks2021measuring} Level 4--5 & Level 4以上に限定して抽出 & 200 & 数学推論はMADの改善効果が最大と報告される領域．高難度に限定して天井効果を回避 \\
+\hline
+SuperGPQA\cite{du2025supergpqa} & 固定ランダム抽出 & 300 & ベースの公表値42.8と最も余地が大きい．大学院水準の広分野知識推論 \\
+\hline
+\end{tabular}
+\end{table}
+
+GSM8K\cite{cobbe2021training}はベースモデルで80--92\%と飽和しているため配管確認（スモークテスト）専用とし，主張には用いない．GPQA-Diamond\cite{rein2023gpqa}はデータセットがHFゲート付きであるため不採用とする．
+
+\subsection{生成型評価と回答抽出}
+\label{sec:4.2.2}
+
+評価はlm-evaluation-harness型の選択肢対数尤度方式ではなく，\textbf{生成型（generative）評価}で統一する．solo条件とdebate条件を同一プロトコル・同一抽出ロジックで比較するためには，両者とも自由生成テキストから回答を取り出す必要があるからである．全エージェントに厳密な書式指示
+\begin{verbatim}
+Think step by step. Then give your final answer on the last line
+in exactly this format:
+ANSWER: <letter | number>
+\end{verbatim}
+を与え，出力末尾の\texttt{ANSWER:}行を正規表現で最優先抽出する．\texttt{ANSWER:}行が欠落した場合に限り，文脈条件付きのフォールバック（選択肢タスクでは``answer is (X)''等のパターン，数値タスクでは最後の数値，数式タスクでは最後の\verb|\boxed{}|）を適用する．数式回答はLaTeX表記の正規化（\verb|\frac|$\rightarrow$\texttt{/}，\verb|\sqrt|$\rightarrow$\texttt{sqrt()}，数値の同値判定 $12.0 = 12$等）を経て比較する．抽出不能な出力は無効票（多数決から除外）とし，単独評価では不正解として扱う．\textbf{すべての比較条件で同一の抽出・正規化・採点コードを共有}し，条件間の差が抽出ロジックの差に混入しないことを保証する．
+
+\subsection{進化ループ内の適応度セット}
+\label{sec:4.2.3}
+
+進化ループの選択圧（第\ref{cha:3}章の$v(S)$計測）には，MMLU-Pro test分割（約12,000問）から専用シード（777）で抽出した\textbf{固定100問}を全世代共通で用いる．100問という規模は，tinyBenchmarks\cite{polo2024tinybenchmarks}が示した「キュレートされた100例でフルベンチマークのスコアを平均誤差約2\%で推定できる」という結果に基づく．適応度セットは世代間の\textbf{順位付け専用}であり，その絶対値は主張に用いない．最終評価とはシード系列を分離して抽出するため（最終評価はシード1--3），標本の系統的な共有はないが，母集合が共通のため偶発的な重複は起こりうる（期待重複は500問抽出あたり約4問，1\%未満）．適応度セットへの選択圧の過適合（進化版の「テストへの学習」）が疑われる場合に備え，最終評価がこの100問を含まない形でも集計できるよう問題IDを全ログに記録する．
+
+\section{比較条件}
+\label{sec:4.3}
+
+最終評価は表\ref{tab:4.cond}に示す8条件で行う（研究設計書\S 6.2の7条件に，プロンプトペルソナの寄与を分離する条件3$'$を追加）．全条件で同一の問題集合・同一シード・同一抽出ロジックを用い，問題単位で対応づけ（paired）が可能な設計とする．debate条件のラウンド数は$R = 1$に統一する．
+
+\begin{table}[htbp]
+\caption{最終評価の比較条件}
+\label{tab:4.cond}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{|p{0.5cm}|p{2.9cm}|p{3.6cm}|p{6.0cm}|}
+\hline
+\# & 条件 & 構成 & 目的 \\
+\hline
+1 & ベースsolo CoT & ベースモデル単体，ペルソナなし & 絶対的な基準線 \\
+\hline
+2 & \textbf{Self-Consistency@9} & ベースモデルから9サンプル$\rightarrow$多数決\cite{wang2023selfconsistency} & \textbf{計算量マッチの非協調ベースライン}．3エージェント$\times$最大3生成（round 0＋2ラウンド）＝9生成に相当．既定$R=1$ではdebate側は6生成/問であり，SC@9はベースライン側に計算量で有利な保守的設定．「MADは計算量を揃えたSCに勝てない」という批判\cite{smit2024should}への直接の対処 \\
+\hline
+3 & ベース$\times$3温度サンプリングdebate & 同一ベースモデル3体（ペルソナプロンプトなし，シードオフセットのみ） & サンプリング多様性のみのdebate（Self-MoA型対照） \\
+\hline
+3$'$ & ベース$\times$3プロンプトペルソナdebate & 同一ベースモデル3体＋役割プロンプト & プロンプトによるペルソナ付与の寄与を分離．RQ2（重み焼き込みvsプロンプト）の対照 \\
+\hline
+4 & gen-0 LoRAチームdebate & SFT直後の3ペルソナLoRA & 進化前のチーム性能．条件5との差が進化の寄与 \\
+\hline
+5 & \textbf{進化後チームdebate（主要条件）} & 提案手法（Shapley＋sharing，$G=6$世代）の最終代表チーム & 本研究の主張の中核 \\
+\hline
+6 & 進化後LoRA solo $\times$3 & 条件5の各個体を単独評価 & チーム効果（協調による上乗せ）と個体改善の分離 \\
+\hline
+7 & A1: solo適応度進化チームdebate & 適応度を$v(\{c\})$に置換して進化させたチーム & \textbf{新規性の直接検証}．個体性能のみを選択圧とするGENOME型\cite{zhang2025genome}との比較であり，チームレベル選択圧の寄与を分離する \\
+\hline
+\end{tabular}
+\end{table}
+
+このほか進化ループ側のアブレーションとして，A2（fitness sharing無効）とA3（交叉をnaiveな$A$/$B$別補間に置換）を実行フラグとして実装している（第\ref{cha:3}章参照）．
+
+\section{統計設計}
+\label{sec:4.4}
+
+統計処理はMiller\cite{miller2024adding}の評価統計5原則（標準誤差の併記・クラスタ構造の考慮・リサンプルの扱い・paired分析・検出力設計）に準拠する．
+
+\begin{itemize}
+\item \textbf{シードと反復}: 主要比較は$K = 3$シード（1, 2, 3）で反復し，各シードの生成サンプルを\textbf{問題内リサンプル}として扱う．すなわち問題$j$の条件$A$に対するスコアをシード間平均$\bar{s}_{A,j}$とし，以後の検定は問題を単位とする．
+\item \textbf{主検定}: 問題単位の\textbf{対応あり$t$検定}（条件間差分$\bar{s}_{A,j} - \bar{s}_{B,j}$の平均がゼロという帰無仮説）を行い，\textbf{paired bootstrap}（$B = 10{,}000$，問題単位の再標本化）による95\%信頼区間を併記する．
+\item \textbf{単一シード比較}: シード反復を伴わない補助比較には，2値の対応ありデータに適した\textbf{McNemar検定}を用いる\cite{dror2018hitchhiker}．
+\item \textbf{多重比較補正}: 主要な仮説検定は「条件5 vs 条件2」「条件5 vs 条件7」の2比較$\times$3ベンチマーク$= 6$検定であり，\textbf{Holm--Bonferroni法}\cite{holm1979simple}でfamily-wise error rateを5\%に制御する．それ以外の比較は探索的分析と位置づけ，補正済み$p$値を主張に用いない．
+\item \textbf{検出可能効果量}: 対応あり検定（$\alpha = 0.05$，検出力80\%）の目安は$+10$pt $\rightarrow N \approx 180$，$+7$pt $\rightarrow N \approx 360$，$+5$pt $\rightarrow N \approx 700$である．3ベンチマーク統合（$N = 500 + 200 + 300 = 1{,}000$問，$K=3$シードによる分散低減を含む）では\textbf{$+4$〜$5$pt程度の効果が検出可能}であり，Duらが報告するMADの効果量（7〜15pt）に対して十分な感度を持つ．
+\item \textbf{再現性の記録}: 全実行についてシード・モデルrevision・vLLMバージョン・生成パラメータ・問題IDリストを結果JSONに記録する．
+\end{itemize}
+
+副次評価として，議論品質のLLM-as-judge評価（Gemini 2.5 Flash，pairwise＋提示順スワップ＋引き分け許容，50〜100サンプル）と，世代を通じた行動多様性（回答不一致率）の推移分析を行うが，これらは主要な統計的主張には用いない．
+
+\section{ハイパーパラメータ}
+\label{sec:4.5}
+
+以下の値はすべて実装のデフォルト値（コマンドライン引数の既定値，およびVertexジョブ投入スクリプトの設定値）と一致する．QLoRA学習の設定を表\ref{tab:4.hp-qlora}に，議論・生成の設定を表\ref{tab:4.hp-debate}に，進化ループの設定を表\ref{tab:4.hp-evolve}に，最終評価の設定を表\ref{tab:4.hp-eval}に，サービング・インフラの設定を表\ref{tab:4.hp-infra}に示す．
+
+\begin{table}[htbp]
+\caption{QLoRA学習（世代0）のハイパーパラメータ}
+\label{tab:4.hp-qlora}
+\centering
+\small
+\begin{tabular}{|p{5.4cm}|p{7.6cm}|}
+\hline
+項目 & 値 \\
+\hline
+ベースモデル & Qwen/Qwen3-4B-Instruct-2507 \\
+\hline
+量子化 & 4bit NF4，double quantization，計算dtype bf16（T4ではfp16） \\
+\hline
+LoRA rank $r$ / $\alpha_{\mathrm{LoRA}}$ / dropout & 32 / 64 / 0.05 \\
+\hline
+対象モジュール & q, k, v, o, gate, up, downの各射影（全層） \\
+\hline
+学習率／エポック & $2 \times 10^{-4}$ ／ 3（Vertex投入設定; スクリプト既定1） \\
+\hline
+バッチサイズ／勾配累積 & 1 ／ 16 \\
+\hline
+最適化器 & \texttt{paged\_adamw\_32bit}（gradient checkpointing有効，packing無効） \\
+\hline
+SFTデータ & 役割別60会話例$\times$3役割 \\
+\hline
+シード & 1234 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{議論・生成のハイパーパラメータ}
+\label{tab:4.hp-debate}
+\centering
+\small
+\begin{tabular}{|p{5.4cm}|p{7.6cm}|}
+\hline
+項目 & 値 \\
+\hline
+temperature / top-p / 最大トークン & 0.7 / 0.9 / 512 \\
+\hline
+議論ラウンド数$R$ & 1（round 0の独立回答＋1更新ラウンド） \\
+\hline
+集約 & 最終ラウンド多数決（同数はシード付き乱数，無効票は除外） \\
+\hline
+シードオフセット & エージェント$\times$ラウンド: $\mathrm{seed} \cdot 10^4 + 100i + \rho$；SCサンプル: $\mathrm{seed} \cdot 10^3 + k$ \\
+\hline
+クライアント並列数／リトライ & 16 ／ 3回（線形バックオフ） \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{進化ループのハイパーパラメータ}
+\label{tab:4.hp-evolve}
+\centering
+\small
+\begin{tabular}{|p{5.4cm}|p{7.6cm}|}
+\hline
+項目 & 値 \\
+\hline
+世代数$G$ & 6 \\
+\hline
+サブ集団構成 & 3役割$\times K = 2$（エリート＋子）$= 6$ LoRA \\
+\hline
+適応度 & 厳密Shapley値$\times$fitness sharing（\texttt{--fitness-mode shapley}） \\
+\hline
+適応度セット & MMLU-Pro 100問，シード777（最終評価とシード分離） \\
+\hline
+sharing $\sigma_{\mathrm{share}}$ & 0.3 \\
+\hline
+交叉 & $\Delta W$空間ブレンド＋ランダム化SVD再分解（\texttt{delta}） \\
+\hline
+混合比$\alpha$ & $\mathcal{U}(0.3, 0.7)$から世代・役割ごとに抽出 \\
+\hline
+SVD & oversampling $+8$，power iteration 4回，rank 32に切詰め \\
+\hline
+突然変異率$\rho_{\mathrm{mut}}$／幅$\sigma_{\mathrm{mut}}$ & 0.3 ／ 0.02（テンソル標準偏差に対する相対値） \\
+\hline
+世代0変異体 & $\rho_{\mathrm{mut}} = 1.0$，$\sigma_{\mathrm{mut}} = 0.02$ \\
+\hline
+進化シード & 1234 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{最終評価の設定}
+\label{tab:4.hp-eval}
+\centering
+\small
+\begin{tabular}{|p{5.4cm}|p{7.6cm}|}
+\hline
+項目 & 値 \\
+\hline
+ベンチマーク & MMLU-Pro 500 / MATH-500（Level 4--5）200 / SuperGPQA 300 \\
+\hline
+シード & $K = 3$（1, 2, 3．問題抽出・生成・同数決着に共通使用） \\
+\hline
+Self-Consistency & $k = 9$ \\
+\hline
+bootstrap反復 & $B = 10{,}000$ \\
+\hline
+多重比較補正 & Holm--Bonferroni（2主要比較$\times$3ベンチ） \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\caption{サービング・インフラの設定}
+\label{tab:4.hp-infra}
+\centering
+\small
+\begin{tabular}{|p{5.4cm}|p{7.6cm}|}
+\hline
+項目 & 値 \\
+\hline
+vLLM & \texttt{--enable-lora --max\_loras 8 --max\_lora\_rank 64 --max-model-len 32768}，TP=1 \\
+\hline
+動的ロード & \texttt{/v1/load\_lora\_adapter}（\texttt{VLLM\_ALLOW\_RUNTIME\_LORA\_UPDATING=True}） \\
+\hline
+学習ジョブ & Vertex AI Spot，n1-standard-8 + T4 $\times$1 \\
+\hline
+進化・評価ジョブ & Vertex AI Spot，a2-highgpu-1g（A100 40GB $\times$1），us-central1 \\
+\hline
+成果物保存 & GCS（Cloud Storage FUSEマウント），問題単位JSONL逐次追記による再開設計 \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{実験結果}
+\label{sec:4.6}
+
+% TODO: 実験は現在実行中である．完了後に以下を執筆する．
+%   - 主要比較（条件5 vs 条件2 / 条件7）の結果表（3ベンチマーク，K=3シード，
+%     平均±SEM，paired bootstrap 95%CI，Holm-Bonferroni補正後p値）
+%   - 全8条件の性能一覧表
+%   - 世代ごとの適応度・チーム精度・行動多様性の推移図
+%   - アブレーション（A1/A2/A3）の結果
+%   - LLM-as-judge による議論品質の副次評価

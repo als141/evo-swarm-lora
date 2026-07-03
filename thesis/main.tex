@@ -1,0 +1,119 @@
+\documentclass[12pt, a4j]{jreport}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amssymb}
+\usepackage{bm}
+%\usepackage{titlesec}
+\usepackage{multirow}
+\usepackage[titletoc]{appendix} 
+
+\renewcommand{\bibname}{参考文献}
+    
+\newcommand\subcaption[1]{\begin{center}#1\end{center}}
+\renewcommand{\baselinestretch}{1.2}
+
+
+
+\begin{document}
+\thispagestyle{empty}
+
+%-----------------------------------
+%   表紙
+%-----------------------------------
+\begin{center}
+\large{令和〇年度 修士論文}\\ % TODO: 年度を確認して記入
+\vspace{5cm}
+\Large{マルチエージェント議論における\\チームレベル適応度を用いた\\LoRAエージェント集団の進化的最適化}\\
+\vspace{5mm}
+\normalsize{Evolutionary Optimization of LoRA Agent Populations\\ with Team-Level Fitness in Multi-Agent Debate}\\ % TODO: 英文タイトルを確認
+\vspace{4cm}
+\西暦\today
+\\
+\large{指導教員　余俊　助教}\\ % TODO: 指導教員名・職位を確認
+\vspace{1cm}
+%\large{新潟大学　工学部　工学科\\ 知能情報システムプログラム}\\
+\large{新潟大学　自然科学研究科\\電気情報工学専攻　情報工学コース}\\ % TODO: 所属（研究科・専攻・コース）を確認
+\vspace{10mm}
+\large{学生番号　増田　学}\\ % TODO: 学籍番号を記入
+\large{Gaku Masuda}\\
+\vspace{10mm}
+\end{center}
+
+\clearpage
+\phantom{s}\thispagestyle{empty}
+\clearpage
+
+\pagestyle{empty}
+
+
+% -------------------------------------
+% 概要
+% -------------------------------------
+\include{abstract}
+
+
+%======================
+%   目次
+%======================
+\tableofcontents
+
+
+%======================
+%   第1章
+%======================
+\include{Sec1}
+
+%======================
+%   第2章
+%======================
+\include{Sec2}
+
+%======================
+%   第3章
+%======================
+\include{Sec3}
+
+%======================
+%   第４章
+%======================
+\include{Sec4}
+
+%======================
+%   第5章
+%======================
+\include{Sec5}
+
+%======================
+%   第6章
+%======================
+\include{Sec6}
+
+%===============================
+% 謝辞
+%==============================
+\include{Thanks}
+
+
+%===============================
+% 参考文献
+%==============================
+\newpage
+{
+%\bibliographystyle{plain}
+%\bibliographystyle{abbrv}
+\bibliographystyle{unsrt}
+\footnotesize
+\addtolength{\itemsep}{-1em}
+\clearpage
+%\phantomsection
+\addcontentsline{toc}{chapter}{参考文献}
+\bibliography{refer}
+}
+
+
+
+\end{document}
+
+

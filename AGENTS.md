@@ -134,6 +134,13 @@ uv run python scripts/ping_vllm_persona.py --persona persona_a
 
 ## 研究ログ（随時追記・新しいものを上に）
 
+### 2026-07-03: 修論Markdownドラフトの LaTeX テンプレ移植完了（thesis/）
+- **移植**: `docs/thesis/01〜04_*.md` → `thesis/Sec1〜Sec4.tex`（原本の md は無変更）。Sec4 は実験設定（4.1〜4.5）＋「4.6 実験結果」プレースホルダ（TODOコメント）。Sec5（考察）/Sec6（結論）/abstract.tex は節見出し＋TODOのみの骨組み。ラベルはテンプレ規約（`cha:N` / `sec:N.M(.L)` / `tab:` / `eq:` / `alg:`）。句読点はテンプレに合わせ「，．」へ統一。
+- **参考文献**: 各章末リストを `thesis/refer.bib` に統合（重複除去して **63エントリ**、key は著者年形式 例 `du2023improving`）。ダミーの Back1997 は削除。著者不明の arXiv エントリ6件・タイトル未確認1件（arXiv:2511.11040）は note に「要確認」を明記。
+- **表紙**: タイトル「マルチエージェント議論におけるチームレベル適応度を用いたLoRAエージェント集団の進化的最適化」、著者 増田 学。年度・学籍番号・指導教員・英文タイトルは TODO コメント。
+- **コンパイル環境の発見**: `platex`/`uplatex`/`pbibtex` は PATH になく `~/.TinyTeX/bin/x86_64-linux/`（TeX Live 2025）に存在（`/usr/local/texlive/2024` はほぼ空）。**jreport は pLaTeX 用クラスのため uplatex では JY1 エンコーディングエラー → platex を使うこと**。不足パッケージ algorithms/multirow/appendix は `tlmgr --repository https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2025/tlnet-final install ...` で導入（通常リポジトリは2026に進んでおりクロスリリース拒否）。
+- **検証**: `platex → pbibtex → platex ×2 → dvipdfmx` でエラー0・未解決参照0・49ページの main.pdf 生成を確認。amsmath はテンプレ未読込のため数式は kernel 互換記法（eqnarray, \mbox, \mathop）で記述している点に注意。
+
 ### 2026-07-03: 実験方針の意思決定（ユーザー確認済み）と修論テンプレ展開
 - **ユーザー決定**: (1) 修論は大学指定LaTeXテンプレ（`template/修論見本.zip`→jreport, Sec1〜6構成）に合わせる。`template/latex/` に正名展開し、作業コピーを `thesis/` に配置、Markdownドラフトの移植を実施中。 (2) 進化実験は**まず主実験のみ**（A1 solo適応度アブレーションは結果を見て判断）。 (3) **debateラウンドは1で固定**（文献根拠: 2502.19130等「ラウンド増は逆効果」）。
 - **SFTデータ補記**: persona_a（批判的検証者）・persona_c（発散的探索者）も各60例で生成完了済み（Bと同構成: 英語算数20/英語4択10/日本語タスク15/日本語議論応答10/特殊5。数値答は独立再計算で全検証）。3ファイルとも1行1JSON・system固定・重複なしを機械検証済み。
