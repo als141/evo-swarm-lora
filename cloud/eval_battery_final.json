@@ -14,7 +14,9 @@
       "base=Qwen/Qwen3-4B-Instruct-2507",
       "--no-persona-prompt",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -34,7 +36,9 @@
       "base=Qwen/Qwen3-4B-Instruct-2507",
       "--no-persona-prompt",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -55,7 +59,9 @@
       "sampler_1=Qwen/Qwen3-4B-Instruct-2507",
       "sampler_2=Qwen/Qwen3-4B-Instruct-2507",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -76,7 +82,9 @@
       "pragmatist=Qwen/Qwen3-4B-Instruct-2507",
       "explorer=Qwen/Qwen3-4B-Instruct-2507",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -101,7 +109,9 @@
       "pragmatist=g0_pragmatist",
       "explorer=g0_explorer",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -126,7 +136,9 @@
       "pragmatist=ev_pragmatist",
       "explorer=ev_explorer",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -149,7 +161,9 @@
       "pragmatist=ev_pragmatist",
       "explorer=ev_explorer",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -167,7 +181,9 @@
       "base=Qwen/Qwen3-4B-Instruct-2507",
       "--no-persona-prompt",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -187,7 +203,9 @@
       "base=Qwen/Qwen3-4B-Instruct-2507",
       "--no-persona-prompt",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -208,7 +226,9 @@
       "sampler_1=Qwen/Qwen3-4B-Instruct-2507",
       "sampler_2=Qwen/Qwen3-4B-Instruct-2507",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -229,7 +249,9 @@
       "pragmatist=Qwen/Qwen3-4B-Instruct-2507",
       "explorer=Qwen/Qwen3-4B-Instruct-2507",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -254,7 +276,9 @@
       "pragmatist=g0_pragmatist",
       "explorer=g0_explorer",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -279,7 +303,9 @@
       "pragmatist=ev_pragmatist",
       "explorer=ev_explorer",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -302,7 +328,9 @@
       "pragmatist=ev_pragmatist",
       "explorer=ev_explorer",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -320,7 +348,9 @@
       "base=Qwen/Qwen3-4B-Instruct-2507",
       "--no-persona-prompt",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -340,7 +370,9 @@
       "base=Qwen/Qwen3-4B-Instruct-2507",
       "--no-persona-prompt",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -361,7 +393,9 @@
       "sampler_1=Qwen/Qwen3-4B-Instruct-2507",
       "sampler_2=Qwen/Qwen3-4B-Instruct-2507",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -382,7 +416,9 @@
       "pragmatist=Qwen/Qwen3-4B-Instruct-2507",
       "explorer=Qwen/Qwen3-4B-Instruct-2507",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -407,7 +443,9 @@
       "pragmatist=g0_pragmatist",
       "explorer=g0_explorer",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -432,7 +470,9 @@
       "pragmatist=ev_pragmatist",
       "explorer=ev_explorer",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -455,7 +495,9 @@
       "pragmatist=ev_pragmatist",
       "explorer=ev_explorer",
       "--exclude-items-file",
-      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+      "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -471,7 +513,9 @@
       "solo",
       "--agents",
       "base=Qwen/Qwen3-4B-Instruct-2507",
-      "--no-persona-prompt"
+      "--no-persona-prompt",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -489,7 +533,9 @@
       "9",
       "--agents",
       "base=Qwen/Qwen3-4B-Instruct-2507",
-      "--no-persona-prompt"
+      "--no-persona-prompt",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -508,7 +554,9 @@
       "--agents",
       "sampler_0=Qwen/Qwen3-4B-Instruct-2507",
       "sampler_1=Qwen/Qwen3-4B-Instruct-2507",
-      "sampler_2=Qwen/Qwen3-4B-Instruct-2507"
+      "sampler_2=Qwen/Qwen3-4B-Instruct-2507",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -527,7 +575,9 @@
       "--agents",
       "critic=Qwen/Qwen3-4B-Instruct-2507",
       "pragmatist=Qwen/Qwen3-4B-Instruct-2507",
-      "explorer=Qwen/Qwen3-4B-Instruct-2507"
+      "explorer=Qwen/Qwen3-4B-Instruct-2507",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -550,7 +600,9 @@
       "--agents",
       "critic=g0_critic",
       "pragmatist=g0_pragmatist",
-      "explorer=g0_explorer"
+      "explorer=g0_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -573,7 +625,9 @@
       "--agents",
       "critic=ev_critic",
       "pragmatist=ev_pragmatist",
-      "explorer=ev_explorer"
+      "explorer=ev_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -594,7 +648,9 @@
       "--agents",
       "critic=ev_critic",
       "pragmatist=ev_pragmatist",
-      "explorer=ev_explorer"
+      "explorer=ev_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -610,7 +666,9 @@
       "solo",
       "--agents",
       "base=Qwen/Qwen3-4B-Instruct-2507",
-      "--no-persona-prompt"
+      "--no-persona-prompt",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -628,7 +686,9 @@
       "9",
       "--agents",
       "base=Qwen/Qwen3-4B-Instruct-2507",
-      "--no-persona-prompt"
+      "--no-persona-prompt",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -647,7 +707,9 @@
       "--agents",
       "sampler_0=Qwen/Qwen3-4B-Instruct-2507",
       "sampler_1=Qwen/Qwen3-4B-Instruct-2507",
-      "sampler_2=Qwen/Qwen3-4B-Instruct-2507"
+      "sampler_2=Qwen/Qwen3-4B-Instruct-2507",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -666,7 +728,9 @@
       "--agents",
       "critic=Qwen/Qwen3-4B-Instruct-2507",
       "pragmatist=Qwen/Qwen3-4B-Instruct-2507",
-      "explorer=Qwen/Qwen3-4B-Instruct-2507"
+      "explorer=Qwen/Qwen3-4B-Instruct-2507",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -689,7 +753,9 @@
       "--agents",
       "critic=g0_critic",
       "pragmatist=g0_pragmatist",
-      "explorer=g0_explorer"
+      "explorer=g0_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -712,7 +778,9 @@
       "--agents",
       "critic=ev_critic",
       "pragmatist=ev_pragmatist",
-      "explorer=ev_explorer"
+      "explorer=ev_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -733,7 +801,9 @@
       "--agents",
       "critic=ev_critic",
       "pragmatist=ev_pragmatist",
-      "explorer=ev_explorer"
+      "explorer=ev_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -749,7 +819,9 @@
       "solo",
       "--agents",
       "base=Qwen/Qwen3-4B-Instruct-2507",
-      "--no-persona-prompt"
+      "--no-persona-prompt",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -767,7 +839,9 @@
       "9",
       "--agents",
       "base=Qwen/Qwen3-4B-Instruct-2507",
-      "--no-persona-prompt"
+      "--no-persona-prompt",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -786,7 +860,9 @@
       "--agents",
       "sampler_0=Qwen/Qwen3-4B-Instruct-2507",
       "sampler_1=Qwen/Qwen3-4B-Instruct-2507",
-      "sampler_2=Qwen/Qwen3-4B-Instruct-2507"
+      "sampler_2=Qwen/Qwen3-4B-Instruct-2507",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -805,7 +881,9 @@
       "--agents",
       "critic=Qwen/Qwen3-4B-Instruct-2507",
       "pragmatist=Qwen/Qwen3-4B-Instruct-2507",
-      "explorer=Qwen/Qwen3-4B-Instruct-2507"
+      "explorer=Qwen/Qwen3-4B-Instruct-2507",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -828,7 +906,9 @@
       "--agents",
       "critic=g0_critic",
       "pragmatist=g0_pragmatist",
-      "explorer=g0_explorer"
+      "explorer=g0_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -851,7 +931,9 @@
       "--agents",
       "critic=ev_critic",
       "pragmatist=ev_pragmatist",
-      "explorer=ev_explorer"
+      "explorer=ev_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -872,7 +954,9 @@
       "--agents",
       "critic=ev_critic",
       "pragmatist=ev_pragmatist",
-      "explorer=ev_explorer"
+      "explorer=ev_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -888,7 +972,9 @@
       "solo",
       "--agents",
       "base=Qwen/Qwen3-4B-Instruct-2507",
-      "--no-persona-prompt"
+      "--no-persona-prompt",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -906,7 +992,9 @@
       "9",
       "--agents",
       "base=Qwen/Qwen3-4B-Instruct-2507",
-      "--no-persona-prompt"
+      "--no-persona-prompt",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -925,7 +1013,9 @@
       "--agents",
       "sampler_0=Qwen/Qwen3-4B-Instruct-2507",
       "sampler_1=Qwen/Qwen3-4B-Instruct-2507",
-      "sampler_2=Qwen/Qwen3-4B-Instruct-2507"
+      "sampler_2=Qwen/Qwen3-4B-Instruct-2507",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -944,7 +1034,9 @@
       "--agents",
       "critic=Qwen/Qwen3-4B-Instruct-2507",
       "pragmatist=Qwen/Qwen3-4B-Instruct-2507",
-      "explorer=Qwen/Qwen3-4B-Instruct-2507"
+      "explorer=Qwen/Qwen3-4B-Instruct-2507",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -967,7 +1059,9 @@
       "--agents",
       "critic=g0_critic",
       "pragmatist=g0_pragmatist",
-      "explorer=g0_explorer"
+      "explorer=g0_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -990,7 +1084,9 @@
       "--agents",
       "critic=ev_critic",
       "pragmatist=ev_pragmatist",
-      "explorer=ev_explorer"
+      "explorer=ev_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -1011,7 +1107,9 @@
       "--agents",
       "critic=ev_critic",
       "pragmatist=ev_pragmatist",
-      "explorer=ev_explorer"
+      "explorer=ev_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -1027,7 +1125,9 @@
       "solo",
       "--agents",
       "base=Qwen/Qwen3-4B-Instruct-2507",
-      "--no-persona-prompt"
+      "--no-persona-prompt",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -1045,7 +1145,9 @@
       "9",
       "--agents",
       "base=Qwen/Qwen3-4B-Instruct-2507",
-      "--no-persona-prompt"
+      "--no-persona-prompt",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -1064,7 +1166,9 @@
       "--agents",
       "sampler_0=Qwen/Qwen3-4B-Instruct-2507",
       "sampler_1=Qwen/Qwen3-4B-Instruct-2507",
-      "sampler_2=Qwen/Qwen3-4B-Instruct-2507"
+      "sampler_2=Qwen/Qwen3-4B-Instruct-2507",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -1083,7 +1187,9 @@
       "--agents",
       "critic=Qwen/Qwen3-4B-Instruct-2507",
       "pragmatist=Qwen/Qwen3-4B-Instruct-2507",
-      "explorer=Qwen/Qwen3-4B-Instruct-2507"
+      "explorer=Qwen/Qwen3-4B-Instruct-2507",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -1106,7 +1212,9 @@
       "--agents",
       "critic=g0_critic",
       "pragmatist=g0_pragmatist",
-      "explorer=g0_explorer"
+      "explorer=g0_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -1129,7 +1237,9 @@
       "--agents",
       "critic=ev_critic",
       "pragmatist=ev_pragmatist",
-      "explorer=ev_explorer"
+      "explorer=ev_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -1150,7 +1260,9 @@
       "--agents",
       "critic=ev_critic",
       "pragmatist=ev_pragmatist",
-      "explorer=ev_explorer"
+      "explorer=ev_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -1166,7 +1278,9 @@
       "solo",
       "--agents",
       "base=Qwen/Qwen3-4B-Instruct-2507",
-      "--no-persona-prompt"
+      "--no-persona-prompt",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -1184,7 +1298,9 @@
       "9",
       "--agents",
       "base=Qwen/Qwen3-4B-Instruct-2507",
-      "--no-persona-prompt"
+      "--no-persona-prompt",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -1203,7 +1319,9 @@
       "--agents",
       "sampler_0=Qwen/Qwen3-4B-Instruct-2507",
       "sampler_1=Qwen/Qwen3-4B-Instruct-2507",
-      "sampler_2=Qwen/Qwen3-4B-Instruct-2507"
+      "sampler_2=Qwen/Qwen3-4B-Instruct-2507",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -1222,7 +1340,9 @@
       "--agents",
       "critic=Qwen/Qwen3-4B-Instruct-2507",
       "pragmatist=Qwen/Qwen3-4B-Instruct-2507",
-      "explorer=Qwen/Qwen3-4B-Instruct-2507"
+      "explorer=Qwen/Qwen3-4B-Instruct-2507",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -1245,7 +1365,9 @@
       "--agents",
       "critic=g0_critic",
       "pragmatist=g0_pragmatist",
-      "explorer=g0_explorer"
+      "explorer=g0_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -1268,7 +1390,9 @@
       "--agents",
       "critic=ev_critic",
       "pragmatist=ev_pragmatist",
-      "explorer=ev_explorer"
+      "explorer=ev_explorer",
+      "--workers",
+      "32"
     ]
   },
   {
@@ -1289,7 +1413,9 @@
       "--agents",
       "critic=ev_critic",
       "pragmatist=ev_pragmatist",
-      "explorer=ev_explorer"
+      "explorer=ev_explorer",
+      "--workers",
+      "32"
     ]
   }
 ]

@@ -111,6 +111,7 @@ workerPoolSpecs:
         - --out-dir=${GCS_MOUNT}/final_eval
 scheduling:
   strategy: SPOT
+  restartJobOnWorkerRestart: true
 baseOutputDirectory:
   outputUriPrefix: ${RUN_URI}/final_eval_job
 EOF
