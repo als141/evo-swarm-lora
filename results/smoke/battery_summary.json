@@ -1,0 +1,22 @@
+[
+  {
+    "name": "smoke_base_solo_gsm8k",
+    "status": "ok",
+    "elapsed_seconds": 9.925355672836304
+  },
+  {
+    "name": "smoke_sc3_gsm8k",
+    "status": "ok",
+    "elapsed_seconds": 14.522115707397461
+  },
+  {
+    "name": "smoke_gen0_team_gsm8k",
+    "status": "ok",
+    "elapsed_seconds": 46.191524267196655
+  },
+  {
+    "name": "smoke_gen0_coalitions_mmlupro",
+    "status": "ok",
+    "elapsed_seconds": 181.3631386756897
+  }
+]

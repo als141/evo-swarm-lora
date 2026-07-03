@@ -1,0 +1,68 @@
+{
+  "task": "gsm8k",
+  "n": 8,
+  "seed": 42,
+  "rounds": 2,
+  "mode": "sc",
+  "agents": [
+    {
+      "name": "base",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "persona": ""
+    }
+  ],
+  "generation": {
+    "temperature": 0.7,
+    "max_tokens": 512
+  },
+  "sc_k": 3,
+  "sc": {
+    "base": {
+      "accuracy": 1.0,
+      "n": 8,
+      "per_item": {
+        "gsm8k-test-588": {
+          "predicted": "52",
+          "gold": "52",
+          "correct": true
+        },
+        "gsm8k-test-1214": {
+          "predicted": "5",
+          "gold": "5",
+          "correct": true
+        },
+        "gsm8k-test-57": {
+          "predicted": "83",
+          "gold": "83",
+          "correct": true
+        },
+        "gsm8k-test-906": {
+          "predicted": "10",
+          "gold": "10",
+          "correct": true
+        },
+        "gsm8k-test-1252": {
+          "predicted": "70",
+          "gold": "70",
+          "correct": true
+        },
+        "gsm8k-test-618": {
+          "predicted": "36",
+          "gold": "36",
+          "correct": true
+        },
+        "gsm8k-test-599": {
+          "predicted": "48",
+          "gold": "48",
+          "correct": true
+        },
+        "gsm8k-test-289": {
+          "predicted": "16",
+          "gold": "16",
+          "correct": true
+        }
+      }
+    }
+  },
+  "elapsed_seconds": 11.264715671539307
+}

@@ -74,36 +74,42 @@ def main() -> None:
     gen0_map = parse_gen0(args.gen0)
     out_root = Path(args.out_root)
     out_root.mkdir(parents=True, exist_ok=True)
-    rng = random.Random(args.evolution_seed)
+    # 再開の決定性を保つため、乱数は用途・世代ごとに独立にシードする
+    rng_init = random.Random(args.evolution_seed)
 
     client = ChatClient(base_url=args.base_url)
     config = GenerationConfig(temperature=args.temperature, max_tokens=args.max_tokens, seed=args.fitness_seed)
     task = load_task(args.fitness_task, n=args.fitness_n, seed=args.fitness_seed)
     lora_manager = VllmLoraManager(args.base_url)
 
+    individuals_by_name: dict[str, Individual] = {}
+
+    def register(individual: Individual) -> Individual:
+        individuals_by_name[individual.name] = individual
+        return individual
+
     # gen 0: SFT 済み 3 個体 + 各役割の突然変異コピー（初期多様性の確保）
     subpopulations: dict[str, list[Individual]] = {}
     representatives: dict[str, Individual] = {}
     for role, adapter_dir in sorted(gen0_map.items()):
-        original = Individual(
+        original = register(Individual(
             name=f"gen0_{role}_base",
             role=role,
             adapter_dir=adapter_dir,
             persona_prompt=ROLE_PERSONAS[role],
-        )
+        ))
         mutant_dir = out_root / "gen_00" / f"gen0_{role}_mutant"
-        if not mutant_dir.exists():
-            make_child(
-                original, original, f"gen0_{role}_mutant", str(mutant_dir),
-                alpha=0.5, mut_ratio=1.0, mut_std=args.mut_std,
-                seed=rng.randrange(2**31), crossover=args.crossover,
-            )
-        mutant = Individual(
+        make_child(
+            original, original, f"gen0_{role}_mutant", str(mutant_dir),
+            alpha=0.5, mut_ratio=1.0, mut_std=args.mut_std,
+            seed=rng_init.randrange(2**31), crossover=args.crossover,
+        )
+        mutant = register(Individual(
             name=f"gen0_{role}_mutant",
             role=role,
             adapter_dir=str(mutant_dir),
             persona_prompt=ROLE_PERSONAS[role],
-        )
+        ))
         subpopulations[role] = [original, mutant]
         representatives[role] = original
 
@@ -114,26 +120,39 @@ def main() -> None:
     }
 
     for generation in range(args.generations):
-        print(f"[info] === generation {generation} ===")
-        evaluator = CoalitionEvaluator(
-            client, task, config, args.rounds, args.fitness_seed, workers=args.workers
-        )
-        result = run_generation(
-            generation=generation,
-            subpopulations=subpopulations,
-            representatives=representatives,
-            evaluator=evaluator,
-            lora_manager=lora_manager,
-            out_root=out_root,
-            fitness_mode=args.fitness_mode,
-            sharing_sigma=args.sharing_sigma,
-            use_sharing=not args.no_sharing,
-        )
-        representatives = result["representatives"]
-        run_log["generations"].append(result["log"])
+        gen_log_path = out_root / f"gen_{generation:02d}" / "generation_log.json"
+
+        if gen_log_path.exists():
+            # 再開: 評価済み世代はログから状態を復元して評価をスキップする
+            gen_log = json.loads(gen_log_path.read_text(encoding="utf-8"))
+            representatives = {
+                role: individuals_by_name[name]
+                for role, name in gen_log["representatives"].items()
+            }
+            print(f"[info] === generation {generation} (resumed from log) ===")
+        else:
+            print(f"[info] === generation {generation} ===")
+            evaluator = CoalitionEvaluator(
+                client, task, config, args.rounds, args.fitness_seed, workers=args.workers
+            )
+            result = run_generation(
+                generation=generation,
+                subpopulations=subpopulations,
+                representatives=representatives,
+                evaluator=evaluator,
+                lora_manager=lora_manager,
+                out_root=out_root,
+                fitness_mode=args.fitness_mode,
+                sharing_sigma=args.sharing_sigma,
+                use_sharing=not args.no_sharing,
+            )
+            representatives = result["representatives"]
+            gen_log = result["log"]
+
+        run_log["generations"].append(gen_log)
 
         for role, rep in sorted(representatives.items()):
-            record = result["log"]["roles"][role]["candidates"][rep.name]
+            record = gen_log["roles"][role]["candidates"][rep.name]
             print(
                 f"[info] {role}: selected={rep.name} fitness={record['fitness']:.4f} "
                 f"(shapley={record['shapley']:.4f}, solo={record['solo_accuracy']:.4f}, "
@@ -148,7 +167,7 @@ def main() -> None:
         if generation < args.generations - 1:
             fitness_by_name = {
                 name: rec["fitness"]
-                for role_log in result["log"]["roles"].values()
+                for role_log in gen_log["roles"].values()
                 for name, rec in role_log["candidates"].items()
             }
             subpopulations = breed_next_generation(
@@ -157,12 +176,16 @@ def main() -> None:
                 subpopulations=subpopulations,
                 fitness_by_name=fitness_by_name,
                 out_root=out_root,
-                rng=rng,
+                # 世代ごとに独立シード: 再開時も同一の交叉・突然変異を再現する
+                rng=random.Random(args.evolution_seed * 1000 + generation + 1),
                 mut_ratio=args.mut_ratio,
                 mut_std=args.mut_std,
                 crossover=args.crossover,
                 persona_prompts=ROLE_PERSONAS,
             )
+            for members in subpopulations.values():
+                for member in members:
+                    individuals_by_name.setdefault(member.name, member)
 
     final_team = {role: rep.adapter_dir for role, rep in sorted(representatives.items())}
     run_log["final_team"] = final_team

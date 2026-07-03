@@ -175,8 +175,11 @@ def make_child(
     seed: int,
     crossover: str = "delta",
 ) -> None:
-    """交叉 + 突然変異で子アダプタを生成する。"""
+    """交叉 + 突然変異で子アダプタを生成する。生成済みならスキップ（再開対応）。"""
     from src.models.lora_ops import alpha_blend_lora
+
+    if (Path(child_dir) / "adapter_model.safetensors").exists():
+        return
 
     tmp_dir = f"{child_dir}_blend_tmp"
     if Path(tmp_dir).exists():

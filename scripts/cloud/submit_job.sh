@@ -83,6 +83,7 @@ workerPoolSpecs:
 $(for arg in "${EXTRA_ARGS[@]}"; do echo "        - ${arg}"; done)
 scheduling:
   strategy: SPOT
+  restartJobOnWorkerRestart: true
 baseOutputDirectory:
   outputUriPrefix: ${RUN_URI}/evolution
 EOF
