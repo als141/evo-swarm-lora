@@ -134,6 +134,11 @@ uv run python scripts/ping_vllm_persona.py --persona persona_a
 
 ## 研究ログ（随時追記・新しいものを上に）
 
+### 2026-07-03: 【重要】VertexのGPUドライバはCUDA 12.2相当 — cu124以降のtorchはCPUフォールバックする
+- **症状**: T4学習ジョブが極端に遅い+初回はRAM不足で失敗。ログに `CUDA initialization: The NVIDIA driver on your system is too old (found version 12020)` → torch cu124 が初期化できず**サイレントにCPU学習**していた。
+- **対処**: (1) trainer イメージの torch を **cu118 ビルド**に変更（ドライバ12.2でネイティブ動作）。(2) `train_lora_persona.py` は CUDA 不可なら即エラーに変更（`ALLOW_CPU_TRAINING=1` でのみ CPU 許可）。(3) eval イメージ（vLLM は cu124/cu128 ビルド）は entrypoint で `/usr/local/cuda/compat` を LD_LIBRARY_PATH に追加+`nvidia-smi` ログ出力。**A100ホストのドライバも535系ならvLLMが同じ問題を踏む可能性**があり、スモークテストの nvidia-smi 出力で確認する。ダメなら vLLM の cu118 系イメージ/自前ビルドへ切替。
+- **教訓**: ジョブ投入時は必ず「GPUが実際に使われているか」をログで確認する（`Loading base model on cuda` / nvidia-smi）。CPUフォールバックは静かに実験を無効化する。
+
 ### 2026-07-03: 修論Markdownドラフトの LaTeX テンプレ移植完了（thesis/）
 - **移植**: `docs/thesis/01〜04_*.md` → `thesis/Sec1〜Sec4.tex`（原本の md は無変更）。Sec4 は実験設定（4.1〜4.5）＋「4.6 実験結果」プレースホルダ（TODOコメント）。Sec5（考察）/Sec6（結論）/abstract.tex は節見出し＋TODOのみの骨組み。ラベルはテンプレ規約（`cha:N` / `sec:N.M(.L)` / `tab:` / `eq:` / `alg:`）。句読点はテンプレに合わせ「，．」へ統一。
 - **参考文献**: 各章末リストを `thesis/refer.bib` に統合（重複除去して **63エントリ**、key は著者年形式 例 `du2023improving`）。ダミーの Back1997 は削除。著者不明の arXiv エントリ6件・タイトル未確認1件（arXiv:2511.11040）は note に「要確認」を明記。
