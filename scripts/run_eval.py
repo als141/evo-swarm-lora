@@ -27,11 +27,44 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from src.agents.personalities import PERSONAS
+from src.agents.personalities import PERSONAS, ROLE_PERSONAS
 from src.evalx.client import ChatClient, GenerationConfig
 from src.evalx.debate import AgentSpec, majority_vote, run_debate, solo_answer
 from src.evalx.shapley import all_coalitions, shapley_values
 from src.evalx.tasks import load_task, score_predictions
+
+
+class ProgressCache:
+    """問題単位で予測を JSONL に逐次追記し、Spot プリエンプション後の再開を可能にする。"""
+
+    def __init__(self, path: Path | None):
+        self._path = path
+        self._answers: dict[str, str | None] = {}
+        if path is not None and path.exists():
+            for line in path.read_text(encoding="utf-8").splitlines():
+                if not line.strip():
+                    continue
+                record = json.loads(line)
+                self._answers[record["item_id"]] = record["answer"]
+        if path is not None:
+            path.parent.mkdir(parents=True, exist_ok=True)
+
+    def __contains__(self, item_id: str) -> bool:
+        return item_id in self._answers
+
+    def get(self, item_id: str):
+        return self._answers.get(item_id)
+
+    def put(self, item_id: str, answer) -> None:
+        self._answers[item_id] = answer
+        if self._path is not None:
+            with self._path.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps({"item_id": item_id, "answer": answer}, ensure_ascii=False) + "\n")
+
+
+def _cache_for(progress_dir: Path | None, label: str) -> ProgressCache:
+    safe = label.replace("/", "_").replace("+", "_")
+    return ProgressCache(progress_dir / f"{safe}.jsonl" if progress_dir else None)
 
 
 def parse_agents(raw_agents: list[str], persona_map: dict[str, str]) -> list[AgentSpec]:
@@ -44,23 +77,32 @@ def parse_agents(raw_agents: list[str], persona_map: dict[str, str]) -> list[Age
     return agents
 
 
-def evaluate_solo(client, agents, task, config) -> dict:
+def evaluate_solo(client, agents, task, config, progress_dir=None) -> dict:
     results = {}
     for agent in agents:
+        cache = _cache_for(progress_dir, f"solo_{agent.name}")
         predictions = {}
         for item in task.items:
+            if item.item_id in cache:
+                predictions[item.item_id] = cache.get(item.item_id)
+                continue
             result = solo_answer(client, agent, item, task.answer_type, config)
             predictions[item.item_id] = result["answer"]
+            cache.put(item.item_id, result["answer"])
         results[agent.name] = score_predictions(task.items, predictions, task.answer_type)
         print(f"[info] solo {agent.name}: acc={results[agent.name]['accuracy']:.4f}")
     return results
 
 
-def evaluate_self_consistency(client, agent, task, config, k, tie_break_seed) -> dict:
+def evaluate_self_consistency(client, agent, task, config, k, tie_break_seed, progress_dir=None) -> dict:
     from dataclasses import replace
 
+    cache = _cache_for(progress_dir, f"sc{k}_{agent.name}")
     predictions = {}
     for item in task.items:
+        if item.item_id in cache:
+            predictions[item.item_id] = cache.get(item.item_id)
+            continue
         answers = []
         for sample_idx in range(k):
             # 同一 seed だと同一サンプルが k 回返るため、サンプルごとに seed をずらす
@@ -69,16 +111,26 @@ def evaluate_self_consistency(client, agent, task, config, k, tie_break_seed) ->
             )
             result = solo_answer(client, agent, item, task.answer_type, sample_config)
             answers.append(result["answer"])
-        predictions[item.item_id] = majority_vote(answers, tie_break_seed)
+        vote = majority_vote(answers, tie_break_seed)
+        predictions[item.item_id] = vote
+        cache.put(item.item_id, vote)
     return score_predictions(task.items, predictions, task.answer_type)
 
 
-def evaluate_team(client, agents, task, config, rounds, tie_break_seed, transcript_path=None) -> dict:
+def evaluate_team(
+    client, agents, task, config, rounds, tie_break_seed, transcript_path=None, progress_dir=None
+) -> dict:
+    label = "team_" + "_".join(a.name for a in agents)
+    cache = _cache_for(progress_dir, label)
     predictions = {}
     transcripts = []
     for item in task.items:
+        if item.item_id in cache:
+            predictions[item.item_id] = cache.get(item.item_id)
+            continue
         record = run_debate(client, agents, item, task.answer_type, rounds, config, tie_break_seed)
         predictions[item.item_id] = record.majority_answer
+        cache.put(item.item_id, record.majority_answer)
         transcripts.append(
             {
                 "item_id": item.item_id,
@@ -87,10 +139,12 @@ def evaluate_team(client, agents, task, config, rounds, tie_break_seed, transcri
                 "majority_answer": record.majority_answer,
             }
         )
-    if transcript_path:
-        Path(transcript_path).parent.mkdir(parents=True, exist_ok=True)
-        Path(transcript_path).write_text(
-            json.dumps(transcripts, ensure_ascii=False, indent=2), encoding="utf-8"
+    if transcript_path and transcripts:
+        path = Path(transcript_path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        existing = json.loads(path.read_text(encoding="utf-8")) if path.exists() else []
+        path.write_text(
+            json.dumps(existing + transcripts, ensure_ascii=False, indent=2), encoding="utf-8"
         )
     return score_predictions(task.items, predictions, task.answer_type)
 
@@ -103,17 +157,44 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=42, help="問題サンプリングと同点処理のシード")
     parser.add_argument("--rounds", type=int, default=2, help="独立回答後の debate ラウンド数")
     parser.add_argument("--agents", nargs="+", required=True, help="name=model 形式")
+    parser.add_argument(
+        "--load-adapters",
+        nargs="*",
+        default=[],
+        help="name=path 形式。vLLM の動的 LoRA ロード API で評価前に登録する",
+    )
+    parser.add_argument(
+        "--no-persona-prompt",
+        action="store_true",
+        help="ペルソナ system prompt を使わない（ベースモデル×温度サンプリング条件用）",
+    )
     parser.add_argument("--mode", choices=["solo", "team", "coalitions", "sc"], default="coalitions")
     parser.add_argument("--sc-k", type=int, default=9, help="Self-Consistency のサンプル数")
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--max-tokens", type=int, default=512)
     parser.add_argument("--out", required=True)
     parser.add_argument("--save-transcripts", action="store_true")
+    parser.add_argument(
+        "--progress-dir",
+        default=None,
+        help="問題単位の逐次キャッシュを置くディレクトリ（Spot プリエンプト後の再開用）",
+    )
     args = parser.parse_args()
 
     client = ChatClient(base_url=args.base_url)
     config = GenerationConfig(temperature=args.temperature, max_tokens=args.max_tokens, seed=args.seed)
-    agents = parse_agents(args.agents, PERSONAS)
+
+    if args.load_adapters:
+        from src.evolve.loop import VllmLoraManager
+
+        manager = VllmLoraManager(args.base_url)
+        for spec in args.load_adapters:
+            name, path = spec.split("=", 1)
+            manager.load(name, path)
+            print(f"[info] loaded adapter {name} from {path}")
+
+    persona_map = {} if args.no_persona_prompt else {**PERSONAS, **ROLE_PERSONAS}
+    agents = parse_agents(args.agents, persona_map)
     task = load_task(args.task, n=args.n, seed=args.seed)
     print(f"[info] task={task.name} n={len(task.items)} agents={[a.name for a in agents]} mode={args.mode}")
 
@@ -129,19 +210,23 @@ def main() -> None:
     }
     out_dir = Path(args.out).parent
 
+    progress_dir = Path(args.progress_dir) if args.progress_dir else None
+
     if args.mode == "solo":
-        payload["solo"] = evaluate_solo(client, agents, task, config)
+        payload["solo"] = evaluate_solo(client, agents, task, config, progress_dir)
     elif args.mode == "sc":
         payload["sc_k"] = args.sc_k
         payload["sc"] = {}
         for agent in agents:
             payload["sc"][agent.name] = evaluate_self_consistency(
-                client, agent, task, config, args.sc_k, args.seed
+                client, agent, task, config, args.sc_k, args.seed, progress_dir
             )
             print(f"[info] sc@{args.sc_k} {agent.name}: acc={payload['sc'][agent.name]['accuracy']:.4f}")
     elif args.mode == "team":
         transcript_path = out_dir / "transcripts_team.json" if args.save_transcripts else None
-        payload["team"] = evaluate_team(client, agents, task, config, args.rounds, args.seed, transcript_path)
+        payload["team"] = evaluate_team(
+            client, agents, task, config, args.rounds, args.seed, transcript_path, progress_dir
+        )
         print(f"[info] team: acc={payload['team']['accuracy']:.4f}")
     else:
         # 全連合を評価して厳密 Shapley 値を算出
@@ -152,12 +237,14 @@ def main() -> None:
             members = [agent_by_name[n] for n in coalition]
             key = "+".join(coalition)
             if len(members) == 1:
-                result = evaluate_solo(client, members, task, config)[members[0].name]
+                result = evaluate_solo(client, members, task, config, progress_dir)[members[0].name]
             else:
                 transcript_path = (
                     out_dir / f"transcripts_{key}.json" if args.save_transcripts else None
                 )
-                result = evaluate_team(client, members, task, config, args.rounds, args.seed, transcript_path)
+                result = evaluate_team(
+                    client, members, task, config, args.rounds, args.seed, transcript_path, progress_dir
+                )
             coalition_results[key] = result
             print(f"[info] coalition {key}: acc={result['accuracy']:.4f}")
 

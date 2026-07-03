@@ -85,6 +85,33 @@ baseOutputDirectory:
   outputUriPrefix: ${RUN_URI}/evolution
 EOF
     ;;
+  battery)
+    # 使用例: submit_job.sh battery run001 <バッテリー設定のGCSマウントパス>
+    CONFIG_PATH="${EXTRA_ARGS[0]:?battery config path (GCS mount) required}"
+    DISPLAY_NAME="battery-${RUN_ID}-${TIMESTAMP}"
+    cat > "${CONFIG_FILE}" <<EOF
+workerPoolSpecs:
+  - machineSpec:
+      machineType: a2-highgpu-1g
+      acceleratorType: NVIDIA_TESLA_A100
+      acceleratorCount: 1
+    replicaCount: 1
+    diskSpec:
+      bootDiskSizeGb: 200
+    containerSpec:
+      imageUri: ${IMAGE_PREFIX}/eval:latest
+      args:
+        - python3
+        - scripts/run_eval_battery.py
+        - --base-url=http://localhost:8000/v1
+        - --config=${CONFIG_PATH}
+        - --out-dir=${GCS_MOUNT}/final_eval
+scheduling:
+  strategy: SPOT
+baseOutputDirectory:
+  outputUriPrefix: ${RUN_URI}/final_eval_job
+EOF
+    ;;
   eval)
     DISPLAY_NAME="eval-${RUN_ID}-${TIMESTAMP}"
     cat > "${CONFIG_FILE}" <<EOF

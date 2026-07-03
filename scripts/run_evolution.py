@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from src.agents.personalities import ROLE_PERSONAS
 from src.evalx.client import ChatClient, GenerationConfig
 from src.evalx.tasks import load_task
 from src.evolve.loop import (
@@ -33,12 +34,6 @@ from src.evolve.loop import (
     make_child,
     run_generation,
 )
-
-ROLE_PERSONAS = {
-    "critic": "あなたは厳密な検証を重視する批判的思考家。反証・例外・境界条件に敏感。",
-    "pragmatist": "あなたは応用志向の実務家。意思決定に役立つ実装可能性とコストを重視。",
-    "explorer": "あなたは創発を促す発想家。仮説生成と多角的比喩で発想を広げる。",
-}
 
 
 def parse_gen0(raw: list[str]) -> dict[str, str]:

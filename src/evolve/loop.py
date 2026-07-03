@@ -50,7 +50,8 @@ class VllmLoraManager:
             json={"lora_name": name, "lora_path": str(Path(path).resolve())},
             timeout=120.0,
         )
-        if response.status_code not in (200, 201):
+        # 別プロセスが先に登録済みのケース（バッテリー実行）は成功として扱う
+        if response.status_code not in (200, 201) and "already" not in response.text.lower():
             raise RuntimeError(f"Failed to load adapter {name}: {response.status_code} {response.text}")
         self._loaded.add(name)
 
