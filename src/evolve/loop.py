@@ -21,6 +21,7 @@ import httpx
 
 from src.evalx.client import ChatClient, GenerationConfig
 from src.evalx.debate import AgentSpec, run_debate, solo_answer
+from src.evalx.parallel import parallel_map
 from src.evalx.shapley import shapley_values
 from src.evalx.tasks import TaskSpec, score_predictions
 from src.models.lora_ops import delta_blend_lora, mutate_lora
@@ -76,12 +77,14 @@ class CoalitionEvaluator:
         config: GenerationConfig,
         rounds: int,
         tie_break_seed: int,
+        workers: int = 16,
     ):
         self._client = client
         self._task = task
         self._config = config
         self._rounds = rounds
         self._tie_break_seed = tie_break_seed
+        self._workers = workers
         self.cache: Dict[frozenset, dict] = {}
 
     def evaluate(self, members: List[Individual]) -> dict:
@@ -89,18 +92,23 @@ class CoalitionEvaluator:
         if key in self.cache:
             return self.cache[key]
         agents = [AgentSpec(name=m.name, model=m.name, persona_prompt=m.persona_prompt) for m in members]
-        predictions = {}
+
         if len(agents) == 1:
-            for item in self._task.items:
+            def process(item):
                 result = solo_answer(self._client, agents[0], item, self._task.answer_type, self._config)
-                predictions[item.item_id] = result["answer"]
+                return result["answer"]
         else:
-            for item in self._task.items:
+            def process(item):
                 record = run_debate(
                     self._client, agents, item, self._task.answer_type,
                     self._rounds, self._config, self._tie_break_seed,
                 )
-                predictions[item.item_id] = record.majority_answer
+                return record.majority_answer
+
+        answers = parallel_map(self._task.items, process, max_workers=self._workers)
+        predictions = {
+            item.item_id: answers[idx] for idx, item in enumerate(self._task.items)
+        }
         result = score_predictions(self._task.items, predictions, self._task.answer_type)
         self.cache[key] = result
         return result

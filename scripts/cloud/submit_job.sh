@@ -47,6 +47,7 @@ workerPoolSpecs:
         - --seed=1234
         - --rank=32
         - --epochs=3
+        - --upload-uri=
         - --notes=run ${RUN_ID}
 $(for arg in "${EXTRA_ARGS[@]}"; do echo "        - ${arg}"; done)
 scheduling:

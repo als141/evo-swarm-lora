@@ -66,6 +66,7 @@ def main() -> None:
     parser.add_argument("--evolution-seed", type=int, default=1234)
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--max-tokens", type=int, default=512)
+    parser.add_argument("--workers", type=int, default=16, help="問題単位の並列リクエスト数")
     parser.add_argument("--out-root", default="adapters/evolution")
     parser.add_argument("--log", required=True, help="実行全体のログ JSON 出力先")
     args = parser.parse_args()
@@ -114,7 +115,9 @@ def main() -> None:
 
     for generation in range(args.generations):
         print(f"[info] === generation {generation} ===")
-        evaluator = CoalitionEvaluator(client, task, config, args.rounds, args.fitness_seed)
+        evaluator = CoalitionEvaluator(
+            client, task, config, args.rounds, args.fitness_seed, workers=args.workers
+        )
         result = run_generation(
             generation=generation,
             subpopulations=subpopulations,

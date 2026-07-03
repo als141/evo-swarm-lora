@@ -1,0 +1,41 @@
+[
+  {
+    "name": "smoke_base_solo_gsm8k",
+    "args": [
+      "--task", "gsm8k", "--n", "8", "--seed", "42", "--mode", "solo",
+      "--agents", "base=Qwen/Qwen3-4B-Instruct-2507",
+      "--no-persona-prompt"
+    ]
+  },
+  {
+    "name": "smoke_sc3_gsm8k",
+    "args": [
+      "--task", "gsm8k", "--n", "8", "--seed", "42", "--mode", "sc", "--sc-k", "3",
+      "--agents", "base=Qwen/Qwen3-4B-Instruct-2507",
+      "--no-persona-prompt"
+    ]
+  },
+  {
+    "name": "smoke_gen0_team_gsm8k",
+    "args": [
+      "--task", "gsm8k", "--n", "8", "--seed", "42", "--mode", "team", "--rounds", "1",
+      "--load-adapters",
+      "critic=/gcs/evo-swarm-lora-research-501308/experiments/run001/training/model/adapters/persona_a",
+      "pragmatist=/gcs/evo-swarm-lora-research-501308/experiments/run001/training/model/adapters/persona_b",
+      "explorer=/gcs/evo-swarm-lora-research-501308/experiments/run001/training/model/adapters/persona_c",
+      "--agents", "critic=critic", "pragmatist=pragmatist", "explorer=explorer",
+      "--save-transcripts"
+    ]
+  },
+  {
+    "name": "smoke_gen0_coalitions_mmlupro",
+    "args": [
+      "--task", "mmlu_pro", "--n", "8", "--seed", "42", "--mode", "coalitions", "--rounds", "1",
+      "--load-adapters",
+      "critic=/gcs/evo-swarm-lora-research-501308/experiments/run001/training/model/adapters/persona_a",
+      "pragmatist=/gcs/evo-swarm-lora-research-501308/experiments/run001/training/model/adapters/persona_b",
+      "explorer=/gcs/evo-swarm-lora-research-501308/experiments/run001/training/model/adapters/persona_c",
+      "--agents", "critic=critic", "pragmatist=pragmatist", "explorer=explorer"
+    ]
+  }
+]

@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import threading
 import time
 from pathlib import Path
 
@@ -30,6 +31,7 @@ if str(ROOT) not in sys.path:
 from src.agents.personalities import PERSONAS, ROLE_PERSONAS
 from src.evalx.client import ChatClient, GenerationConfig
 from src.evalx.debate import AgentSpec, majority_vote, run_debate, solo_answer
+from src.evalx.parallel import parallel_map
 from src.evalx.shapley import all_coalitions, shapley_values
 from src.evalx.tasks import load_task, score_predictions
 
@@ -39,6 +41,7 @@ class ProgressCache:
 
     def __init__(self, path: Path | None):
         self._path = path
+        self._lock = threading.Lock()
         self._answers: dict[str, str | None] = {}
         if path is not None and path.exists():
             for line in path.read_text(encoding="utf-8").splitlines():
@@ -56,10 +59,13 @@ class ProgressCache:
         return self._answers.get(item_id)
 
     def put(self, item_id: str, answer) -> None:
-        self._answers[item_id] = answer
-        if self._path is not None:
-            with self._path.open("a", encoding="utf-8") as handle:
-                handle.write(json.dumps({"item_id": item_id, "answer": answer}, ensure_ascii=False) + "\n")
+        with self._lock:
+            self._answers[item_id] = answer
+            if self._path is not None:
+                with self._path.open("a", encoding="utf-8") as handle:
+                    handle.write(
+                        json.dumps({"item_id": item_id, "answer": answer}, ensure_ascii=False) + "\n"
+                    )
 
 
 def _cache_for(progress_dir: Path | None, label: str) -> ProgressCache:
@@ -77,32 +83,32 @@ def parse_agents(raw_agents: list[str], persona_map: dict[str, str]) -> list[Age
     return agents
 
 
-def evaluate_solo(client, agents, task, config, progress_dir=None) -> dict:
+def evaluate_solo(client, agents, task, config, progress_dir=None, workers=16) -> dict:
     results = {}
     for agent in agents:
         cache = _cache_for(progress_dir, f"solo_{agent.name}")
-        predictions = {}
-        for item in task.items:
-            if item.item_id in cache:
-                predictions[item.item_id] = cache.get(item.item_id)
-                continue
+        pending = [item for item in task.items if item.item_id not in cache]
+
+        def process(item, agent=agent, cache=cache):
             result = solo_answer(client, agent, item, task.answer_type, config)
-            predictions[item.item_id] = result["answer"]
             cache.put(item.item_id, result["answer"])
+
+        parallel_map(pending, process, max_workers=workers)
+        predictions = {item.item_id: cache.get(item.item_id) for item in task.items}
         results[agent.name] = score_predictions(task.items, predictions, task.answer_type)
         print(f"[info] solo {agent.name}: acc={results[agent.name]['accuracy']:.4f}")
     return results
 
 
-def evaluate_self_consistency(client, agent, task, config, k, tie_break_seed, progress_dir=None) -> dict:
+def evaluate_self_consistency(
+    client, agent, task, config, k, tie_break_seed, progress_dir=None, workers=16
+) -> dict:
     from dataclasses import replace
 
     cache = _cache_for(progress_dir, f"sc{k}_{agent.name}")
-    predictions = {}
-    for item in task.items:
-        if item.item_id in cache:
-            predictions[item.item_id] = cache.get(item.item_id)
-            continue
+    pending = [item for item in task.items if item.item_id not in cache]
+
+    def process(item):
         answers = []
         for sample_idx in range(k):
             # 同一 seed だと同一サンプルが k 回返るため、サンプルごとに seed をずらす
@@ -111,34 +117,38 @@ def evaluate_self_consistency(client, agent, task, config, k, tie_break_seed, pr
             )
             result = solo_answer(client, agent, item, task.answer_type, sample_config)
             answers.append(result["answer"])
-        vote = majority_vote(answers, tie_break_seed)
-        predictions[item.item_id] = vote
-        cache.put(item.item_id, vote)
+        cache.put(item.item_id, majority_vote(answers, tie_break_seed))
+
+    parallel_map(pending, process, max_workers=workers)
+    predictions = {item.item_id: cache.get(item.item_id) for item in task.items}
     return score_predictions(task.items, predictions, task.answer_type)
 
 
 def evaluate_team(
-    client, agents, task, config, rounds, tie_break_seed, transcript_path=None, progress_dir=None
+    client, agents, task, config, rounds, tie_break_seed, transcript_path=None, progress_dir=None,
+    workers=16,
 ) -> dict:
     label = "team_" + "_".join(a.name for a in agents)
     cache = _cache_for(progress_dir, label)
-    predictions = {}
+    pending = [item for item in task.items if item.item_id not in cache]
     transcripts = []
-    for item in task.items:
-        if item.item_id in cache:
-            predictions[item.item_id] = cache.get(item.item_id)
-            continue
+    transcripts_lock = threading.Lock()
+
+    def process(item):
         record = run_debate(client, agents, item, task.answer_type, rounds, config, tie_break_seed)
-        predictions[item.item_id] = record.majority_answer
         cache.put(item.item_id, record.majority_answer)
-        transcripts.append(
-            {
-                "item_id": item.item_id,
-                "rounds": record.rounds,
-                "final_answers": record.final_answers,
-                "majority_answer": record.majority_answer,
-            }
-        )
+        with transcripts_lock:
+            transcripts.append(
+                {
+                    "item_id": item.item_id,
+                    "rounds": record.rounds,
+                    "final_answers": record.final_answers,
+                    "majority_answer": record.majority_answer,
+                }
+            )
+
+    parallel_map(pending, process, max_workers=workers)
+    predictions = {item.item_id: cache.get(item.item_id) for item in task.items}
     if transcript_path and transcripts:
         path = Path(transcript_path)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -172,6 +182,7 @@ def main() -> None:
     parser.add_argument("--sc-k", type=int, default=9, help="Self-Consistency のサンプル数")
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--max-tokens", type=int, default=512)
+    parser.add_argument("--workers", type=int, default=16, help="問題単位の並列リクエスト数")
     parser.add_argument("--out", required=True)
     parser.add_argument("--save-transcripts", action="store_true")
     parser.add_argument(
@@ -213,19 +224,20 @@ def main() -> None:
     progress_dir = Path(args.progress_dir) if args.progress_dir else None
 
     if args.mode == "solo":
-        payload["solo"] = evaluate_solo(client, agents, task, config, progress_dir)
+        payload["solo"] = evaluate_solo(client, agents, task, config, progress_dir, args.workers)
     elif args.mode == "sc":
         payload["sc_k"] = args.sc_k
         payload["sc"] = {}
         for agent in agents:
             payload["sc"][agent.name] = evaluate_self_consistency(
-                client, agent, task, config, args.sc_k, args.seed, progress_dir
+                client, agent, task, config, args.sc_k, args.seed, progress_dir, args.workers
             )
             print(f"[info] sc@{args.sc_k} {agent.name}: acc={payload['sc'][agent.name]['accuracy']:.4f}")
     elif args.mode == "team":
         transcript_path = out_dir / "transcripts_team.json" if args.save_transcripts else None
         payload["team"] = evaluate_team(
-            client, agents, task, config, args.rounds, args.seed, transcript_path, progress_dir
+            client, agents, task, config, args.rounds, args.seed, transcript_path, progress_dir,
+            args.workers,
         )
         print(f"[info] team: acc={payload['team']['accuracy']:.4f}")
     else:
@@ -237,13 +249,16 @@ def main() -> None:
             members = [agent_by_name[n] for n in coalition]
             key = "+".join(coalition)
             if len(members) == 1:
-                result = evaluate_solo(client, members, task, config, progress_dir)[members[0].name]
+                result = evaluate_solo(client, members, task, config, progress_dir, args.workers)[
+                    members[0].name
+                ]
             else:
                 transcript_path = (
                     out_dir / f"transcripts_{key}.json" if args.save_transcripts else None
                 )
                 result = evaluate_team(
-                    client, members, task, config, args.rounds, args.seed, transcript_path, progress_dir
+                    client, members, task, config, args.rounds, args.seed, transcript_path,
+                    progress_dir, args.workers,
                 )
             coalition_results[key] = result
             print(f"[info] coalition {key}: acc={result['accuracy']:.4f}")
