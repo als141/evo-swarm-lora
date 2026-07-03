@@ -133,6 +133,25 @@ uv run python scripts/ping_vllm_persona.py --persona persona_a
 
 ## 研究ログ（随時追記・新しいものを上に）
 
+### 2026-07-03: 研究設計の全面確定と実験基盤の再構築（docs/research_design.md 参照）
+- **旧評価系の廃止**: `evaluate_debate.py` の fitness（投票スコア=confidence 0.6固定+引用数+回答文字数）は学術的に無効と判断。2025-11-01 の gen0→gen1「改善」は回答長の増加が主因であり、以後この結果は主張に使わない。
+- **適応度の再設計（理論的根拠つき）**: fitness = 代表チーム文脈での**厳密Shapley値**（3エージェント=全7連合を実測、近似不要）× fitness sharing（Goldberg & Richardson 1987、乗法ペナルティ）。多様性の加重「加算」はQD文献（MAP-Elites）とアンサンブル統一理論（Wood+ JMLR23）の双方が批判するため不採用。理論的骨格は協調的共進化（Potter & De Jong 1994）+ PBT。
+- **ベンチマーク変更**: GSM8KはQwen3-4Bで飽和(80-92%)→スモーク専用。主要評価は **MMLU-Pro(500問)/MATH-500 L4-5/SuperGPQA(300問)**。GPQA-DiamondはHFゲート付きで不採用。**SC@9（計算量マッチ）ベースラインが査読上必須**（Smit+ ICML24）。統計は Miller(2411.00640) 準拠: paired t + bootstrap + McNemar + Holm補正、K=3 seed。
+- **LoRA交叉の理論的修正**: 従来の A/B 行列別補間は交差項 B1A2+B2A1 が混入（KnOTS 2410.19735）→ **ΔW空間ブレンド+ランダム化SVD再分解**を主方式に実装（`delta_blend_lora`）。naive方式はアブレーションA3として保持。テストで最良rank-r近似との一致を検証済み。
+- **新実装**: `src/evalx/`（tasks/client/debate/shapley/stats）、`src/evolve/loop.py`（協調的共進化）、`scripts/run_eval.py`（solo/team/coalitions/scモード）、`scripts/run_evolution.py`。テスト41件 `tests/` に整備。`train_lora_persona.py` はT4向けfp16フォールバック+use_cache競合修正。
+- **クラウド基盤**: Artifact Registry `evo-swarm`(us-central1) 作成。Vertex AIクォータ実測: **Spot A100×8 (us-central1) / Spot T4×1**。T4はvLLM Multi-LoRA非対応(CC8.0要件)のため**評価/進化はA100、学習のみT4**。イメージ2種（trainer / eval=vLLM v0.8.5ベース）を `cloud/cloudbuild.yaml` でビルド。ジョブ投入は `scripts/cloud/submit_job.sh`。
+- **novelty check結論**: 「議論のチームレベル適応度×LoRA重み集団の世代交代進化」の交点は未報告（2026-07-03時点）。要引用の近接研究: GENOME(2503.01155)/PopuLoRA(2605.16727)/MAPoRL(2502.18439)/Model Swarms(2410.11163)/EvoMAS(2602.06511)。執筆直前に再検索すること。
+
+### 2026-07-03: ペルソナB SFTデータセット生成（60例）
+- `data/sft_persona_b.jsonl` を全面書き換え（旧2例を破棄）。ペルソナB=実務的意思決定者（結論先行・概算検証・コスト/実現可能性重視）。
+- 内訳: 英語算数文章題20（GSM8K風、末尾 `ANSWER: <数値>`）/ 英語4択10（`ANSWER: <A-D>`）/ 日本語意思決定タスク15 / 日本語議論応答10 / 英語フェルミ推定5（`ANSWER: <数値>`）。全例で system prompt 固定。
+- 検証済み: 厳密なJSONL 60行・3メッセージ構造・算数/4択/フェルミの全答を独立再計算で一致確認・userプロンプト重複なし・英語応答は約100-360語。生成/検証スクリプトはセッションscratchpadで実行（リポジトリには含めず）。
+
+### 2026-07-03: MAD・マルチエージェント自己改善の文献調査（詳細レポートはセッション出力参照）
+- **最重要関連研究**: (1) Subramaniam+ "Multiagent Finetuning" (ICLR2025, arXiv:2501.05707) = debate由来データで生成/批評エージェントを分化SFT、Phi-3(4B)でMATH 58.8→66.0%(5反復)。(2) Feng+ "Model Swarms" (ICML2025, arXiv:2410.11163) = LoRAエキスパート群をPSOで重み空間探索(+最大21%)。(3) PopuLoRA (arXiv:2605.16727, 2026-05) = LoRA個体群の突然変異・交叉による共進化self-play。→「SFT自己改善 vs 重み空間進化」という差別化はModel Swarms/PopuLoRAの存在で単独では成立しない。**チームレベル適応度（討論での協調・新規性）を目的関数にした進化**が本研究の差別化点になる。
+- **警告（4Bクラスdebate）**: 7-8B級の同質debateは単体CoT/Self-Consistencyに勝てない・むしろ悪化する報告多数（arXiv:2502.08788, 2509.05396, 2605.00914）。原因は追従(sycophancy)・合意崩壊。対策: 多様な初期解＋confidence条件付き更新（arXiv:2601.19921）、投票中心の集約（arXiv:2508.17536, 2502.19130: 推論タスクは投票が+13.2%優位、議論ラウンド増は逆効果）。→ run_debate_local.py は「多数決＋confidence重み付け、ラウンド数少なめ」が文献的に正当。
+- 小型モデルでもdebateトレースによるpost-training(MACA, arXiv:2509.15172)でGSM8K +27.6%等の報告あり。「弱いモデルほどdebateの矯正効果が大きい」(MADC: Qwen-3Bで+8.8%)と「弱いモデルが強いモデルを汚染する」(arXiv:2509.05396)が併存 → ペルソナ多様性の設計と集約方式が成否を分ける。
+
 ### 2026-07-03: GCP環境構築と要件調査
 - **環境構築**: 上記「クラウド環境の現状」の通り、プロジェクト選定〜課金リンク〜API有効化〜バケット・予算アラート作成まで完了。研究本体（学習ジョブ）は未実行。
 - **要件調査の結論**: 必要な外部認証は GCP(ADC) のみ。HFトークン不要（Qwen3-4Bはゲートなし）、OpenAI APIキー不要（`openai` パッケージはローカルvLLMへの互換クライアント、`api_key="EMPTY"`）、W&B完全未使用（実験記録は Vertex Experiments + `results/` のJSON）。

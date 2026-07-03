@@ -1,0 +1,19 @@
+# 評価・進化ジョブ用イメージ (Vertex AI Custom Job / Spot A100 想定)
+# vLLM OpenAI 互換サーバ + 本リポジトリの評価/進化ドライバを同梱する。
+# Qwen3-4B-Instruct-2507 の公式推奨 (vLLM >= 0.8.5) に合わせてタグを固定。
+FROM vllm/vllm-openai:v0.8.5
+
+ENV PYTHONUNBUFFERED=1 \
+    HF_HOME=/workspace/.cache/huggingface \
+    PYTHONPATH=/workspace
+
+# ドライバが必要とする軽量依存のみ追加（torch/transformers/openai は同梱済み）
+RUN pip install --no-cache-dir "datasets>=3.0.0" "httpx>=0.27.0"
+
+WORKDIR /workspace
+COPY src ./src
+COPY scripts ./scripts
+COPY cloud/entrypoint_eval.sh ./cloud/entrypoint_eval.sh
+RUN chmod +x ./cloud/entrypoint_eval.sh
+
+ENTRYPOINT ["/workspace/cloud/entrypoint_eval.sh"]

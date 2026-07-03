@@ -5,7 +5,7 @@ import statistics
 import sys
 from pathlib import Path
 from subprocess import CompletedProcess, run
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 ROOT = Path(__file__).resolve().parent.parent
 RUN_DEBATE_SCRIPT = ROOT / "scripts" / "run_debate_local.py"

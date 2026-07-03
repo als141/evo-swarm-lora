@@ -58,16 +58,20 @@ def main():
     device_str = "cuda" if use_cuda else "cpu"
     print(f"[info] Loading base model on {device_str}.")
 
+    # T4 (compute capability 7.5) は bf16 非対応のため fp16 へフォールバックする
+    use_bf16 = use_cuda and torch.cuda.is_bf16_supported()
+    compute_dtype = torch.bfloat16 if use_bf16 else torch.float16
+
     load_kwargs = {"device_map": "auto"}
     if use_cuda:
         quant_cfg = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_quant_type="nf4",
-            bnb_4bit_compute_dtype=torch.bfloat16,
+            bnb_4bit_compute_dtype=compute_dtype,
             bnb_4bit_use_double_quant=True,
         )
         load_kwargs["quantization_config"] = quant_cfg
-        load_kwargs["torch_dtype"] = torch.bfloat16
+        load_kwargs["torch_dtype"] = compute_dtype
     else:
         load_kwargs["device_map"] = None
         load_kwargs["torch_dtype"] = torch.float32
@@ -75,6 +79,8 @@ def main():
     model = AutoModelForCausalLM.from_pretrained(BASE_MODEL, **load_kwargs)
     if not use_cuda:
         model = model.to(torch.device("cpu"))
+    # gradient_checkpointing と use_cache=True は競合するため学習時は無効化する
+    model.config.use_cache = False
 
     dataset = load_sft_dataset(args.data)
     dataset = dataset.map(lambda ex: format_sample(ex, tokenizer), remove_columns=dataset.column_names)
@@ -97,7 +103,8 @@ def main():
         learning_rate=args.lr,
         logging_steps=10,
         save_steps=200,
-        bf16=use_cuda,
+        bf16=use_bf16,
+        fp16=use_cuda and not use_bf16,
         optim="paged_adamw_32bit" if use_cuda else "adamw_torch",
         gradient_checkpointing=True,
         packing=False,

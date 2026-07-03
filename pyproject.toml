@@ -43,3 +43,8 @@ eval = [
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+
+[tool.ruff.lint.per-file-ignores]
+# scripts/tests は sys.path 挿入後に src を import するため E402 を許容
+"scripts/*" = ["E402"]
+"tests/*" = ["E402"]

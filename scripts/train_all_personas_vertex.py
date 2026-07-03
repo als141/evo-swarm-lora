@@ -352,7 +352,7 @@ def main() -> None:
         target_lock.write_bytes(uv_lock.read_bytes())
         print(f"[info] Persisted dependency lockfile to {target_lock}")
 
-    uploaded_uri = upload_directory_to_gcs(model_root, upload_target)
+    upload_directory_to_gcs(model_root, upload_target)
 
     if run_context is not None:
         run_context.log_metrics({"total_training_seconds": sum(p["duration_seconds"] for p in personas_metadata)})

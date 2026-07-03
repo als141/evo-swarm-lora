@@ -1,0 +1,17 @@
+# Cloud Build へアップロードする build context から除外するもの
+.git/
+.venv/
+.uv-cache/
+.ruff_cache/
+.pytest_cache/
+__pycache__/
+**/__pycache__/
+*.pyc
+adapters/
+out/
+results/
+docs/
+prompts/
+tests/
+memory/
+uv.lock
