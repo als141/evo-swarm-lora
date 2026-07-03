@@ -1,13 +1,16 @@
-# Codex CLI Agent Briefing
+# Agent Briefing (Codex CLI / Claude Code 共通)
 
-このドキュメントは Codex CLI で本リポジトリを操作するエージェント向けの実務ガイドです。全コマンドの実行が許可されているため、タスクを完遂するまで必要な操作を遠慮なく行ってください。
+このドキュメントは本リポジトリを操作するエージェント向けの実務ガイドです。全コマンドの実行が許可されているため、タスクを完遂するまで必要な操作を遠慮なく行ってください。
+
+> **運用ルール(必須)**: 新しい発見・気付き・修正・変更・参照ソースが生じたら、その都度このファイル末尾の「研究ログ」セクションに日付付きで追記すること。環境設定(GCPプロジェクト・バケット・クォータ等)が変わった場合は「クラウド環境の現状」セクションも更新すること。
 
 ---
 
 ## プロジェクト概観
 - テーマ: Qwen3-4B × LoRA × 3 エージェント協調 → 進化的最適化
+- ベースモデル: `Qwen/Qwen3-4B-Instruct-2507`（ゲートなし・Apache-2.0。**HFトークン不要**）
 - 依存管理: uv（Python 3.12, `.venv` 自動生成）
-- GPU 要件: CUDA 12.4, A6000 1 枚を想定
+- GPU 要件: CUDA 12.4, A6000 1 枚を想定（※ドキュメント上の想定。**実際のローカルGPUは GTX 1660 6GB のみ**のため、学習・vLLMサービングはクラウド前提。下記「クラウド環境の現状」参照）
 - 主なロール:
   - `scripts/train_lora_persona.py` – QLoRA 学習
   - `scripts/run_debate_local.py` – 3 人格ディベート
@@ -96,6 +99,51 @@ uv run python scripts/ping_vllm_persona.py --persona persona_a
 - `prompts/codex/02_multilora_vllm.md` – vLLM Multi-LoRA
 - `prompts/codex/03_evolutionary_loop.md` – 進化ループ
 - `prompts/codex/04_langgraph_integration.md` – LangGraph 移行
+
+---
+
+## クラウド環境の現状（2026-07-03 構築）
+
+計算資源は GCP で提供。**予算上限 $300（課金アカウントはJPY建てのため ¥45,000 で予算アラート設定済み: 50/80/95/100% で通知）**。
+
+| 項目 | 値 |
+|---|---|
+| GCPアカウント | gaku.masuda@starup01.jp |
+| gcloud 構成 | `evo-swarm`（`gcloud config configurations activate evo-swarm` で切替） |
+| プロジェクト | `research-501308`（課金アカウント 017D39-1B6DE0-7AD4AB にリンク済み） |
+| リージョン | asia-northeast1（既定） |
+| GCSバケット | `gs://evo-swarm-lora-research-501308`（asia-northeast1、成果物・LoRAアダプタ保存先） |
+| 認証 | ユーザー認証 + ADC 設定済み（コードは `aiplatform.init()` / `storage.Client()` を引数なしで呼ぶADC前提） |
+| 有効化済みAPI | aiplatform / storage / artifactregistry / compute / cloudbuild / billingbudgets |
+
+**GPUクォータの実態（2026-07-03 時点）— 計画を左右する重要事実**:
+- Compute Engine の GPU は `GPUS_ALL_REGIONS=0` → **GPU VM は立てられない**（増枠申請 or アカウントアップグレードが必要）
+- Vertex AI Custom Training は **preemptible（Spot）のみ利用可**:
+  - Spot **T4 ×1** — asia-northeast1 / us-central1 / us-west1（安価 ~$0.1/h。**bf16非対応なのでfp16を使う**こと）
+  - Spot **A100 ×8** — us-central1（bf16可・高速）
+  - Spot V100/P100 ×1 — asia-east1 / us-central1 / us-west1
+  - オンデマンド（非Spot）GPU は全て 0
+- 結論: 学習・評価は **Vertex AI の Spot ジョブ** として実行する。Spotはプリエンプトされうるため、チェックポイント保存と再開を前提に設計する。
+
+環境変数（ハードコードなし。Vertex実行時は `AIP_*` が自動注入される）:
+- `CLOUD_ML_PROJECT_ID=research-501308` / `CLOUD_ML_REGION=asia-northeast1`
+- `AIP_MODEL_DIR` / `AIP_CHECKPOINT_DIR` / `AIP_TENSORBOARD_LOG_DIR`（gs:// URI）
+
+---
+
+## 研究ログ（随時追記・新しいものを上に）
+
+### 2026-07-03: GCP環境構築と要件調査
+- **環境構築**: 上記「クラウド環境の現状」の通り、プロジェクト選定〜課金リンク〜API有効化〜バケット・予算アラート作成まで完了。研究本体（学習ジョブ）は未実行。
+- **要件調査の結論**: 必要な外部認証は GCP(ADC) のみ。HFトークン不要（Qwen3-4Bはゲートなし）、OpenAI APIキー不要（`openai` パッケージはローカルvLLMへの互換クライアント、`api_key="EMPTY"`）、W&B完全未使用（実験記録は Vertex Experiments + `results/` のJSON）。
+- **既知のギャップ（未修正）**:
+  1. `google-cloud-storage` が `pyproject.toml` に未明記（`google-cloud-aiplatform` の推移的依存頼み）
+  2. `scripts/evaluate_debate.py` と `data/debate_topics.json` が未コミット
+  3. `.env.example` が存在しない
+  4. README/AGENTS.md に Vertex 手順の記載がなかった（本更新で一部解消）
+  5. README等の「PyTorch 2.9 / Transformers 4.51」表記と pyproject の `torch>=2.6.0` / Dockerfile の `torch==2.6.0+cu124` が不整合
+  6. `train_lora_persona.py` の `gradient_checkpointing=True` が `use_cache=True` と競合しうる（実行時警告の可能性）
+- **未コミットの変更内容**: `train_all_personas_vertex.py` にGCSアップロード機能追加、`train_lora_persona.py` にBitsAndBytes 4bit・CPUフォールバック・新TRL API対応、`run_debate_local.py` に投票のJSONパース+confidence処理、Dockerfile に venv PATH 追加。
 
 ---
 
