@@ -1,11 +1,11 @@
 import argparse
 import os
 
-from datasets import load_dataset
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
-from peft import LoraConfig, get_peft_model
-from trl import SFTConfig, SFTTrainer
 import torch
+from datasets import load_dataset
+from peft import LoraConfig, get_peft_model
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from trl import SFTConfig, SFTTrainer
 
 BASE_MODEL = "Qwen/Qwen3-4B-Instruct-2507"
 
@@ -54,18 +54,27 @@ def parse_args() -> argparse.Namespace:
 def main():
     args = parse_args()
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL, trust_remote_code=True)
-    quant_cfg = BitsAndBytesConfig(
-        load_in_4bit=True,
-        bnb_4bit_quant_type="nf4",
-        bnb_4bit_compute_dtype=torch.bfloat16,
-        bnb_4bit_use_double_quant=True,
-    )
-    model = AutoModelForCausalLM.from_pretrained(
-        BASE_MODEL,
-        torch_dtype=torch.bfloat16,
-        quantization_config=quant_cfg,
-        device_map="auto",
-    )
+    use_cuda = torch.cuda.is_available()
+    device_str = "cuda" if use_cuda else "cpu"
+    print(f"[info] Loading base model on {device_str}.")
+
+    load_kwargs = {"device_map": "auto"}
+    if use_cuda:
+        quant_cfg = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16,
+            bnb_4bit_use_double_quant=True,
+        )
+        load_kwargs["quantization_config"] = quant_cfg
+        load_kwargs["torch_dtype"] = torch.bfloat16
+    else:
+        load_kwargs["device_map"] = None
+        load_kwargs["torch_dtype"] = torch.float32
+
+    model = AutoModelForCausalLM.from_pretrained(BASE_MODEL, **load_kwargs)
+    if not use_cuda:
+        model = model.to(torch.device("cpu"))
 
     dataset = load_sft_dataset(args.data)
     dataset = dataset.map(lambda ex: format_sample(ex, tokenizer), remove_columns=dataset.column_names)
@@ -88,8 +97,8 @@ def main():
         learning_rate=args.lr,
         logging_steps=10,
         save_steps=200,
-        bf16=True,
-        optim="paged_adamw_32bit",
+        bf16=use_cuda,
+        optim="paged_adamw_32bit" if use_cuda else "adamw_torch",
         gradient_checkpointing=True,
         packing=False,
         dataset_text_field="text",

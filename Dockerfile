@@ -9,7 +9,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     TRANSFORMERS_CACHE=/workspace/.cache/huggingface
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git curl wget ca-certificates build-essential python3 python3-venv python3-pip \
+    git curl wget ca-certificates build-essential python3 python3-venv python3-pip python-is-python3 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -21,6 +21,7 @@ WORKDIR /workspace
 COPY pyproject.toml README.md ./
 
 RUN uv venv -p 3.12 && . .venv/bin/activate && uv sync --no-dev
+ENV PATH="/workspace/.venv/bin:${PATH}"
 
 RUN . .venv/bin/activate && pip install --no-cache-dir \
     --index-url https://download.pytorch.org/whl/cu124 \

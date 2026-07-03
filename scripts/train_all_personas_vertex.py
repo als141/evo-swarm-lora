@@ -7,10 +7,11 @@ import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple
 
 import numpy as np
 import torch
+from google.cloud import storage
 
 
 DEFAULT_PERSONAS = ["persona_a", "persona_b", "persona_c"]
@@ -85,6 +86,14 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Free-form notes stored in metadata.json for traceability (e.g., experiment rationale).",
     )
+    parser.add_argument(
+        "--upload-uri",
+        default=os.environ.get("AIP_MODEL_DIR"),
+        help=(
+            "Optional gs:// destination to upload the aggregated artifacts after training. "
+            "Defaults to the value of AIP_MODEL_DIR when available. Set to an empty string to skip uploading."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -158,6 +167,42 @@ def _load_package_versions() -> Dict[str, str]:
     except Exception:
         versions["bitsandbytes"] = "unavailable"
     return versions
+
+
+def _split_gcs_uri(uri: str) -> Tuple[str, str]:
+    path = uri[5:]
+    if "/" in path:
+        bucket, prefix = path.split("/", 1)
+    else:
+        bucket, prefix = path, ""
+    return bucket, prefix.rstrip("/")
+
+
+def upload_directory_to_gcs(source_dir: Path, gcs_uri: str) -> Optional[str]:
+    if not gcs_uri:
+        return None
+    if not gcs_uri.startswith("gs://"):
+        print(f"[warn] Skipping upload; destination '{gcs_uri}' is not a gs:// URI.")
+        return None
+    if not source_dir.exists():
+        print(f"[warn] Skipping upload; source directory '{source_dir}' was not found.")
+        return None
+
+    bucket_name, prefix = _split_gcs_uri(gcs_uri)
+    client = storage.Client()
+    bucket = client.bucket(bucket_name)
+
+    print(f"[info] Uploading artifacts from {source_dir} to {gcs_uri}")
+    for file_path in source_dir.rglob("*"):
+        if not file_path.is_file():
+            continue
+        rel_path = file_path.relative_to(source_dir).as_posix()
+        object_name = f"{prefix}/{rel_path}" if prefix else rel_path
+        blob = bucket.blob(object_name)
+        blob.upload_from_filename(str(file_path))
+    dest = f"gs://{bucket_name}/{prefix}" if prefix else f"gs://{bucket_name}"
+    print(f"[info] Upload complete: {dest}")
+    return dest
 
 
 def maybe_start_experiment(args: argparse.Namespace):
@@ -269,6 +314,8 @@ def main() -> None:
         if run_context is not None:
             run_context.log_metrics({f"{persona}_train_seconds": duration})
 
+    upload_target = args.upload_uri.strip() if args.upload_uri else ""
+
     metadata = {
         "created_at": datetime.now(timezone.utc).isoformat(),
         "seed": args.seed,
@@ -291,6 +338,8 @@ def main() -> None:
             "grad_accum": args.grad_accum,
         },
     }
+    if upload_target:
+        metadata["paths"]["uploaded_uri"] = upload_target
 
     metadata_path = configs_root / "metadata.json"
     with open(metadata_path, "w", encoding="utf-8") as handle:
@@ -302,6 +351,8 @@ def main() -> None:
         target_lock = configs_root / "uv.lock"
         target_lock.write_bytes(uv_lock.read_bytes())
         print(f"[info] Persisted dependency lockfile to {target_lock}")
+
+    uploaded_uri = upload_directory_to_gcs(model_root, upload_target)
 
     if run_context is not None:
         run_context.log_metrics({"total_training_seconds": sum(p["duration_seconds"] for p in personas_metadata)})

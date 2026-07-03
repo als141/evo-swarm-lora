@@ -1,0 +1,14 @@
+{
+  "gen1_mutated": {
+    "avg_vote_score": 0.7875,
+    "avg_unique_citations": 3,
+    "avg_final_answer_length": 117,
+    "fitness": 2.2575
+  },
+  "gen0_personas": {
+    "avg_vote_score": 0.7366071428571428,
+    "avg_unique_citations": 3,
+    "avg_final_answer_length": 79.5,
+    "fitness": 1.831607142857143
+  }
+}

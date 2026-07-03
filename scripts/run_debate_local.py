@@ -68,6 +68,15 @@ def extract_vote(agent_idx: int, utterance: str) -> dict:
             confidence = float(confidence_match.group(1))
 
     confidence = max(0.0, min(1.0, confidence))
+    answer = answer.strip()
+    if answer in {"", "-", "→"}:
+        lines = [line.strip() for line in utterance.splitlines() if line.strip()]
+        for line in lines:
+            if line.startswith(("要約", "結論", "回答")) and ":" in line:
+                answer = line.split(":", 1)[1].strip()
+                break
+        if (not answer) and lines:
+            answer = lines[-1]
     return {"agent": f"persona_{agent_idx}", "answer": answer or "", "confidence": confidence}
 
 
