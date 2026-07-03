@@ -1,0 +1,1192 @@
+{
+  "config": {
+    "base_url": "http://localhost:8000/v1",
+    "gen0": [
+      "critic=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/training/model/adapters/persona_a",
+      "pragmatist=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/training/model/adapters/persona_b",
+      "explorer=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/training/model/adapters/persona_c"
+    ],
+    "generations": 6,
+    "fitness_task": "mmlu_pro",
+    "fitness_n": 100,
+    "fitness_seed": 777,
+    "rounds": 1,
+    "fitness_mode": "shapley",
+    "no_sharing": false,
+    "crossover": "delta",
+    "sharing_sigma": 0.3,
+    "mut_ratio": 0.3,
+    "mut_std": 0.02,
+    "evolution_seed": 1234,
+    "temperature": 0.7,
+    "max_tokens": 512,
+    "workers": 32,
+    "out_root": "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/adapters",
+    "log": "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json"
+  },
+  "fitness_items": [
+    "mmlupro-test-4232",
+    "mmlupro-test-9822",
+    "mmlupro-test-3332",
+    "mmlupro-test-5602",
+    "mmlupro-test-7795",
+    "mmlupro-test-9774",
+    "mmlupro-test-12251",
+    "mmlupro-test-10550",
+    "mmlupro-test-10589",
+    "mmlupro-test-1463",
+    "mmlupro-test-3570",
+    "mmlupro-test-3669",
+    "mmlupro-test-10290",
+    "mmlupro-test-8667",
+    "mmlupro-test-8212",
+    "mmlupro-test-127",
+    "mmlupro-test-11915",
+    "mmlupro-test-8766",
+    "mmlupro-test-9321",
+    "mmlupro-test-9991",
+    "mmlupro-test-11077",
+    "mmlupro-test-9418",
+    "mmlupro-test-8716",
+    "mmlupro-test-4029",
+    "mmlupro-test-5245",
+    "mmlupro-test-8729",
+    "mmlupro-test-2684",
+    "mmlupro-test-8177",
+    "mmlupro-test-1895",
+    "mmlupro-test-9214",
+    "mmlupro-test-4962",
+    "mmlupro-test-9736",
+    "mmlupro-test-1147",
+    "mmlupro-test-9023",
+    "mmlupro-test-6286",
+    "mmlupro-test-8004",
+    "mmlupro-test-6445",
+    "mmlupro-test-12161",
+    "mmlupro-test-6603",
+    "mmlupro-test-5968",
+    "mmlupro-test-5292",
+    "mmlupro-test-2421",
+    "mmlupro-test-5729",
+    "mmlupro-test-10719",
+    "mmlupro-test-8938",
+    "mmlupro-test-4835",
+    "mmlupro-test-2904",
+    "mmlupro-test-3827",
+    "mmlupro-test-6794",
+    "mmlupro-test-3784",
+    "mmlupro-test-12000",
+    "mmlupro-test-3149",
+    "mmlupro-test-9066",
+    "mmlupro-test-11372",
+    "mmlupro-test-7162",
+    "mmlupro-test-4018",
+    "mmlupro-test-10847",
+    "mmlupro-test-375",
+    "mmlupro-test-979",
+    "mmlupro-test-7616",
+    "mmlupro-test-9861",
+    "mmlupro-test-4287",
+    "mmlupro-test-6433",
+    "mmlupro-test-10487",
+    "mmlupro-test-4496",
+    "mmlupro-test-5432",
+    "mmlupro-test-8393",
+    "mmlupro-test-10530",
+    "mmlupro-test-7080",
+    "mmlupro-test-4353",
+    "mmlupro-test-9907",
+    "mmlupro-test-3044",
+    "mmlupro-test-4130",
+    "mmlupro-test-2135",
+    "mmlupro-test-7483",
+    "mmlupro-test-12241",
+    "mmlupro-test-11821",
+    "mmlupro-test-11129",
+    "mmlupro-test-4538",
+    "mmlupro-test-5235",
+    "mmlupro-test-11314",
+    "mmlupro-test-4169",
+    "mmlupro-test-6179",
+    "mmlupro-test-7695",
+    "mmlupro-test-4643",
+    "mmlupro-test-996",
+    "mmlupro-test-3032",
+    "mmlupro-test-1415",
+    "mmlupro-test-1919",
+    "mmlupro-test-5156",
+    "mmlupro-test-12034",
+    "mmlupro-test-2846",
+    "mmlupro-test-11047",
+    "mmlupro-test-7860",
+    "mmlupro-test-7098",
+    "mmlupro-test-7262",
+    "mmlupro-test-1912",
+    "mmlupro-test-6551",
+    "mmlupro-test-470",
+    "mmlupro-test-5413"
+  ],
+  "generations": [
+    {
+      "generation": 0,
+      "roles": {
+        "critic": {
+          "candidates": {
+            "gen0_critic_base": {
+              "shapley": 0.17833333333333334,
+              "solo_accuracy": 0.53,
+              "team_accuracy": 0.56,
+              "coalition_accuracy": {
+                "gen0_critic_base": 0.53,
+                "gen0_explorer_base": 0.54,
+                "gen0_pragmatist_base": 0.56,
+                "gen0_critic_base+gen0_explorer_base": 0.54,
+                "gen0_critic_base+gen0_pragmatist_base": 0.51,
+                "gen0_explorer_base+gen0_pragmatist_base": 0.53,
+                "gen0_critic_base+gen0_explorer_base+gen0_pragmatist_base": 0.56
+              },
+              "team_members": [
+                "gen0_critic_base",
+                "gen0_explorer_base",
+                "gen0_pragmatist_base"
+              ],
+              "raw_fitness": 0.17833333333333334,
+              "sharing_distances": [
+                0.28
+              ],
+              "sharing_penalty": 0.9375000000000002,
+              "fitness": 0.16718750000000004
+            },
+            "gen0_critic_mutant": {
+              "shapley": 0.1583333333333333,
+              "solo_accuracy": 0.53,
+              "team_accuracy": 0.54,
+              "coalition_accuracy": {
+                "gen0_critic_mutant": 0.53,
+                "gen0_explorer_base": 0.54,
+                "gen0_pragmatist_base": 0.56,
+                "gen0_critic_mutant+gen0_explorer_base": 0.47,
+                "gen0_critic_mutant+gen0_pragmatist_base": 0.5,
+                "gen0_explorer_base+gen0_pragmatist_base": 0.53,
+                "gen0_critic_mutant+gen0_explorer_base+gen0_pragmatist_base": 0.54
+              },
+              "team_members": [
+                "gen0_critic_mutant",
+                "gen0_explorer_base",
+                "gen0_pragmatist_base"
+              ],
+              "raw_fitness": 0.1583333333333333,
+              "sharing_distances": [
+                0.28
+              ],
+              "sharing_penalty": 0.9375000000000002,
+              "fitness": 0.1484375
+            }
+          },
+          "selected": "gen0_critic_base"
+        },
+        "explorer": {
+          "candidates": {
+            "gen0_explorer_base": {
+              "shapley": 0.19333333333333336,
+              "solo_accuracy": 0.54,
+              "team_accuracy": 0.56,
+              "coalition_accuracy": {
+                "gen0_explorer_base": 0.54,
+                "gen0_critic_base": 0.53,
+                "gen0_pragmatist_base": 0.56,
+                "gen0_critic_base+gen0_explorer_base": 0.54,
+                "gen0_explorer_base+gen0_pragmatist_base": 0.53,
+                "gen0_critic_base+gen0_pragmatist_base": 0.51,
+                "gen0_critic_base+gen0_explorer_base+gen0_pragmatist_base": 0.56
+              },
+              "team_members": [
+                "gen0_explorer_base",
+                "gen0_critic_base",
+                "gen0_pragmatist_base"
+              ],
+              "raw_fitness": 0.19333333333333336,
+              "sharing_distances": [
+                0.36
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.19333333333333336
+            },
+            "gen0_explorer_mutant": {
+              "shapley": 0.18666666666666662,
+              "solo_accuracy": 0.51,
+              "team_accuracy": 0.57,
+              "coalition_accuracy": {
+                "gen0_explorer_mutant": 0.51,
+                "gen0_critic_base": 0.53,
+                "gen0_pragmatist_base": 0.56,
+                "gen0_critic_base+gen0_explorer_mutant": 0.49,
+                "gen0_explorer_mutant+gen0_pragmatist_base": 0.58,
+                "gen0_critic_base+gen0_pragmatist_base": 0.51,
+                "gen0_critic_base+gen0_explorer_mutant+gen0_pragmatist_base": 0.57
+              },
+              "team_members": [
+                "gen0_explorer_mutant",
+                "gen0_critic_base",
+                "gen0_pragmatist_base"
+              ],
+              "raw_fitness": 0.18666666666666662,
+              "sharing_distances": [
+                0.36
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.18666666666666662
+            }
+          },
+          "selected": "gen0_explorer_base"
+        },
+        "pragmatist": {
+          "candidates": {
+            "gen0_pragmatist_base": {
+              "shapley": 0.18833333333333335,
+              "solo_accuracy": 0.56,
+              "team_accuracy": 0.56,
+              "coalition_accuracy": {
+                "gen0_pragmatist_base": 0.56,
+                "gen0_critic_base": 0.53,
+                "gen0_explorer_base": 0.54,
+                "gen0_critic_base+gen0_pragmatist_base": 0.51,
+                "gen0_explorer_base+gen0_pragmatist_base": 0.53,
+                "gen0_critic_base+gen0_explorer_base": 0.54,
+                "gen0_critic_base+gen0_explorer_base+gen0_pragmatist_base": 0.56
+              },
+              "team_members": [
+                "gen0_pragmatist_base",
+                "gen0_critic_base",
+                "gen0_explorer_base"
+              ],
+              "raw_fitness": 0.18833333333333335,
+              "sharing_distances": [
+                0.4
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.18833333333333335
+            },
+            "gen0_pragmatist_mutant": {
+              "shapley": 0.19999999999999998,
+              "solo_accuracy": 0.49,
+              "team_accuracy": 0.63,
+              "coalition_accuracy": {
+                "gen0_pragmatist_mutant": 0.49,
+                "gen0_critic_base": 0.53,
+                "gen0_explorer_base": 0.54,
+                "gen0_critic_base+gen0_pragmatist_mutant": 0.53,
+                "gen0_explorer_base+gen0_pragmatist_mutant": 0.58,
+                "gen0_critic_base+gen0_explorer_base": 0.54,
+                "gen0_critic_base+gen0_explorer_base+gen0_pragmatist_mutant": 0.63
+              },
+              "team_members": [
+                "gen0_pragmatist_mutant",
+                "gen0_critic_base",
+                "gen0_explorer_base"
+              ],
+              "raw_fitness": 0.19999999999999998,
+              "sharing_distances": [
+                0.4
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.19999999999999998
+            }
+          },
+          "selected": "gen0_pragmatist_mutant"
+        }
+      },
+      "elapsed_seconds": 2053.8540012836456,
+      "representatives": {
+        "critic": "gen0_critic_base",
+        "explorer": "gen0_explorer_base",
+        "pragmatist": "gen0_pragmatist_mutant"
+      }
+    },
+    {
+      "generation": 1,
+      "roles": {
+        "critic": {
+          "candidates": {
+            "gen0_critic_base": {
+              "shapley": 0.21333333333333332,
+              "solo_accuracy": 0.46,
+              "team_accuracy": 0.63,
+              "coalition_accuracy": {
+                "gen0_critic_base": 0.46,
+                "gen0_explorer_base": 0.48,
+                "gen0_pragmatist_mutant": 0.47,
+                "gen0_critic_base+gen0_explorer_base": 0.54,
+                "gen0_critic_base+gen0_pragmatist_mutant": 0.53,
+                "gen0_explorer_base+gen0_pragmatist_mutant": 0.51,
+                "gen0_critic_base+gen0_explorer_base+gen0_pragmatist_mutant": 0.63
+              },
+              "team_members": [
+                "gen0_critic_base",
+                "gen0_explorer_base",
+                "gen0_pragmatist_mutant"
+              ],
+              "raw_fitness": 0.21333333333333332,
+              "sharing_distances": [
+                0.38
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.21333333333333332
+            },
+            "gen1_critic_child": {
+              "shapley": 0.20166666666666666,
+              "solo_accuracy": 0.5,
+              "team_accuracy": 0.57,
+              "coalition_accuracy": {
+                "gen1_critic_child": 0.5,
+                "gen0_explorer_base": 0.48,
+                "gen0_pragmatist_mutant": 0.47,
+                "gen0_explorer_base+gen1_critic_child": 0.51,
+                "gen0_pragmatist_mutant+gen1_critic_child": 0.53,
+                "gen0_explorer_base+gen0_pragmatist_mutant": 0.51,
+                "gen0_explorer_base+gen0_pragmatist_mutant+gen1_critic_child": 0.57
+              },
+              "team_members": [
+                "gen1_critic_child",
+                "gen0_explorer_base",
+                "gen0_pragmatist_mutant"
+              ],
+              "raw_fitness": 0.20166666666666666,
+              "sharing_distances": [
+                0.38
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.20166666666666666
+            }
+          },
+          "selected": "gen0_critic_base"
+        },
+        "explorer": {
+          "candidates": {
+            "gen0_explorer_base": {
+              "shapley": 0.21333333333333332,
+              "solo_accuracy": 0.48,
+              "team_accuracy": 0.63,
+              "coalition_accuracy": {
+                "gen0_explorer_base": 0.48,
+                "gen0_critic_base": 0.46,
+                "gen0_pragmatist_mutant": 0.47,
+                "gen0_critic_base+gen0_explorer_base": 0.54,
+                "gen0_explorer_base+gen0_pragmatist_mutant": 0.51,
+                "gen0_critic_base+gen0_pragmatist_mutant": 0.53,
+                "gen0_critic_base+gen0_explorer_base+gen0_pragmatist_mutant": 0.63
+              },
+              "team_members": [
+                "gen0_explorer_base",
+                "gen0_critic_base",
+                "gen0_pragmatist_mutant"
+              ],
+              "raw_fitness": 0.21333333333333332,
+              "sharing_distances": [
+                0.35
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.21333333333333332
+            },
+            "gen1_explorer_child": {
+              "shapley": 0.21,
+              "solo_accuracy": 0.49,
+              "team_accuracy": 0.6,
+              "coalition_accuracy": {
+                "gen1_explorer_child": 0.49,
+                "gen0_critic_base": 0.46,
+                "gen0_pragmatist_mutant": 0.47,
+                "gen0_critic_base+gen1_explorer_child": 0.53,
+                "gen0_pragmatist_mutant+gen1_explorer_child": 0.54,
+                "gen0_critic_base+gen0_pragmatist_mutant": 0.53,
+                "gen0_critic_base+gen0_pragmatist_mutant+gen1_explorer_child": 0.6
+              },
+              "team_members": [
+                "gen1_explorer_child",
+                "gen0_critic_base",
+                "gen0_pragmatist_mutant"
+              ],
+              "raw_fitness": 0.21,
+              "sharing_distances": [
+                0.35
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.21
+            }
+          },
+          "selected": "gen0_explorer_base"
+        },
+        "pragmatist": {
+          "candidates": {
+            "gen0_pragmatist_mutant": {
+              "shapley": 0.2033333333333333,
+              "solo_accuracy": 0.47,
+              "team_accuracy": 0.63,
+              "coalition_accuracy": {
+                "gen0_pragmatist_mutant": 0.47,
+                "gen0_critic_base": 0.46,
+                "gen0_explorer_base": 0.48,
+                "gen0_critic_base+gen0_pragmatist_mutant": 0.53,
+                "gen0_explorer_base+gen0_pragmatist_mutant": 0.51,
+                "gen0_critic_base+gen0_explorer_base": 0.54,
+                "gen0_critic_base+gen0_explorer_base+gen0_pragmatist_mutant": 0.63
+              },
+              "team_members": [
+                "gen0_pragmatist_mutant",
+                "gen0_critic_base",
+                "gen0_explorer_base"
+              ],
+              "raw_fitness": 0.2033333333333333,
+              "sharing_distances": [
+                0.37
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.2033333333333333
+            },
+            "gen1_pragmatist_child": {
+              "shapley": 0.20833333333333331,
+              "solo_accuracy": 0.46,
+              "team_accuracy": 0.62,
+              "coalition_accuracy": {
+                "gen1_pragmatist_child": 0.46,
+                "gen0_critic_base": 0.46,
+                "gen0_explorer_base": 0.48,
+                "gen0_critic_base+gen1_pragmatist_child": 0.56,
+                "gen0_explorer_base+gen1_pragmatist_child": 0.55,
+                "gen0_critic_base+gen0_explorer_base": 0.54,
+                "gen0_critic_base+gen0_explorer_base+gen1_pragmatist_child": 0.62
+              },
+              "team_members": [
+                "gen1_pragmatist_child",
+                "gen0_critic_base",
+                "gen0_explorer_base"
+              ],
+              "raw_fitness": 0.20833333333333331,
+              "sharing_distances": [
+                0.37
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.20833333333333331
+            }
+          },
+          "selected": "gen1_pragmatist_child"
+        }
+      },
+      "elapsed_seconds": 2053.9762659072876,
+      "representatives": {
+        "critic": "gen0_critic_base",
+        "explorer": "gen0_explorer_base",
+        "pragmatist": "gen1_pragmatist_child"
+      }
+    },
+    {
+      "generation": 2,
+      "roles": {
+        "critic": {
+          "candidates": {
+            "gen0_critic_base": {
+              "shapley": 0.21333333333333335,
+              "solo_accuracy": 0.56,
+              "team_accuracy": 0.6,
+              "coalition_accuracy": {
+                "gen0_critic_base": 0.56,
+                "gen0_explorer_base": 0.5,
+                "gen1_pragmatist_child": 0.53,
+                "gen0_critic_base+gen0_explorer_base": 0.51,
+                "gen0_critic_base+gen1_pragmatist_child": 0.54,
+                "gen0_explorer_base+gen1_pragmatist_child": 0.53,
+                "gen0_critic_base+gen0_explorer_base+gen1_pragmatist_child": 0.6
+              },
+              "team_members": [
+                "gen0_critic_base",
+                "gen0_explorer_base",
+                "gen1_pragmatist_child"
+              ],
+              "raw_fitness": 0.21333333333333335,
+              "sharing_distances": [
+                0.45
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.21333333333333335
+            },
+            "gen2_critic_child": {
+              "shapley": 0.21666666666666665,
+              "solo_accuracy": 0.51,
+              "team_accuracy": 0.63,
+              "coalition_accuracy": {
+                "gen2_critic_child": 0.51,
+                "gen0_explorer_base": 0.5,
+                "gen1_pragmatist_child": 0.53,
+                "gen0_explorer_base+gen2_critic_child": 0.54,
+                "gen1_pragmatist_child+gen2_critic_child": 0.57,
+                "gen0_explorer_base+gen1_pragmatist_child": 0.53,
+                "gen0_explorer_base+gen1_pragmatist_child+gen2_critic_child": 0.63
+              },
+              "team_members": [
+                "gen2_critic_child",
+                "gen0_explorer_base",
+                "gen1_pragmatist_child"
+              ],
+              "raw_fitness": 0.21666666666666665,
+              "sharing_distances": [
+                0.45
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.21666666666666665
+            }
+          },
+          "selected": "gen2_critic_child"
+        },
+        "explorer": {
+          "candidates": {
+            "gen0_explorer_base": {
+              "shapley": 0.17833333333333332,
+              "solo_accuracy": 0.5,
+              "team_accuracy": 0.6,
+              "coalition_accuracy": {
+                "gen0_explorer_base": 0.5,
+                "gen0_critic_base": 0.56,
+                "gen1_pragmatist_child": 0.53,
+                "gen0_critic_base+gen0_explorer_base": 0.51,
+                "gen0_explorer_base+gen1_pragmatist_child": 0.53,
+                "gen0_critic_base+gen1_pragmatist_child": 0.54,
+                "gen0_critic_base+gen0_explorer_base+gen1_pragmatist_child": 0.6
+              },
+              "team_members": [
+                "gen0_explorer_base",
+                "gen0_critic_base",
+                "gen1_pragmatist_child"
+              ],
+              "raw_fitness": 0.17833333333333332,
+              "sharing_distances": [
+                0.29
+              ],
+              "sharing_penalty": 0.9677419354838711,
+              "fitness": 0.17258064516129032
+            },
+            "gen2_explorer_child": {
+              "shapley": 0.18999999999999997,
+              "solo_accuracy": 0.54,
+              "team_accuracy": 0.61,
+              "coalition_accuracy": {
+                "gen2_explorer_child": 0.54,
+                "gen0_critic_base": 0.56,
+                "gen1_pragmatist_child": 0.53,
+                "gen0_critic_base+gen2_explorer_child": 0.5,
+                "gen1_pragmatist_child+gen2_explorer_child": 0.51,
+                "gen0_critic_base+gen1_pragmatist_child": 0.54,
+                "gen0_critic_base+gen1_pragmatist_child+gen2_explorer_child": 0.61
+              },
+              "team_members": [
+                "gen2_explorer_child",
+                "gen0_critic_base",
+                "gen1_pragmatist_child"
+              ],
+              "raw_fitness": 0.18999999999999997,
+              "sharing_distances": [
+                0.29
+              ],
+              "sharing_penalty": 0.9677419354838711,
+              "fitness": 0.18387096774193548
+            }
+          },
+          "selected": "gen2_explorer_child"
+        },
+        "pragmatist": {
+          "candidates": {
+            "gen1_pragmatist_child": {
+              "shapley": 0.20833333333333334,
+              "solo_accuracy": 0.53,
+              "team_accuracy": 0.6,
+              "coalition_accuracy": {
+                "gen1_pragmatist_child": 0.53,
+                "gen0_critic_base": 0.56,
+                "gen0_explorer_base": 0.5,
+                "gen0_critic_base+gen1_pragmatist_child": 0.54,
+                "gen0_explorer_base+gen1_pragmatist_child": 0.53,
+                "gen0_critic_base+gen0_explorer_base": 0.51,
+                "gen0_critic_base+gen0_explorer_base+gen1_pragmatist_child": 0.6
+              },
+              "team_members": [
+                "gen1_pragmatist_child",
+                "gen0_critic_base",
+                "gen0_explorer_base"
+              ],
+              "raw_fitness": 0.20833333333333334,
+              "sharing_distances": [
+                0.34
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.20833333333333334
+            },
+            "gen2_pragmatist_child": {
+              "shapley": 0.2016666666666667,
+              "solo_accuracy": 0.54,
+              "team_accuracy": 0.56,
+              "coalition_accuracy": {
+                "gen2_pragmatist_child": 0.54,
+                "gen0_critic_base": 0.56,
+                "gen0_explorer_base": 0.5,
+                "gen0_critic_base+gen2_pragmatist_child": 0.56,
+                "gen0_explorer_base+gen2_pragmatist_child": 0.53,
+                "gen0_critic_base+gen0_explorer_base": 0.51,
+                "gen0_critic_base+gen0_explorer_base+gen2_pragmatist_child": 0.56
+              },
+              "team_members": [
+                "gen2_pragmatist_child",
+                "gen0_critic_base",
+                "gen0_explorer_base"
+              ],
+              "raw_fitness": 0.2016666666666667,
+              "sharing_distances": [
+                0.34
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.2016666666666667
+            }
+          },
+          "selected": "gen1_pragmatist_child"
+        }
+      },
+      "elapsed_seconds": 2052.8764197826385,
+      "representatives": {
+        "critic": "gen2_critic_child",
+        "explorer": "gen2_explorer_child",
+        "pragmatist": "gen1_pragmatist_child"
+      }
+    },
+    {
+      "generation": 3,
+      "roles": {
+        "critic": {
+          "candidates": {
+            "gen2_critic_child": {
+              "shapley": 0.16333333333333327,
+              "solo_accuracy": 0.45,
+              "team_accuracy": 0.57,
+              "coalition_accuracy": {
+                "gen2_critic_child": 0.45,
+                "gen2_explorer_child": 0.52,
+                "gen1_pragmatist_child": 0.51,
+                "gen2_critic_child+gen2_explorer_child": 0.48,
+                "gen1_pragmatist_child+gen2_critic_child": 0.53,
+                "gen1_pragmatist_child+gen2_explorer_child": 0.52,
+                "gen1_pragmatist_child+gen2_critic_child+gen2_explorer_child": 0.57
+              },
+              "team_members": [
+                "gen2_critic_child",
+                "gen2_explorer_child",
+                "gen1_pragmatist_child"
+              ],
+              "raw_fitness": 0.16333333333333327,
+              "sharing_distances": [
+                0.33
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.16333333333333327
+            },
+            "gen3_critic_child": {
+              "shapley": 0.18999999999999995,
+              "solo_accuracy": 0.51,
+              "team_accuracy": 0.57,
+              "coalition_accuracy": {
+                "gen3_critic_child": 0.51,
+                "gen2_explorer_child": 0.52,
+                "gen1_pragmatist_child": 0.51,
+                "gen2_explorer_child+gen3_critic_child": 0.51,
+                "gen1_pragmatist_child+gen3_critic_child": 0.54,
+                "gen1_pragmatist_child+gen2_explorer_child": 0.52,
+                "gen1_pragmatist_child+gen2_explorer_child+gen3_critic_child": 0.57
+              },
+              "team_members": [
+                "gen3_critic_child",
+                "gen2_explorer_child",
+                "gen1_pragmatist_child"
+              ],
+              "raw_fitness": 0.18999999999999995,
+              "sharing_distances": [
+                0.33
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.18999999999999995
+            }
+          },
+          "selected": "gen3_critic_child"
+        },
+        "explorer": {
+          "candidates": {
+            "gen2_explorer_child": {
+              "shapley": 0.19333333333333333,
+              "solo_accuracy": 0.52,
+              "team_accuracy": 0.57,
+              "coalition_accuracy": {
+                "gen2_explorer_child": 0.52,
+                "gen2_critic_child": 0.45,
+                "gen1_pragmatist_child": 0.51,
+                "gen2_critic_child+gen2_explorer_child": 0.48,
+                "gen1_pragmatist_child+gen2_explorer_child": 0.52,
+                "gen1_pragmatist_child+gen2_critic_child": 0.53,
+                "gen1_pragmatist_child+gen2_critic_child+gen2_explorer_child": 0.57
+              },
+              "team_members": [
+                "gen2_explorer_child",
+                "gen2_critic_child",
+                "gen1_pragmatist_child"
+              ],
+              "raw_fitness": 0.19333333333333333,
+              "sharing_distances": [
+                0.38
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.19333333333333333
+            },
+            "gen3_explorer_child": {
+              "shapley": 0.22666666666666668,
+              "solo_accuracy": 0.56,
+              "team_accuracy": 0.62,
+              "coalition_accuracy": {
+                "gen3_explorer_child": 0.56,
+                "gen2_critic_child": 0.45,
+                "gen1_pragmatist_child": 0.51,
+                "gen2_critic_child+gen3_explorer_child": 0.5,
+                "gen1_pragmatist_child+gen3_explorer_child": 0.52,
+                "gen1_pragmatist_child+gen2_critic_child": 0.53,
+                "gen1_pragmatist_child+gen2_critic_child+gen3_explorer_child": 0.62
+              },
+              "team_members": [
+                "gen3_explorer_child",
+                "gen2_critic_child",
+                "gen1_pragmatist_child"
+              ],
+              "raw_fitness": 0.22666666666666668,
+              "sharing_distances": [
+                0.38
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.22666666666666668
+            }
+          },
+          "selected": "gen3_explorer_child"
+        },
+        "pragmatist": {
+          "candidates": {
+            "gen1_pragmatist_child": {
+              "shapley": 0.21333333333333332,
+              "solo_accuracy": 0.51,
+              "team_accuracy": 0.57,
+              "coalition_accuracy": {
+                "gen1_pragmatist_child": 0.51,
+                "gen2_critic_child": 0.45,
+                "gen2_explorer_child": 0.52,
+                "gen1_pragmatist_child+gen2_critic_child": 0.53,
+                "gen1_pragmatist_child+gen2_explorer_child": 0.52,
+                "gen2_critic_child+gen2_explorer_child": 0.48,
+                "gen1_pragmatist_child+gen2_critic_child+gen2_explorer_child": 0.57
+              },
+              "team_members": [
+                "gen1_pragmatist_child",
+                "gen2_critic_child",
+                "gen2_explorer_child"
+              ],
+              "raw_fitness": 0.21333333333333332,
+              "sharing_distances": [
+                0.33
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.21333333333333332
+            },
+            "gen3_pragmatist_child": {
+              "shapley": 0.2333333333333333,
+              "solo_accuracy": 0.48,
+              "team_accuracy": 0.65,
+              "coalition_accuracy": {
+                "gen3_pragmatist_child": 0.48,
+                "gen2_critic_child": 0.45,
+                "gen2_explorer_child": 0.52,
+                "gen2_critic_child+gen3_pragmatist_child": 0.52,
+                "gen2_explorer_child+gen3_pragmatist_child": 0.55,
+                "gen2_critic_child+gen2_explorer_child": 0.48,
+                "gen2_critic_child+gen2_explorer_child+gen3_pragmatist_child": 0.65
+              },
+              "team_members": [
+                "gen3_pragmatist_child",
+                "gen2_critic_child",
+                "gen2_explorer_child"
+              ],
+              "raw_fitness": 0.2333333333333333,
+              "sharing_distances": [
+                0.33
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.2333333333333333
+            }
+          },
+          "selected": "gen3_pragmatist_child"
+        }
+      },
+      "elapsed_seconds": 2041.883418560028,
+      "representatives": {
+        "critic": "gen3_critic_child",
+        "explorer": "gen3_explorer_child",
+        "pragmatist": "gen3_pragmatist_child"
+      }
+    },
+    {
+      "generation": 4,
+      "roles": {
+        "critic": {
+          "candidates": {
+            "gen3_critic_child": {
+              "shapley": 0.17333333333333334,
+              "solo_accuracy": 0.48,
+              "team_accuracy": 0.6,
+              "coalition_accuracy": {
+                "gen3_critic_child": 0.48,
+                "gen3_explorer_child": 0.5,
+                "gen3_pragmatist_child": 0.47,
+                "gen3_critic_child+gen3_explorer_child": 0.48,
+                "gen3_critic_child+gen3_pragmatist_child": 0.53,
+                "gen3_explorer_child+gen3_pragmatist_child": 0.58,
+                "gen3_critic_child+gen3_explorer_child+gen3_pragmatist_child": 0.6
+              },
+              "team_members": [
+                "gen3_critic_child",
+                "gen3_explorer_child",
+                "gen3_pragmatist_child"
+              ],
+              "raw_fitness": 0.17333333333333334,
+              "sharing_distances": [
+                0.36
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.17333333333333334
+            },
+            "gen4_critic_child": {
+              "shapley": 0.17500000000000002,
+              "solo_accuracy": 0.49,
+              "team_accuracy": 0.58,
+              "coalition_accuracy": {
+                "gen4_critic_child": 0.49,
+                "gen3_explorer_child": 0.5,
+                "gen3_pragmatist_child": 0.47,
+                "gen3_explorer_child+gen4_critic_child": 0.53,
+                "gen3_pragmatist_child+gen4_critic_child": 0.51,
+                "gen3_explorer_child+gen3_pragmatist_child": 0.58,
+                "gen3_explorer_child+gen3_pragmatist_child+gen4_critic_child": 0.58
+              },
+              "team_members": [
+                "gen4_critic_child",
+                "gen3_explorer_child",
+                "gen3_pragmatist_child"
+              ],
+              "raw_fitness": 0.17500000000000002,
+              "sharing_distances": [
+                0.36
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.17500000000000002
+            }
+          },
+          "selected": "gen4_critic_child"
+        },
+        "explorer": {
+          "candidates": {
+            "gen3_explorer_child": {
+              "shapley": 0.20833333333333331,
+              "solo_accuracy": 0.5,
+              "team_accuracy": 0.6,
+              "coalition_accuracy": {
+                "gen3_explorer_child": 0.5,
+                "gen3_critic_child": 0.48,
+                "gen3_pragmatist_child": 0.47,
+                "gen3_critic_child+gen3_explorer_child": 0.48,
+                "gen3_explorer_child+gen3_pragmatist_child": 0.58,
+                "gen3_critic_child+gen3_pragmatist_child": 0.53,
+                "gen3_critic_child+gen3_explorer_child+gen3_pragmatist_child": 0.6
+              },
+              "team_members": [
+                "gen3_explorer_child",
+                "gen3_critic_child",
+                "gen3_pragmatist_child"
+              ],
+              "raw_fitness": 0.20833333333333331,
+              "sharing_distances": [
+                0.39
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.20833333333333331
+            },
+            "gen4_explorer_child": {
+              "shapley": 0.18166666666666664,
+              "solo_accuracy": 0.47,
+              "team_accuracy": 0.57,
+              "coalition_accuracy": {
+                "gen4_explorer_child": 0.47,
+                "gen3_critic_child": 0.48,
+                "gen3_pragmatist_child": 0.47,
+                "gen3_critic_child+gen4_explorer_child": 0.49,
+                "gen3_pragmatist_child+gen4_explorer_child": 0.53,
+                "gen3_critic_child+gen3_pragmatist_child": 0.53,
+                "gen3_critic_child+gen3_pragmatist_child+gen4_explorer_child": 0.57
+              },
+              "team_members": [
+                "gen4_explorer_child",
+                "gen3_critic_child",
+                "gen3_pragmatist_child"
+              ],
+              "raw_fitness": 0.18166666666666664,
+              "sharing_distances": [
+                0.39
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.18166666666666664
+            }
+          },
+          "selected": "gen3_explorer_child"
+        },
+        "pragmatist": {
+          "candidates": {
+            "gen3_pragmatist_child": {
+              "shapley": 0.21833333333333332,
+              "solo_accuracy": 0.47,
+              "team_accuracy": 0.6,
+              "coalition_accuracy": {
+                "gen3_pragmatist_child": 0.47,
+                "gen3_critic_child": 0.48,
+                "gen3_explorer_child": 0.5,
+                "gen3_critic_child+gen3_pragmatist_child": 0.53,
+                "gen3_explorer_child+gen3_pragmatist_child": 0.58,
+                "gen3_critic_child+gen3_explorer_child": 0.48,
+                "gen3_critic_child+gen3_explorer_child+gen3_pragmatist_child": 0.6
+              },
+              "team_members": [
+                "gen3_pragmatist_child",
+                "gen3_critic_child",
+                "gen3_explorer_child"
+              ],
+              "raw_fitness": 0.21833333333333332,
+              "sharing_distances": [
+                0.32
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.21833333333333332
+            },
+            "gen4_pragmatist_child": {
+              "shapley": 0.20500000000000002,
+              "solo_accuracy": 0.43,
+              "team_accuracy": 0.61,
+              "coalition_accuracy": {
+                "gen4_pragmatist_child": 0.43,
+                "gen3_critic_child": 0.48,
+                "gen3_explorer_child": 0.5,
+                "gen3_critic_child+gen4_pragmatist_child": 0.55,
+                "gen3_explorer_child+gen4_pragmatist_child": 0.54,
+                "gen3_critic_child+gen3_explorer_child": 0.48,
+                "gen3_critic_child+gen3_explorer_child+gen4_pragmatist_child": 0.61
+              },
+              "team_members": [
+                "gen4_pragmatist_child",
+                "gen3_critic_child",
+                "gen3_explorer_child"
+              ],
+              "raw_fitness": 0.20500000000000002,
+              "sharing_distances": [
+                0.32
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.20500000000000002
+            }
+          },
+          "selected": "gen3_pragmatist_child"
+        }
+      },
+      "elapsed_seconds": 2028.71324300766,
+      "representatives": {
+        "critic": "gen4_critic_child",
+        "explorer": "gen3_explorer_child",
+        "pragmatist": "gen3_pragmatist_child"
+      }
+    },
+    {
+      "generation": 5,
+      "roles": {
+        "critic": {
+          "candidates": {
+            "gen4_critic_child": {
+              "shapley": 0.21999999999999997,
+              "solo_accuracy": 0.51,
+              "team_accuracy": 0.59,
+              "coalition_accuracy": {
+                "gen4_critic_child": 0.51,
+                "gen3_explorer_child": 0.53,
+                "gen3_pragmatist_child": 0.51,
+                "gen3_explorer_child+gen4_critic_child": 0.54,
+                "gen3_pragmatist_child+gen4_critic_child": 0.58,
+                "gen3_explorer_child+gen3_pragmatist_child": 0.48,
+                "gen3_explorer_child+gen3_pragmatist_child+gen4_critic_child": 0.59
+              },
+              "team_members": [
+                "gen4_critic_child",
+                "gen3_explorer_child",
+                "gen3_pragmatist_child"
+              ],
+              "raw_fitness": 0.21999999999999997,
+              "sharing_distances": [
+                0.34
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.21999999999999997
+            },
+            "gen5_critic_child": {
+              "shapley": 0.21333333333333332,
+              "solo_accuracy": 0.51,
+              "team_accuracy": 0.61,
+              "coalition_accuracy": {
+                "gen5_critic_child": 0.51,
+                "gen3_explorer_child": 0.53,
+                "gen3_pragmatist_child": 0.51,
+                "gen3_explorer_child+gen5_critic_child": 0.52,
+                "gen3_pragmatist_child+gen5_critic_child": 0.52,
+                "gen3_explorer_child+gen3_pragmatist_child": 0.48,
+                "gen3_explorer_child+gen3_pragmatist_child+gen5_critic_child": 0.61
+              },
+              "team_members": [
+                "gen5_critic_child",
+                "gen3_explorer_child",
+                "gen3_pragmatist_child"
+              ],
+              "raw_fitness": 0.21333333333333332,
+              "sharing_distances": [
+                0.34
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.21333333333333332
+            }
+          },
+          "selected": "gen4_critic_child"
+        },
+        "explorer": {
+          "candidates": {
+            "gen3_explorer_child": {
+              "shapley": 0.18,
+              "solo_accuracy": 0.53,
+              "team_accuracy": 0.59,
+              "coalition_accuracy": {
+                "gen3_explorer_child": 0.53,
+                "gen4_critic_child": 0.51,
+                "gen3_pragmatist_child": 0.51,
+                "gen3_explorer_child+gen4_critic_child": 0.54,
+                "gen3_explorer_child+gen3_pragmatist_child": 0.48,
+                "gen3_pragmatist_child+gen4_critic_child": 0.58,
+                "gen3_explorer_child+gen3_pragmatist_child+gen4_critic_child": 0.59
+              },
+              "team_members": [
+                "gen3_explorer_child",
+                "gen4_critic_child",
+                "gen3_pragmatist_child"
+              ],
+              "raw_fitness": 0.18,
+              "sharing_distances": [
+                0.38
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.18
+            },
+            "gen5_explorer_child": {
+              "shapley": 0.19333333333333333,
+              "solo_accuracy": 0.56,
+              "team_accuracy": 0.59,
+              "coalition_accuracy": {
+                "gen5_explorer_child": 0.56,
+                "gen4_critic_child": 0.51,
+                "gen3_pragmatist_child": 0.51,
+                "gen4_critic_child+gen5_explorer_child": 0.5,
+                "gen3_pragmatist_child+gen5_explorer_child": 0.54,
+                "gen3_pragmatist_child+gen4_critic_child": 0.58,
+                "gen3_pragmatist_child+gen4_critic_child+gen5_explorer_child": 0.59
+              },
+              "team_members": [
+                "gen5_explorer_child",
+                "gen4_critic_child",
+                "gen3_pragmatist_child"
+              ],
+              "raw_fitness": 0.19333333333333333,
+              "sharing_distances": [
+                0.38
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.19333333333333333
+            }
+          },
+          "selected": "gen5_explorer_child"
+        },
+        "pragmatist": {
+          "candidates": {
+            "gen3_pragmatist_child": {
+              "shapley": 0.18999999999999995,
+              "solo_accuracy": 0.51,
+              "team_accuracy": 0.59,
+              "coalition_accuracy": {
+                "gen3_pragmatist_child": 0.51,
+                "gen4_critic_child": 0.51,
+                "gen3_explorer_child": 0.53,
+                "gen3_pragmatist_child+gen4_critic_child": 0.58,
+                "gen3_explorer_child+gen3_pragmatist_child": 0.48,
+                "gen3_explorer_child+gen4_critic_child": 0.54,
+                "gen3_explorer_child+gen3_pragmatist_child+gen4_critic_child": 0.59
+              },
+              "team_members": [
+                "gen3_pragmatist_child",
+                "gen4_critic_child",
+                "gen3_explorer_child"
+              ],
+              "raw_fitness": 0.18999999999999995,
+              "sharing_distances": [
+                0.4
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.18999999999999995
+            },
+            "gen5_pragmatist_child": {
+              "shapley": 0.21666666666666665,
+              "solo_accuracy": 0.46,
+              "team_accuracy": 0.68,
+              "coalition_accuracy": {
+                "gen5_pragmatist_child": 0.46,
+                "gen4_critic_child": 0.51,
+                "gen3_explorer_child": 0.53,
+                "gen4_critic_child+gen5_pragmatist_child": 0.56,
+                "gen3_explorer_child+gen5_pragmatist_child": 0.58,
+                "gen3_explorer_child+gen4_critic_child": 0.54,
+                "gen3_explorer_child+gen4_critic_child+gen5_pragmatist_child": 0.68
+              },
+              "team_members": [
+                "gen5_pragmatist_child",
+                "gen4_critic_child",
+                "gen3_explorer_child"
+              ],
+              "raw_fitness": 0.21666666666666665,
+              "sharing_distances": [
+                0.4
+              ],
+              "sharing_penalty": 1.0,
+              "fitness": 0.21666666666666665
+            }
+          },
+          "selected": "gen5_pragmatist_child"
+        }
+      },
+      "elapsed_seconds": 2031.438530921936,
+      "representatives": {
+        "critic": "gen4_critic_child",
+        "explorer": "gen5_explorer_child",
+        "pragmatist": "gen5_pragmatist_child"
+      }
+    }
+  ],
+  "final_team": {
+    "critic": "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/adapters/gen_04/gen4_critic_child",
+    "explorer": "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/adapters/gen_05/gen5_explorer_child",
+    "pragmatist": "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/adapters/gen_05/gen5_pragmatist_child"
+  }
+}
