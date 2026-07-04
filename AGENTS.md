@@ -134,6 +134,13 @@ uv run python scripts/ping_vllm_persona.py --persona persona_a
 
 ## 研究ログ（随時追記・新しいものを上に）
 
+### 2026-07-04: 【重要】最終評価v1は無効（max_tokens=512切り捨て）→ Qwen公式仕様準拠のv3で再測定
+- **発見**: v1最終評価でベース系条件の回答抽出失敗率44-84% vs LoRAチーム5-30%と非対称。原因はmax_tokens=512でベースモデルの長いCoTが切り捨てられ回答行に到達しないこと（LoRA群は短い回答+ANSWER形式をSFT済みで影響小）。**v1の比較結果（base 0.27 vs LoRA team 0.64等）は使用禁止**。
+- **Qwen3-4B-Instruct-2507公式仕様の確認結果**: ネイティブコンテキスト262,144 / **推奨出力長16,384** / 推奨サンプリング temp0.7・top_p0.8・top_k20・min_p0。旧設定はtop_p0.9・top_k未設定で非準拠だった。
+- **v3設定（最終形）**: max_tokens=8192、VLLM_MAX_MODEL_LEN=32768（debateは他者解全文埋め込みのため）、top_p=0.8、top_k=20（vLLM拡張extra_body経由）。回答抽出もmarkdown太字耐性を追加。出力先はfinal_eval3/（旧キャッシュ汚染回避）。
+- **limitation（修論に明記）**: 進化ループ自体は512トークン設定で実行済み。進化内部は全個体がLoRA（None率5-6%）のため公正だが、進化時と最終評価時の生成条件が異なる。
+- 教訓: 「新しい実験系では、まず抽出失敗率(None率)の条件間非対称性を必ず確認する」— 精度差より先に見るべき健全性指標。
+
 ### 2026-07-04: 進化ループ本番完了（6世代）— 開発セットでチーム精度+12pt
 - **run001 進化ジョブ成功**（A100 Spot、約3.5h、6世代×3役割×2個体、適応度=厳密Shapley×fitness sharing、MMLU-Pro固定100問）。
 - **結果**: チーム精度 gen0 0.56 → gen5 0.68（開発セット上、選抜ノイズ含む）。最終チームは全役割が進化産の子個体（gen4_critic_child / gen5_pragmatist_child / gen5_explorer_child）。
