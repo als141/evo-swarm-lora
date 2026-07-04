@@ -49,6 +49,12 @@ def main() -> None:
     parser.add_argument("--ablation-solo", nargs=3, default=None, help="role=path 形式（solo適応度で進化したチーム A1）")
     parser.add_argument("--seeds", nargs="+", type=int, default=[1, 2, 3])
     parser.add_argument("--rounds", type=int, default=1)
+    parser.add_argument(
+        "--max-tokens",
+        type=int,
+        default=2048,
+        help="生成トークン上限。512ではベースモデルのCoTが切り捨てられ抽出失敗が多発する（run001の教訓）",
+    )
     parser.add_argument("--sc-k", type=int, default=9)
     parser.add_argument(
         "--fitness-log",
@@ -127,10 +133,11 @@ def main() -> None:
                     agents={r: f"sf_{r}" for r in ROLES},
                 ))
 
-            # 適応度セットとの重複排除（mmlu_pro のみ該当）
-            if exclude_args:
-                for entry in entries[batch_start:]:
+            # 適応度セットとの重複排除（mmlu_pro のみ該当）と共通生成設定
+            for entry in entries[batch_start:]:
+                if exclude_args:
                     entry["args"].extend(exclude_args)
+                entry["args"].extend(["--max-tokens", str(args.max_tokens), "--workers", "32"])
 
     Path(args.out).write_text(json.dumps(entries, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"[info] wrote {len(entries)} battery entries to {args.out}")

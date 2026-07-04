@@ -89,8 +89,9 @@ baseOutputDirectory:
 EOF
     ;;
   battery)
-    # 使用例: submit_job.sh battery run001 <バッテリー設定のGCSマウントパス>
+    # 使用例: submit_job.sh battery run001 <バッテリー設定のGCSマウントパス> [出力サブディレクトリ]
     CONFIG_PATH="${EXTRA_ARGS[0]:?battery config path (GCS mount) required}"
+    OUT_SUBDIR="${EXTRA_ARGS[1]:-final_eval}"
     DISPLAY_NAME="battery-${RUN_ID}-${TIMESTAMP}"
     cat > "${CONFIG_FILE}" <<EOF
 workerPoolSpecs:
@@ -108,7 +109,7 @@ workerPoolSpecs:
         - scripts/run_eval_battery.py
         - --base-url=http://localhost:8000/v1
         - --config=${CONFIG_PATH}
-        - --out-dir=${GCS_MOUNT}/final_eval
+        - --out-dir=${GCS_MOUNT}/${OUT_SUBDIR}
 scheduling:
   strategy: SPOT
   restartJobOnWorkerRestart: true

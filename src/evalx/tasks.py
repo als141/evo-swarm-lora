@@ -204,10 +204,15 @@ def load_task(name: str, n: int, seed: int, **kwargs) -> TaskSpec:
 
 
 ANSWER_LINE_PATTERN = re.compile(r"ANSWER\s*[:：]\s*(.+)", re.IGNORECASE)
-# フォールバック時に "I"（一人称）や "A"（冠詞）を誤検出しないよう文脈を要求する
+# フォールバック時に "I"（一人称）や "A"（冠詞）を誤検出しないよう文脈を要求する。
+# markdown 太字 (**C**) や括弧付き (C) にも耐性を持たせる
 LETTER_FALLBACK_PATTERNS = [
-    re.compile(r"(?:answer|option|choice)\s+(?:is\s+)?\(?([A-J])\)?\b", re.IGNORECASE),
+    re.compile(
+        r"(?:answer|option|choice)\s*(?:is)?\s*[:：]?\s*\*{0,2}\(?([A-J])\)?\*{0,2}(?![a-z])",
+        re.IGNORECASE,
+    ),
     re.compile(r"\(([A-J])\)"),
+    re.compile(r"\*\*([A-J])\*\*"),
 ]
 
 
