@@ -104,6 +104,10 @@ workerPoolSpecs:
       bootDiskSizeGb: 200
     containerSpec:
       imageUri: ${IMAGE_PREFIX}/eval:latest
+      env:
+        # 長い CoT + debate プロンプト（他者解を埋め込む）に耐えるコンテキスト長
+        - name: VLLM_MAX_MODEL_LEN
+          value: "32768"
       args:
         - python3
         - scripts/run_eval_battery.py

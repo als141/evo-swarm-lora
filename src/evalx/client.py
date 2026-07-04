@@ -15,9 +15,12 @@ from openai import OpenAI
 
 @dataclass
 class GenerationConfig:
+    """Qwen3-4B-Instruct-2507 の公式推奨値に準拠 (temp 0.7 / top_p 0.8 / top_k 20)。"""
+
     temperature: float = 0.7
-    top_p: float = 0.9
-    max_tokens: int = 512
+    top_p: float = 0.8
+    top_k: int = 20
+    max_tokens: int = 4096
     seed: Optional[int] = None
 
 
@@ -38,6 +41,8 @@ class ChatClient:
                     top_p=config.top_p,
                     max_tokens=config.max_tokens,
                     seed=config.seed,
+                    # top_k は OpenAI API 標準外のため vLLM 拡張として渡す
+                    extra_body={"top_k": config.top_k},
                 )
                 content = response.choices[0].message.content
                 return content or ""

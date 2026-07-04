@@ -181,7 +181,7 @@ def main() -> None:
     parser.add_argument("--mode", choices=["solo", "team", "coalitions", "sc"], default="coalitions")
     parser.add_argument("--sc-k", type=int, default=9, help="Self-Consistency のサンプル数")
     parser.add_argument("--temperature", type=float, default=0.7)
-    parser.add_argument("--max-tokens", type=int, default=512)
+    parser.add_argument("--max-tokens", type=int, default=4096)
     parser.add_argument("--workers", type=int, default=16, help="問題単位の並列リクエスト数")
     parser.add_argument("--out", required=True)
     parser.add_argument("--save-transcripts", action="store_true")
