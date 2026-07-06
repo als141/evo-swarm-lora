@@ -48,6 +48,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--lr", type=float, default=2e-4)
     parser.add_argument("--bsz", type=int, default=1, help="Per-device batch size.")
     parser.add_argument("--grad_accum", type=int, default=16, help="Gradient accumulation steps.")
+    parser.add_argument(
+        "--max-seq-len",
+        type=int,
+        default=8192,
+        help="学習系列長の上限。TRLのSFTConfig.max_length既定1024では長CoTリプレイ例"
+        "（run002で最長~7.4kトークン）が切り捨てられ能力保持の意味を失うため明示する。",
+    )
     return parser.parse_args()
 
 
@@ -114,6 +121,7 @@ def main():
         gradient_checkpointing=True,
         packing=False,
         dataset_text_field="text",
+        max_length=args.max_seq_len,
     )
 
     trainer = SFTTrainer(

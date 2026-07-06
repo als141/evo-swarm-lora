@@ -220,6 +220,11 @@ def extract_answer(text: str, answer_type: str) -> Optional[str]:
     """モデル出力から最終回答を抽出する。ANSWER: 行を最優先し、無ければフォールバック。"""
     candidates = ANSWER_LINE_PATTERN.findall(text)
     tail = candidates[-1].strip() if candidates else None
+    if tail:
+        # "ANSWER: ANSWER: X" のような二重prefixを剥がす。letter型で単語
+        # "ANSWER" の 'A' を誤抽出する事故（run001 v3 math500で実測）を防ぐ
+        tail = re.sub(r"^(?:ANSWER\s*[:：]\s*)+", "", tail, flags=re.IGNORECASE).strip()
+        tail = tail or None
 
     if answer_type == "letter":
         if tail:

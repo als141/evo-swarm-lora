@@ -1,0 +1,21 @@
+# trainer イメージのみを再ビルドする（--max-seq-len 対応等の学習スクリプト変更時用）。
+#   gcloud builds submit --config cloud/cloudbuild.trainer-only.yaml .
+substitutions:
+  _REGION: us-central1
+  _REPO: evo-swarm
+steps:
+  - name: gcr.io/cloud-builders/docker
+    id: build-trainer
+    args:
+      - build
+      - -t
+      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/trainer:latest
+      - -f
+      - Dockerfile
+      - .
+images:
+  - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/trainer:latest
+options:
+  machineType: E2_HIGHCPU_8
+  diskSizeGb: 200
+timeout: 3600s

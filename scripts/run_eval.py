@@ -126,16 +126,23 @@ def evaluate_self_consistency(
 
 def evaluate_team(
     client, agents, task, config, rounds, tie_break_seed, transcript_path=None, progress_dir=None,
-    workers=16,
+    workers=16, update_style="standard", aggregation="majority", anonymize=False, judge_model=None,
 ) -> dict:
     label = "team_" + "_".join(a.name for a in agents)
+    if aggregation != "majority":
+        # v3集約は progress キャッシュを従来経路と分ける（集約方式で予測が変わるため）
+        label += f"_{aggregation}"
     cache = _cache_for(progress_dir, label)
     pending = [item for item in task.items if item.item_id not in cache]
     transcripts = []
     transcripts_lock = threading.Lock()
 
     def process(item):
-        record = run_debate(client, agents, item, task.answer_type, rounds, config, tie_break_seed)
+        record = run_debate(
+            client, agents, item, task.answer_type, rounds, config, tie_break_seed,
+            update_style=update_style, aggregation=aggregation, anonymize=anonymize,
+            judge_model=judge_model,
+        )
         cache.put(item.item_id, record.majority_answer)
         with transcripts_lock:
             transcripts.append(
@@ -144,6 +151,8 @@ def evaluate_team(
                     "rounds": record.rounds,
                     "final_answers": record.final_answers,
                     "majority_answer": record.majority_answer,
+                    "confidences": record.confidences,
+                    "adjudicated": record.adjudicated,
                 }
             )
 
@@ -179,6 +188,29 @@ def main() -> None:
         help="ペルソナ system prompt を使わない（ベースモデル×温度サンプリング条件用）",
     )
     parser.add_argument("--mode", choices=["solo", "team", "coalitions", "sc"], default="coalitions")
+    parser.add_argument(
+        "--debate-style",
+        choices=["standard", "conditional"],
+        default="standard",
+        help="debate更新指示。conditional=自分の誤りを特定できた場合のみ変更（追従対策）",
+    )
+    parser.add_argument(
+        "--aggregation",
+        choices=["majority", "weighted", "genselect"],
+        default="majority",
+        help="チーム集約: majority=従来 / weighted=logprob重み付き投票(DeepConf/CISC系) / "
+        "genselect=票が割れた問題のみベースモデルの比較選択裁定(GenSelect系)",
+    )
+    parser.add_argument(
+        "--anonymize-debate",
+        action="store_true",
+        help="議論プロンプトの発言者ラベルを匿名化+提示順シャッフル（sycophancy対策 arXiv:2510.07517）",
+    )
+    parser.add_argument(
+        "--judge-model",
+        default=None,
+        help="genselect裁定に使うモデル名（通常はベースモデル。未指定時はweightedへフォールバック）",
+    )
     parser.add_argument("--sc-k", type=int, default=9, help="Self-Consistency のサンプル数")
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--max-tokens", type=int, default=4096)
@@ -253,9 +285,13 @@ def main() -> None:
             print(f"[info] sc@{args.sc_k} {agent.name}: acc={payload['sc'][agent.name]['accuracy']:.4f}")
     elif args.mode == "team":
         transcript_path = out_dir / "transcripts_team.json" if args.save_transcripts else None
+        payload["debate_style"] = args.debate_style
+        payload["aggregation"] = args.aggregation
+        payload["anonymize_debate"] = args.anonymize_debate
         payload["team"] = evaluate_team(
             client, agents, task, config, args.rounds, args.seed, transcript_path, progress_dir,
-            args.workers,
+            args.workers, args.debate_style, args.aggregation, args.anonymize_debate,
+            args.judge_model,
         )
         print(f"[info] team: acc={payload['team']['accuracy']:.4f}")
     else:

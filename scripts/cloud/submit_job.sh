@@ -70,6 +70,9 @@ workerPoolSpecs:
       bootDiskSizeGb: 200
     containerSpec:
       imageUri: ${IMAGE_PREFIX}/eval:latest
+      env:
+        - name: EVALX_LOG_DIR
+          value: ${GCS_MOUNT}/evolution/llm_calls
       args:
         - python3
         - scripts/run_evolution.py
@@ -108,6 +111,9 @@ workerPoolSpecs:
         # 長い CoT + debate プロンプト（他者解を埋め込む）に耐えるコンテキスト長
         - name: VLLM_MAX_MODEL_LEN
           value: "32768"
+        # 全LLM呼び出しの入出力（プロンプト全文+生成全文）を一次資産として保全
+        - name: EVALX_LOG_DIR
+          value: ${GCS_MOUNT}/${OUT_SUBDIR}/llm_calls
       args:
         - python3
         - scripts/run_eval_battery.py

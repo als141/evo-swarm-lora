@@ -59,6 +59,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--lr", type=float, default=2e-4, help="Learning rate for LoRA training.")
     parser.add_argument("--rank", type=int, default=32, help="LoRA rank (r).")
     parser.add_argument("--grad-accum", type=int, default=16, help="Gradient accumulation steps.")
+    parser.add_argument(
+        "--max-seq-len",
+        type=int,
+        default=8192,
+        help="学習系列長の上限（train_lora_persona.py へ中継。長CoTリプレイの切り捨て防止）。",
+    )
     parser.add_argument("--bsz", type=int, default=1, help="Per-device batch size.")
     parser.add_argument("--seed", type=int, default=1234, help="Global random seed for reproducibility.")
     parser.add_argument(
@@ -293,6 +299,8 @@ def main() -> None:
             str(args.bsz),
             "--grad_accum",
             str(args.grad_accum),
+            "--max-seq-len",
+            str(args.max_seq_len),
         ]
 
         print(f"[info] Training persona '{persona}' with command: {' '.join(cmd)}")
