@@ -1,0 +1,17 @@
+[
+  {
+    "name": "g1_run002_solo_mmlu_pro",
+    "status": "ok",
+    "elapsed_seconds": 796.9864461421967
+  },
+  {
+    "name": "g1_run002_solo_math500",
+    "status": "ok",
+    "elapsed_seconds": 1187.3421895503998
+  },
+  {
+    "name": "g1_run002_solo_supergpqa",
+    "status": "ok",
+    "elapsed_seconds": 1147.5877513885498
+  }
+]

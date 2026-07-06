@@ -1,0 +1,2527 @@
+{
+  "task": "mmlu_pro",
+  "n": 500,
+  "seed": 2,
+  "rounds": 2,
+  "mode": "solo",
+  "agents": [
+    {
+      "name": "base",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "persona": ""
+    }
+  ],
+  "generation": {
+    "temperature": 0.7,
+    "max_tokens": 8192
+  },
+  "solo": {
+    "base": {
+      "accuracy": 0.722,
+      "n": 500,
+      "per_item": {
+        "mmlupro-test-5701": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-11559": {
+          "predicted": "E",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-12078": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-9203": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-1395": {
+          "predicted": "J",
+          "gold": "B",
+          "correct": false
+        },
+        "mmlupro-test-7621": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-2380": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-4783": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-10342": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-10328": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-923": {
+          "predicted": "D",
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-8640": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-3195": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-10095": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-6891": {
+          "predicted": "H",
+          "gold": "D",
+          "correct": false
+        },
+        "mmlupro-test-6014": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-1695": {
+          "predicted": "H",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-5947": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-1512": {
+          "predicted": "C",
+          "gold": "B",
+          "correct": false
+        },
+        "mmlupro-test-1747": {
+          "predicted": "A",
+          "gold": "B",
+          "correct": false
+        },
+        "mmlupro-test-102": {
+          "predicted": "F",
+          "gold": "J",
+          "correct": false
+        },
+        "mmlupro-test-8804": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-7059": {
+          "predicted": "H",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-4582": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-8405": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-5718": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-5100": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-4634": {
+          "predicted": "E",
+          "gold": "J",
+          "correct": false
+        },
+        "mmlupro-test-7761": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-11368": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-2894": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-10436": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-6851": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-2850": {
+          "predicted": "C",
+          "gold": "D",
+          "correct": false
+        },
+        "mmlupro-test-7545": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-2138": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-10577": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-12164": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-5228": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-2243": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-8048": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-10016": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-10041": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-8371": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-9171": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-5357": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-9498": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-11239": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-8415": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-357": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-819": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-12059": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-3600": {
+          "predicted": "C",
+          "gold": "G",
+          "correct": false
+        },
+        "mmlupro-test-11852": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-3355": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-834": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-742": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-2190": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-6985": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-12148": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-4865": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-4974": {
+          "predicted": "F",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-5649": {
+          "predicted": "D",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-5375": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-9342": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-912": {
+          "predicted": "D",
+          "gold": "B",
+          "correct": false
+        },
+        "mmlupro-test-9792": {
+          "predicted": "E",
+          "gold": "G",
+          "correct": false
+        },
+        "mmlupro-test-8863": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-7897": {
+          "predicted": "E",
+          "gold": "H",
+          "correct": false
+        },
+        "mmlupro-test-8049": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-9936": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-4853": {
+          "predicted": "H",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-3625": {
+          "predicted": "G",
+          "gold": "H",
+          "correct": false
+        },
+        "mmlupro-test-4644": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-5522": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-11657": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-2257": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-2284": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-9982": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-4771": {
+          "predicted": "F",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-9994": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-2166": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-8660": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-2624": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-5069": {
+          "predicted": "D",
+          "gold": "B",
+          "correct": false
+        },
+        "mmlupro-test-4585": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-10282": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-7403": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-7933": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-1942": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-5205": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-11264": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-7033": {
+          "predicted": "B",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-7901": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-4814": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-10263": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-5504": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-9294": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-3477": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-6900": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-4396": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-10827": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-7174": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-10278": {
+          "predicted": "D",
+          "gold": "E",
+          "correct": false
+        },
+        "mmlupro-test-6567": {
+          "predicted": "D",
+          "gold": "B",
+          "correct": false
+        },
+        "mmlupro-test-1287": {
+          "predicted": "A",
+          "gold": "D",
+          "correct": false
+        },
+        "mmlupro-test-759": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-9063": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-11837": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-1553": {
+          "predicted": "I",
+          "gold": "B",
+          "correct": false
+        },
+        "mmlupro-test-8483": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-319": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-9847": {
+          "predicted": "A",
+          "gold": "C",
+          "correct": false
+        },
+        "mmlupro-test-6621": {
+          "predicted": "B",
+          "gold": "E",
+          "correct": false
+        },
+        "mmlupro-test-6894": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-1715": {
+          "predicted": "I",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-8457": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-8185": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-3072": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-11111": {
+          "predicted": "G",
+          "gold": "D",
+          "correct": false
+        },
+        "mmlupro-test-5315": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-10449": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-5238": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-2649": {
+          "predicted": "B",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-3616": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-9766": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-8080": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-7452": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-10352": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-4022": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-6532": {
+          "predicted": "D",
+          "gold": "H",
+          "correct": false
+        },
+        "mmlupro-test-4439": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-4361": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-9346": {
+          "predicted": "B",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-12130": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-7636": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-11204": {
+          "predicted": "A",
+          "gold": "C",
+          "correct": false
+        },
+        "mmlupro-test-8501": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-2773": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-535": {
+          "predicted": "G",
+          "gold": "H",
+          "correct": false
+        },
+        "mmlupro-test-10457": {
+          "predicted": "D",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-1510": {
+          "predicted": "I",
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-3789": {
+          "predicted": "B",
+          "gold": "D",
+          "correct": false
+        },
+        "mmlupro-test-6256": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-2127": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-6899": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-10758": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-9889": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-5096": {
+          "predicted": "A",
+          "gold": "B",
+          "correct": false
+        },
+        "mmlupro-test-8019": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-10258": {
+          "predicted": "G",
+          "gold": "J",
+          "correct": false
+        },
+        "mmlupro-test-12157": {
+          "predicted": "D",
+          "gold": "J",
+          "correct": false
+        },
+        "mmlupro-test-4758": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-5438": {
+          "predicted": "H",
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-1297": {
+          "predicted": "A",
+          "gold": "B",
+          "correct": false
+        },
+        "mmlupro-test-6499": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-2149": {
+          "predicted": "D",
+          "gold": "C",
+          "correct": false
+        },
+        "mmlupro-test-5595": {
+          "predicted": "J",
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-12136": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-155": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-6254": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-749": {
+          "predicted": "C",
+          "gold": "D",
+          "correct": false
+        },
+        "mmlupro-test-9209": {
+          "predicted": "C",
+          "gold": "G",
+          "correct": false
+        },
+        "mmlupro-test-7937": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-11340": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-1689": {
+          "predicted": "D",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-8725": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-1950": {
+          "predicted": "E",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-3564": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-2067": {
+          "predicted": "A",
+          "gold": "B",
+          "correct": false
+        },
+        "mmlupro-test-2806": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-7052": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-11987": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-6126": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-9769": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-1885": {
+          "predicted": "H",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-172": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-11425": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-10732": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-10128": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-12040": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-3755": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-3002": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-7435": {
+          "predicted": "C",
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-11244": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-11342": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-880": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-6565": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-8006": {
+          "predicted": "C",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-2416": {
+          "predicted": "G",
+          "gold": "J",
+          "correct": false
+        },
+        "mmlupro-test-2924": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-8374": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-5133": {
+          "predicted": "E",
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-8799": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-10199": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-11168": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-10830": {
+          "predicted": "B",
+          "gold": "G",
+          "correct": false
+        },
+        "mmlupro-test-8850": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-10429": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-258": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-7969": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-720": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-7490": {
+          "predicted": "D",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-8710": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-7340": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-5186": {
+          "predicted": "J",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-4831": {
+          "predicted": "D",
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-1066": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-9403": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-7319": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-5688": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-4804": {
+          "predicted": "E",
+          "gold": "G",
+          "correct": false
+        },
+        "mmlupro-test-11578": {
+          "predicted": "C",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-347": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-10818": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-2054": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-8530": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-5651": {
+          "predicted": "E",
+          "gold": "D",
+          "correct": false
+        },
+        "mmlupro-test-4966": {
+          "predicted": "H",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-9801": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-11981": {
+          "predicted": "G",
+          "gold": "B",
+          "correct": false
+        },
+        "mmlupro-test-507": {
+          "predicted": "J",
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-9485": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-9650": {
+          "predicted": "J",
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-8735": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-2758": {
+          "predicted": "J",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-7960": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-227": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-11693": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-3708": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-2545": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-5103": {
+          "predicted": "A",
+          "gold": "J",
+          "correct": false
+        },
+        "mmlupro-test-9416": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-5319": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-6758": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-7382": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-8319": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-10149": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-6303": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-2308": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-2943": {
+          "predicted": "F",
+          "gold": "C",
+          "correct": false
+        },
+        "mmlupro-test-345": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-8922": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-5990": {
+          "predicted": "D",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-5600": {
+          "predicted": "B",
+          "gold": "G",
+          "correct": false
+        },
+        "mmlupro-test-3507": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-442": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-520": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-8508": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-9924": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-1869": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-1432": {
+          "predicted": "H",
+          "gold": "E",
+          "correct": false
+        },
+        "mmlupro-test-6734": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-3731": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-7596": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-6335": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-11928": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-9511": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-11932": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-6218": {
+          "predicted": "E",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-2790": {
+          "predicted": "H",
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-4867": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-569": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-3026": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-147": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-10345": {
+          "predicted": "C",
+          "gold": "G",
+          "correct": false
+        },
+        "mmlupro-test-12115": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-10170": {
+          "predicted": "G",
+          "gold": "H",
+          "correct": false
+        },
+        "mmlupro-test-1088": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-10874": {
+          "predicted": "B",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-8292": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-6155": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-8203": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-4617": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-9672": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-6404": {
+          "predicted": "E",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-5352": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-12231": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-6411": {
+          "predicted": "F",
+          "gold": "C",
+          "correct": false
+        },
+        "mmlupro-test-2089": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-3690": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-11748": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-1860": {
+          "predicted": "H",
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-934": {
+          "predicted": "D",
+          "gold": "G",
+          "correct": false
+        },
+        "mmlupro-test-11379": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-7994": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-2802": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-2574": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-1115": {
+          "predicted": "H",
+          "gold": "C",
+          "correct": false
+        },
+        "mmlupro-test-10645": {
+          "predicted": "J",
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-1787": {
+          "predicted": "G",
+          "gold": "C",
+          "correct": false
+        },
+        "mmlupro-test-4834": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-4782": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-275": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-6455": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-895": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-8519": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-11254": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-1445": {
+          "predicted": "H",
+          "gold": "D",
+          "correct": false
+        },
+        "mmlupro-test-5492": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-10096": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-3856": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-5471": {
+          "predicted": "E",
+          "gold": "H",
+          "correct": false
+        },
+        "mmlupro-test-182": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-1923": {
+          "predicted": "F",
+          "gold": "C",
+          "correct": false
+        },
+        "mmlupro-test-1618": {
+          "predicted": "G",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-4905": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-10825": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-6113": {
+          "predicted": "A",
+          "gold": "H",
+          "correct": false
+        },
+        "mmlupro-test-10324": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-9858": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-4727": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-10571": {
+          "predicted": "I",
+          "gold": "H",
+          "correct": false
+        },
+        "mmlupro-test-9327": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-2721": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-2759": {
+          "predicted": "C",
+          "gold": "D",
+          "correct": false
+        },
+        "mmlupro-test-4433": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-11888": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-9966": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-7779": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-2876": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-4007": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-6769": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-2921": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-4024": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-9721": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-9759": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-3033": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-6233": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-9527": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-10451": {
+          "predicted": "I",
+          "gold": "D",
+          "correct": false
+        },
+        "mmlupro-test-9532": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-2785": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-7922": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-5302": {
+          "predicted": "H",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-9709": {
+          "predicted": "D",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-2442": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-1007": {
+          "predicted": "F",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-9649": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-5343": {
+          "predicted": "C",
+          "gold": "E",
+          "correct": false
+        },
+        "mmlupro-test-8532": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-10349": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-2565": {
+          "predicted": "G",
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-9437": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-7602": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-11753": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-10212": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-10220": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-968": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-7898": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-6133": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-3548": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-9096": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-6520": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-6072": {
+          "predicted": "A",
+          "gold": "H",
+          "correct": false
+        },
+        "mmlupro-test-11874": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-11671": {
+          "predicted": "D",
+          "gold": "E",
+          "correct": false
+        },
+        "mmlupro-test-9798": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-7367": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-3182": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-10071": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-3421": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-10786": {
+          "predicted": "F",
+          "gold": "B",
+          "correct": false
+        },
+        "mmlupro-test-7141": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-1093": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-7415": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-822": {
+          "predicted": "A",
+          "gold": "D",
+          "correct": false
+        },
+        "mmlupro-test-8022": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-1495": {
+          "predicted": "I",
+          "gold": "D",
+          "correct": false
+        },
+        "mmlupro-test-1459": {
+          "predicted": "A",
+          "gold": "E",
+          "correct": false
+        },
+        "mmlupro-test-585": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-6682": {
+          "predicted": "A",
+          "gold": "H",
+          "correct": false
+        },
+        "mmlupro-test-10480": {
+          "predicted": "F",
+          "gold": "G",
+          "correct": false
+        },
+        "mmlupro-test-4581": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-8553": {
+          "predicted": "F",
+          "gold": "H",
+          "correct": false
+        },
+        "mmlupro-test-9222": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-10167": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-5384": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-7097": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-2050": {
+          "predicted": "I",
+          "gold": "D",
+          "correct": false
+        },
+        "mmlupro-test-8386": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-8139": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-6902": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-1363": {
+          "predicted": "J",
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-11224": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-10536": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-1540": {
+          "predicted": "B",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-3961": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-11664": {
+          "predicted": null,
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-1107": {
+          "predicted": "G",
+          "gold": "E",
+          "correct": false
+        },
+        "mmlupro-test-3462": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-3293": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-9447": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-254": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-4898": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-9677": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-6052": {
+          "predicted": "I",
+          "gold": "G",
+          "correct": false
+        },
+        "mmlupro-test-7518": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-11002": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-3288": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-8598": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-4488": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-1711": {
+          "predicted": "D",
+          "gold": "E",
+          "correct": false
+        },
+        "mmlupro-test-6962": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-10868": {
+          "predicted": "B",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-9671": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-2607": {
+          "predicted": "E",
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-8690": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-1074": {
+          "predicted": "D",
+          "gold": "J",
+          "correct": false
+        },
+        "mmlupro-test-5107": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-109": {
+          "predicted": "H",
+          "gold": "J",
+          "correct": false
+        },
+        "mmlupro-test-8941": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-4375": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-280": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-1627": {
+          "predicted": "B",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-8557": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-6394": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-10624": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-9182": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-9567": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-6790": {
+          "predicted": "F",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-3607": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-2460": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-9842": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-10908": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-11850": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-3275": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-7330": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-1215": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-2483": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-527": {
+          "predicted": "B",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-4612": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-6210": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-9375": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-2482": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-6812": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-6509": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-3028": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-7486": {
+          "predicted": "A",
+          "gold": "D",
+          "correct": false
+        },
+        "mmlupro-test-2591": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-7436": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-1067": {
+          "predicted": "J",
+          "gold": "J",
+          "correct": true
+        },
+        "mmlupro-test-3435": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-455": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-1996": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-2304": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-5723": {
+          "predicted": "H",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-10083": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-11550": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-11793": {
+          "predicted": "I",
+          "gold": "H",
+          "correct": false
+        },
+        "mmlupro-test-8136": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-9762": {
+          "predicted": "H",
+          "gold": "B",
+          "correct": false
+        },
+        "mmlupro-test-1071": {
+          "predicted": "G",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-2856": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-4076": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-6593": {
+          "predicted": "D",
+          "gold": "G",
+          "correct": false
+        },
+        "mmlupro-test-10042": {
+          "predicted": "F",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-9559": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-11744": {
+          "predicted": null,
+          "gold": "I",
+          "correct": false
+        },
+        "mmlupro-test-9875": {
+          "predicted": "J",
+          "gold": "H",
+          "correct": false
+        },
+        "mmlupro-test-5293": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-7137": {
+          "predicted": "F",
+          "gold": "H",
+          "correct": false
+        },
+        "mmlupro-test-308": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-8440": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-7904": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-4893": {
+          "predicted": "G",
+          "gold": "E",
+          "correct": false
+        },
+        "mmlupro-test-8390": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-6310": {
+          "predicted": "C",
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-8001": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-3420": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-7642": {
+          "predicted": "I",
+          "gold": "E",
+          "correct": false
+        },
+        "mmlupro-test-10810": {
+          "predicted": "H",
+          "gold": "A",
+          "correct": false
+        },
+        "mmlupro-test-2858": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-6889": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-850": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-9728": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-11890": {
+          "predicted": "F",
+          "gold": "F",
+          "correct": true
+        },
+        "mmlupro-test-4129": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-6424": {
+          "predicted": "A",
+          "gold": "C",
+          "correct": false
+        },
+        "mmlupro-test-2056": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-9507": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-2927": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-12107": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-11969": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-11021": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-10166": {
+          "predicted": "I",
+          "gold": "I",
+          "correct": true
+        },
+        "mmlupro-test-1570": {
+          "predicted": "C",
+          "gold": "F",
+          "correct": false
+        },
+        "mmlupro-test-5160": {
+          "predicted": "H",
+          "gold": "J",
+          "correct": false
+        },
+        "mmlupro-test-8607": {
+          "predicted": "G",
+          "gold": "G",
+          "correct": true
+        },
+        "mmlupro-test-6450": {
+          "predicted": "E",
+          "gold": "E",
+          "correct": true
+        },
+        "mmlupro-test-10494": {
+          "predicted": "A",
+          "gold": "D",
+          "correct": false
+        },
+        "mmlupro-test-2436": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-5594": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-5750": {
+          "predicted": "H",
+          "gold": "H",
+          "correct": true
+        },
+        "mmlupro-test-730": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-10754": {
+          "predicted": "D",
+          "gold": "D",
+          "correct": true
+        },
+        "mmlupro-test-6577": {
+          "predicted": "A",
+          "gold": "A",
+          "correct": true
+        },
+        "mmlupro-test-5122": {
+          "predicted": "C",
+          "gold": "C",
+          "correct": true
+        },
+        "mmlupro-test-6185": {
+          "predicted": "B",
+          "gold": "B",
+          "correct": true
+        },
+        "mmlupro-test-4261": {
+          "predicted": "I",
+          "gold": "F",
+          "correct": false
+        }
+      }
+    }
+  },
+  "elapsed_seconds": 647.0149970054626
+}

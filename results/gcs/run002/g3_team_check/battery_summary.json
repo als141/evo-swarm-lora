@@ -1,0 +1,17 @@
+[
+  {
+    "name": "g3_mmlu_pro",
+    "status": "ok",
+    "elapsed_seconds": 3062.4302220344543
+  },
+  {
+    "name": "g3_math500",
+    "status": "ok",
+    "elapsed_seconds": 2114.17796254158
+  },
+  {
+    "name": "g3_supergpqa",
+    "status": "ok",
+    "elapsed_seconds": 2894.586028814316
+  }
+]

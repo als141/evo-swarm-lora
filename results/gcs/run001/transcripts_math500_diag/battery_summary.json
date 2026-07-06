@@ -1,0 +1,17 @@
+[
+  {
+    "name": "diag_evolved_team_math500",
+    "status": "ok",
+    "elapsed_seconds": 402.95108580589294
+  },
+  {
+    "name": "diag_gen0_team_math500",
+    "status": "ok",
+    "elapsed_seconds": 651.0276608467102
+  },
+  {
+    "name": "diag_base_team_math500",
+    "status": "ok",
+    "elapsed_seconds": 696.9651997089386
+  }
+]

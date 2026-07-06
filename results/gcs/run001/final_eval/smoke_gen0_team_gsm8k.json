@@ -1,0 +1,75 @@
+{
+  "task": "gsm8k",
+  "n": 8,
+  "seed": 42,
+  "rounds": 1,
+  "mode": "team",
+  "agents": [
+    {
+      "name": "critic",
+      "model": "critic",
+      "persona": "あなたは厳密な検証を重視する批判的思考家。反証・例外・境界条件に敏感。"
+    },
+    {
+      "name": "pragmatist",
+      "model": "pragmatist",
+      "persona": "あなたは応用志向の実務家。意思決定に役立つ実装可能性とコストを重視。"
+    },
+    {
+      "name": "explorer",
+      "model": "explorer",
+      "persona": "あなたは創発を促す発想家。仮説生成と多角的比喩で発想を広げる。"
+    }
+  ],
+  "generation": {
+    "temperature": 0.7,
+    "max_tokens": 512
+  },
+  "team": {
+    "accuracy": 1.0,
+    "n": 8,
+    "per_item": {
+      "gsm8k-test-588": {
+        "predicted": "52",
+        "gold": "52",
+        "correct": true
+      },
+      "gsm8k-test-1214": {
+        "predicted": "5",
+        "gold": "5",
+        "correct": true
+      },
+      "gsm8k-test-57": {
+        "predicted": "83",
+        "gold": "83",
+        "correct": true
+      },
+      "gsm8k-test-906": {
+        "predicted": "10",
+        "gold": "10",
+        "correct": true
+      },
+      "gsm8k-test-1252": {
+        "predicted": "70",
+        "gold": "70",
+        "correct": true
+      },
+      "gsm8k-test-618": {
+        "predicted": "36",
+        "gold": "36",
+        "correct": true
+      },
+      "gsm8k-test-599": {
+        "predicted": "48",
+        "gold": "48",
+        "correct": true
+      },
+      "gsm8k-test-289": {
+        "predicted": "16",
+        "gold": "16",
+        "correct": true
+      }
+    }
+  },
+  "elapsed_seconds": 26.092159748077393
+}

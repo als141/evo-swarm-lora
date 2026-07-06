@@ -1,0 +1,1535 @@
+{
+  "task": "supergpqa",
+  "n": 300,
+  "seed": 1,
+  "rounds": 1,
+  "mode": "team",
+  "agents": [
+    {
+      "name": "critic",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "persona": "あなたは厳密な検証を重視する批判的思考家。反証・例外・境界条件に敏感。"
+    },
+    {
+      "name": "pragmatist",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "persona": "あなたは応用志向の実務家。意思決定に役立つ実装可能性とコストを重視。"
+    },
+    {
+      "name": "explorer",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "persona": "あなたは創発を促す発想家。仮説生成と多角的比喩で発想を広げる。"
+    }
+  ],
+  "generation": {
+    "temperature": 0.7,
+    "max_tokens": 8192
+  },
+  "team": {
+    "accuracy": 0.4866666666666667,
+    "n": 300,
+    "per_item": {
+      "supergpqa-e198b25317b3494baed5189347c16716": {
+        "predicted": "D",
+        "gold": "D",
+        "correct": true
+      },
+      "supergpqa-c3e410efd0d54b30a76ea39f72ba5d6e": {
+        "predicted": "A",
+        "gold": "J",
+        "correct": false
+      },
+      "supergpqa-f66e3e3ef4ba476a84e5a3019f21224b": {
+        "predicted": "F",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-c01417064b7d41a8a7c88b5705ea6cbd": {
+        "predicted": "C",
+        "gold": "C",
+        "correct": true
+      },
+      "supergpqa-2b564fbdea6b445a99fbf09bc744edb7": {
+        "predicted": "E",
+        "gold": "G",
+        "correct": false
+      },
+      "supergpqa-e8425ff5c87743568f2e00a2894116e6": {
+        "predicted": "C",
+        "gold": "C",
+        "correct": true
+      },
+      "supergpqa-f9a33d8f93a746ec8c6431a2b6bce193": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-466d2323f96443929c965329f4511d71": {
+        "predicted": "D",
+        "gold": "D",
+        "correct": true
+      },
+      "supergpqa-4ec7fd279abe4399b72a91acb406fa9e": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-e5efe3dbab7348c2a1fe1d8d2ea704f4": {
+        "predicted": "D",
+        "gold": "D",
+        "correct": true
+      },
+      "supergpqa-42c21a0221b74afebe151a545114e59f": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-e3a0dc337f56486ca626db0d35593585": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-4a9dbad4277c427e9f470f9b53faf095": {
+        "predicted": "H",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-7485d80f121f43488efd9f4fb53603c1": {
+        "predicted": "J",
+        "gold": "J",
+        "correct": true
+      },
+      "supergpqa-488c934405f14b5ca8f6a2b0093e6145": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-e3b3e257753646ad8b1441c567c2332a": {
+        "predicted": "J",
+        "gold": "J",
+        "correct": true
+      },
+      "supergpqa-908ea145d5664611a937082f5ab42abc": {
+        "predicted": "E",
+        "gold": "J",
+        "correct": false
+      },
+      "supergpqa-0eb6e43acdde4d879072744844ee239e": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-19a9adc2f3734c808de294d393d95257": {
+        "predicted": "C",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-90f4acafd98240b2ba039a32c9cbfcff": {
+        "predicted": "D",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-9328f45ae13341d7ad7acfa3ae4275be": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-3df1804e83334d3aba1196418e21433a": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-8c861f315e854f58b9f827435ff845a5": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-6fdc0422b5e84c8ba8ef7b861831992c": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-09b4ae702bad42349c05e0696a75a9eb": {
+        "predicted": "J",
+        "gold": "J",
+        "correct": true
+      },
+      "supergpqa-c7eeb7980fd547f495515a72fc724101": {
+        "predicted": "D",
+        "gold": "A",
+        "correct": false
+      },
+      "supergpqa-b5956d21715f4bc3a9e6b43758478f7d": {
+        "predicted": "C",
+        "gold": "C",
+        "correct": true
+      },
+      "supergpqa-87fec8c6fc0249a28bdbe28d69ef4552": {
+        "predicted": "A",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-a24ff16087c642cfb9e996b94d3ccc59": {
+        "predicted": "G",
+        "gold": "D",
+        "correct": false
+      },
+      "supergpqa-b1d0b085f45e40a883ea4612bb04e190": {
+        "predicted": "H",
+        "gold": "A",
+        "correct": false
+      },
+      "supergpqa-b0defa9894ad4bfb84841dd2c797b994": {
+        "predicted": "G",
+        "gold": "G",
+        "correct": true
+      },
+      "supergpqa-6c94cc8f5a664f47977cea77f258380c": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-4783726dc7884e118369bfeae421b1bd": {
+        "predicted": "E",
+        "gold": "E",
+        "correct": true
+      },
+      "supergpqa-6b38bdc9927a411da62046b2ed27d1bb": {
+        "predicted": "C",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-c202ccea47d646aebebe1c21f83ee798": {
+        "predicted": "D",
+        "gold": "D",
+        "correct": true
+      },
+      "supergpqa-37dd9e87bc8149e4bff082e68243b630": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-f064c83302774ce38fd33e427dee928c": {
+        "predicted": "E",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-f429a1883fec43949b2db39d1948733c": {
+        "predicted": "E",
+        "gold": "E",
+        "correct": true
+      },
+      "supergpqa-3aac0a3ad8714a2ab00ecadbd492bb79": {
+        "predicted": "H",
+        "gold": "H",
+        "correct": true
+      },
+      "supergpqa-fffa1458ee464471a1bc20d3910538dd": {
+        "predicted": "A",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-df10660bcb9c43a8bf8bd74729c7d5f0": {
+        "predicted": "C",
+        "gold": "G",
+        "correct": false
+      },
+      "supergpqa-5960f910957b4a3492ff6bd17a38103a": {
+        "predicted": "A",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-ea6b651b199c4d03aa04c4c4eb96faa0": {
+        "predicted": "G",
+        "gold": "C",
+        "correct": false
+      },
+      "supergpqa-513598f005434b5fae96afb975199d5d": {
+        "predicted": "C",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-8b313c21422d40d0a810dbb4a9e07866": {
+        "predicted": "F",
+        "gold": "J",
+        "correct": false
+      },
+      "supergpqa-179ec881aef34435b3402a478358833c": {
+        "predicted": "C",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-00f9c59ff117481cbbc88a3a7e32cc0b": {
+        "predicted": "G",
+        "gold": "G",
+        "correct": true
+      },
+      "supergpqa-16c4751f62d047ce8653348758b654b8": {
+        "predicted": "J",
+        "gold": "J",
+        "correct": true
+      },
+      "supergpqa-97ddde602eef4a6db631f5179fe6bbe4": {
+        "predicted": "C",
+        "gold": "A",
+        "correct": false
+      },
+      "supergpqa-0d466d2936284e30953e896bf5ce6a51": {
+        "predicted": "E",
+        "gold": "E",
+        "correct": true
+      },
+      "supergpqa-3cf6883911614114b73a4e02af50c4aa": {
+        "predicted": "H",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-21392a9d44264b51a557a047f188a995": {
+        "predicted": "A",
+        "gold": "A",
+        "correct": true
+      },
+      "supergpqa-0a6697360b65482086a096bdaf81d8cf": {
+        "predicted": "D",
+        "gold": "C",
+        "correct": false
+      },
+      "supergpqa-c8e4903e27c8497faea79ce21a9d62c3": {
+        "predicted": "C",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-fe4cffcb02f14b25b469bee02fe4e1bd": {
+        "predicted": "F",
+        "gold": "J",
+        "correct": false
+      },
+      "supergpqa-c35fe7af82ff44a38370ca4f02683faf": {
+        "predicted": "C",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-5f097dc8d393409d887ff30d6ce512f3": {
+        "predicted": "G",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-c64d09c5641b4de586b342f0aefc816a": {
+        "predicted": "J",
+        "gold": "J",
+        "correct": true
+      },
+      "supergpqa-f0f9fe14e3f44b50af95aee106fdf675": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-18b7cb34cccb429ab9012f2f6ffc532f": {
+        "predicted": "I",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-2edd98784c394b95b350ed31c7a4587f": {
+        "predicted": "A",
+        "gold": "H",
+        "correct": false
+      },
+      "supergpqa-3b22a0671ca1410bbb5c90fe8741d154": {
+        "predicted": "J",
+        "gold": "J",
+        "correct": true
+      },
+      "supergpqa-6b7a875d65064c3da51dbb9f1e9dcd09": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-eeb8d161f3c644c6974040683cf99ef4": {
+        "predicted": "C",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-cdbd92a249df4bb287c966b24ec3f1fc": {
+        "predicted": "E",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-5b00412be08b48c88e20ee5200358c79": {
+        "predicted": "F",
+        "gold": "H",
+        "correct": false
+      },
+      "supergpqa-340d0efcc84248f7b3db66f8ca94bddd": {
+        "predicted": "H",
+        "gold": "H",
+        "correct": true
+      },
+      "supergpqa-a89ae42a6e3a4450a776340ca2f30645": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-1198c3c37c9b48f4bac8f2dedc909671": {
+        "predicted": "G",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-4a9cba4c6e7846449a900a0709022b5e": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-4b2e855535a3420ca977a58a63a1156e": {
+        "predicted": "E",
+        "gold": "A",
+        "correct": false
+      },
+      "supergpqa-25b3541bde4b44ce848f5a6007f1564b": {
+        "predicted": "H",
+        "gold": "J",
+        "correct": false
+      },
+      "supergpqa-8e0d729fb1354e188ceab72c59d5ac6a": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-7c2d37a8bf7749eb94964115b3e0c82e": {
+        "predicted": "I",
+        "gold": "D",
+        "correct": false
+      },
+      "supergpqa-e2d9c9bd9f5d48ef865ec818187a3a5f": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-90fc4171cdc346f3a8bed6dd395ff475": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-bf77b48fdda646fb8c4dbebec15920b3": {
+        "predicted": "J",
+        "gold": "A",
+        "correct": false
+      },
+      "supergpqa-72299eb6ebac4f16ab9519a84fdd5047": {
+        "predicted": "H",
+        "gold": "H",
+        "correct": true
+      },
+      "supergpqa-795fdc9cfb9b43459ec3d2a01a831f3a": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-7eecaba3f91a4ab0a9a635158df27e44": {
+        "predicted": "C",
+        "gold": "C",
+        "correct": true
+      },
+      "supergpqa-db65e3ae66234cfea848428c58042f07": {
+        "predicted": "G",
+        "gold": "G",
+        "correct": true
+      },
+      "supergpqa-143658f041524e8fbe8f1d4eb3b821e2": {
+        "predicted": "H",
+        "gold": "H",
+        "correct": true
+      },
+      "supergpqa-09ad65bfa3d04b859b693b6886fa25b0": {
+        "predicted": "J",
+        "gold": "J",
+        "correct": true
+      },
+      "supergpqa-ebe5398c17c14ea192e333cf90e1708a": {
+        "predicted": "D",
+        "gold": "D",
+        "correct": true
+      },
+      "supergpqa-e7a5b8fb08ab46249255a26ea2c0ac72": {
+        "predicted": "G",
+        "gold": "H",
+        "correct": false
+      },
+      "supergpqa-13ecc085815a4b5bbb60c2131d55550c": {
+        "predicted": "D",
+        "gold": "D",
+        "correct": true
+      },
+      "supergpqa-e916298996754bffaaad20c4a7519249": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-37e47b819d324b3d8a7b9b56bdad139a": {
+        "predicted": "E",
+        "gold": "E",
+        "correct": true
+      },
+      "supergpqa-91595ebc8dd643ddbc595408e1cf9125": {
+        "predicted": "C",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-a6fa3315b5414da8ad87f97af7a1f2f3": {
+        "predicted": "D",
+        "gold": "D",
+        "correct": true
+      },
+      "supergpqa-35133803ba9b448f9d41002201bb9a19": {
+        "predicted": "E",
+        "gold": "C",
+        "correct": false
+      },
+      "supergpqa-3a7ea8a92ff5433ba2a719a91f2923f7": {
+        "predicted": "B",
+        "gold": "D",
+        "correct": false
+      },
+      "supergpqa-fc4ff0f703e34c2bbe58f8d341e5dac0": {
+        "predicted": "C",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-3efdcfe9fb9a49edbf58dcc7e5d84af9": {
+        "predicted": "A",
+        "gold": "D",
+        "correct": false
+      },
+      "supergpqa-dc47716901ec4abeb796a634f846e3b1": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-32dab814a642494f8ff4be2310e9b901": {
+        "predicted": "H",
+        "gold": "H",
+        "correct": true
+      },
+      "supergpqa-b5d9a6d989ed480ba32b2410de767d31": {
+        "predicted": "C",
+        "gold": "C",
+        "correct": true
+      },
+      "supergpqa-d4b55396b8e44fa5ae4c18d55f1d9a63": {
+        "predicted": "J",
+        "gold": "J",
+        "correct": true
+      },
+      "supergpqa-01f8fa4562434561a16adcc5f86f23f7": {
+        "predicted": "E",
+        "gold": "E",
+        "correct": true
+      },
+      "supergpqa-f28d81ab7c7440e8850024a1d396927e": {
+        "predicted": "E",
+        "gold": "H",
+        "correct": false
+      },
+      "supergpqa-b2b7cf2981be4627910789de174845b2": {
+        "predicted": "A",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-f11e22410b434a4ebdcfd675a274ca1d": {
+        "predicted": "D",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-adebe93c7bdf47f4b13c538301b95928": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-7d90b9f640f7431bb7b00bde85e0a18e": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-bb4d85bce5c14cf0adc60036e05b2787": {
+        "predicted": "A",
+        "gold": "C",
+        "correct": false
+      },
+      "supergpqa-da18b2fae51d452fb8b933f6be5793ac": {
+        "predicted": "G",
+        "gold": "C",
+        "correct": false
+      },
+      "supergpqa-54f5f45c06be42ea81affbbde7e00e9f": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-b5cf2e859d504a90803aee3ecb0dc12e": {
+        "predicted": "D",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-bd792b25a20540b2a1f460b2749c5581": {
+        "predicted": "C",
+        "gold": "C",
+        "correct": true
+      },
+      "supergpqa-8e494ef9276e4977af216a49cb561cf2": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-147a89278dd842448157d1cb7e26aaff": {
+        "predicted": "A",
+        "gold": "A",
+        "correct": true
+      },
+      "supergpqa-777bc0aef207409680d3f03d6db7c020": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-ff69e514ae6e4a009943a25080a8b7cb": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-ae05a8ef06764654bcf88b13f46f53b6": {
+        "predicted": "H",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-bfef48e5925b485daffc9f2955550f2b": {
+        "predicted": "A",
+        "gold": "A",
+        "correct": true
+      },
+      "supergpqa-26f1902d4c554af4bcfdc059cfc6779c": {
+        "predicted": "D",
+        "gold": "J",
+        "correct": false
+      },
+      "supergpqa-f4ae88c0fce84b85ad57ce0d83e20738": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-a1a173f0c54d4dfd9a77d8c176a0b5d3": {
+        "predicted": "H",
+        "gold": "H",
+        "correct": true
+      },
+      "supergpqa-e7db4e2e55024146ac357739aa73d2bf": {
+        "predicted": "H",
+        "gold": "H",
+        "correct": true
+      },
+      "supergpqa-2c120fea2fe546bebc3e606e98bb5002": {
+        "predicted": "G",
+        "gold": "G",
+        "correct": true
+      },
+      "supergpqa-c984ca82f20d4089bd8a33b7ab6490e7": {
+        "predicted": "G",
+        "gold": "A",
+        "correct": false
+      },
+      "supergpqa-3e91d19a39a24e9eb80f794944da6922": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-60d7e21b87674f7f8f69000413aa5695": {
+        "predicted": "F",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-f74a9b29f37f4ba685d7a99dbeb1f82f": {
+        "predicted": "G",
+        "gold": "G",
+        "correct": true
+      },
+      "supergpqa-795ea427677947788f1a5a4d25ff8538": {
+        "predicted": "C",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-5e15fa38d3514d49a66cedcdcbf08ae2": {
+        "predicted": "I",
+        "gold": "G",
+        "correct": false
+      },
+      "supergpqa-ca77d01ee0fb4d7fa1cf7a0668c3c804": {
+        "predicted": "A",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-a9125ce7646a45229b9efd812d5219c7": {
+        "predicted": "E",
+        "gold": "A",
+        "correct": false
+      },
+      "supergpqa-6cc4724867a445abb0bb0b9a284cd6f2": {
+        "predicted": "E",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-3210931860e4445d964c6b191bbd7267": {
+        "predicted": "J",
+        "gold": "G",
+        "correct": false
+      },
+      "supergpqa-fed7b75cbf344e3bb4b18ef50016150e": {
+        "predicted": "I",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-8f12125b383c489891aa6547bbaf3ab9": {
+        "predicted": "J",
+        "gold": "J",
+        "correct": true
+      },
+      "supergpqa-5cbea2d1cb6544cd9700df91d9536849": {
+        "predicted": "C",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-391cbc7e49524ddcaaf7ac48215b5b17": {
+        "predicted": "H",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-9a83dec77ea74ac0b7d7e80a78ce08fb": {
+        "predicted": "H",
+        "gold": "A",
+        "correct": false
+      },
+      "supergpqa-82e02bf4c1bb43b786d3f78156984dad": {
+        "predicted": "I",
+        "gold": "A",
+        "correct": false
+      },
+      "supergpqa-8fb703aaa35b4fb5aa80752fb8f2a0a4": {
+        "predicted": "C",
+        "gold": "C",
+        "correct": true
+      },
+      "supergpqa-8456a1872c5041a08a4461ec1b56e2c5": {
+        "predicted": "C",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-2eb701e9198e4f66b64588e8ac5d0bd6": {
+        "predicted": "A",
+        "gold": "H",
+        "correct": false
+      },
+      "supergpqa-3f9c0af1bd4946568067384aac3e35c2": {
+        "predicted": "A",
+        "gold": "C",
+        "correct": false
+      },
+      "supergpqa-9ccb4d2ed25c4875987c0c222e7febdd": {
+        "predicted": "G",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-db84e2283fe44780a70295b620bf16c9": {
+        "predicted": "F",
+        "gold": "A",
+        "correct": false
+      },
+      "supergpqa-97c31c311eb04a69842059eb73f9f711": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-b1dc60b180104bc6b673f95c73a9f99f": {
+        "predicted": "H",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-51c64fd6672543c6840111d2cdf422a3": {
+        "predicted": "C",
+        "gold": "D",
+        "correct": false
+      },
+      "supergpqa-c5b07e9cf5a34fefa362f50da7c10cd1": {
+        "predicted": "D",
+        "gold": "D",
+        "correct": true
+      },
+      "supergpqa-2747ada40ff948e5a5d177cb84acf352": {
+        "predicted": "D",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-a5583c65c266497db1636ba2223904e2": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-52f6794e051246318ea10238114e7060": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-029055b1d3c14c1194eb8b5750f58059": {
+        "predicted": "A",
+        "gold": "D",
+        "correct": false
+      },
+      "supergpqa-c6490323f3134769873d7c64b2cdb8d4": {
+        "predicted": "A",
+        "gold": "D",
+        "correct": false
+      },
+      "supergpqa-bde230f0141c403abfab1e144fd1b389": {
+        "predicted": "J",
+        "gold": "J",
+        "correct": true
+      },
+      "supergpqa-63308dab4bad4e909323b44ec5e9e5a0": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-13903b251ce844b9b9183e1462df4049": {
+        "predicted": "A",
+        "gold": "A",
+        "correct": true
+      },
+      "supergpqa-217f56f6aa12483893a0e9d4c90aa90d": {
+        "predicted": "H",
+        "gold": "H",
+        "correct": true
+      },
+      "supergpqa-4f693e1643394f06b9f745fd07799d92": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-ddc873cda1d04ddf98a19b55cabc6c70": {
+        "predicted": "H",
+        "gold": "H",
+        "correct": true
+      },
+      "supergpqa-a141ad5a2ec74b72abea92d7b1734fe0": {
+        "predicted": "E",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-35c3616a5cb94a3187c8dbb560ee3579": {
+        "predicted": "A",
+        "gold": "A",
+        "correct": true
+      },
+      "supergpqa-9e0c86a7c5b14a528550479219d447f5": {
+        "predicted": "C",
+        "gold": "G",
+        "correct": false
+      },
+      "supergpqa-73a3ff299dc040ad8e5ac743c66a1050": {
+        "predicted": "A",
+        "gold": "C",
+        "correct": false
+      },
+      "supergpqa-9a87310b38c54200831b25cbd1ab1af1": {
+        "predicted": "J",
+        "gold": "J",
+        "correct": true
+      },
+      "supergpqa-40d739fd7fea48daba1f64058986d81c": {
+        "predicted": "F",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-bf74c2dba801441babe6aae5ba167de8": {
+        "predicted": "A",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-3dd861f644344b20ba25c2543366c048": {
+        "predicted": "G",
+        "gold": "G",
+        "correct": true
+      },
+      "supergpqa-a86195d2acd143e898333a413c2cb2d2": {
+        "predicted": "C",
+        "gold": "C",
+        "correct": true
+      },
+      "supergpqa-8a5ed0f68ef645d78e6ac390ba1d13cd": {
+        "predicted": "F",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-752fa7be36cf4b6787eb36a7750d4312": {
+        "predicted": "H",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-c53723f06b31455dbe6f777d6c9b40a5": {
+        "predicted": "I",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-568de68f99cd47eca4eb2c2e57b0b991": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-91a9e227529d4d7d9223c787f429fcd3": {
+        "predicted": "E",
+        "gold": "J",
+        "correct": false
+      },
+      "supergpqa-3756b20bf8de4169a4d983497fa617a1": {
+        "predicted": "H",
+        "gold": "H",
+        "correct": true
+      },
+      "supergpqa-55638ba87747455eb7d722cbb63879dd": {
+        "predicted": "B",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-c1bd8b63ae6e4f93995bf938e9a7655a": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-150e461f1b4c4c25b99e086db9c7ea67": {
+        "predicted": "J",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-23b1530811f24e4591e5cd6fce00005e": {
+        "predicted": "G",
+        "gold": "A",
+        "correct": false
+      },
+      "supergpqa-c3bafaecd469411791f638a72f58bf8d": {
+        "predicted": "A",
+        "gold": "A",
+        "correct": true
+      },
+      "supergpqa-320c2e8f42504a2484211e053b79b84d": {
+        "predicted": "E",
+        "gold": "E",
+        "correct": true
+      },
+      "supergpqa-a678ada68f4b4321a39eeeeee6eb17d4": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-9f587fcd23434b18911c0a6c26632a30": {
+        "predicted": "C",
+        "gold": "C",
+        "correct": true
+      },
+      "supergpqa-f8ad406db73d4601ae415d0d52864a41": {
+        "predicted": "I",
+        "gold": "J",
+        "correct": false
+      },
+      "supergpqa-84c3fb832fcd46b2ae242b33a12da6e6": {
+        "predicted": "A",
+        "gold": "A",
+        "correct": true
+      },
+      "supergpqa-c0ce6886935f44acaa5b4a0a84b011f6": {
+        "predicted": "C",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-c40215d44339440aa5d1146bfcb38dde": {
+        "predicted": "D",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-a9e545c78d504ee2981a8c0c095453dc": {
+        "predicted": "C",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-f7463d87cd0c4d4590bc6ecc1af6853e": {
+        "predicted": "H",
+        "gold": "H",
+        "correct": true
+      },
+      "supergpqa-e41388966e744c3d9effb05b4fd090b2": {
+        "predicted": "D",
+        "gold": "H",
+        "correct": false
+      },
+      "supergpqa-d97b03a96da949d0987bba8e70bc5769": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-8541563d751c4077af0831082f5f4b49": {
+        "predicted": "F",
+        "gold": "D",
+        "correct": false
+      },
+      "supergpqa-78f498f687494d2f840b86d5f9a05ff0": {
+        "predicted": "A",
+        "gold": "J",
+        "correct": false
+      },
+      "supergpqa-65e18d5ebc6d481f92372a02f7346d7e": {
+        "predicted": "A",
+        "gold": "A",
+        "correct": true
+      },
+      "supergpqa-89e44bf28fc844e4bf0cde04e105fa32": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-b93393f7429e4d508eaf192d885418ba": {
+        "predicted": "H",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-5828d485ef37441999b75f7afa8519ea": {
+        "predicted": "H",
+        "gold": "J",
+        "correct": false
+      },
+      "supergpqa-4c5ae39063704f85a6523488fac96626": {
+        "predicted": "G",
+        "gold": "G",
+        "correct": true
+      },
+      "supergpqa-f5ed8fd2334f4a73bf90431347ed080f": {
+        "predicted": "G",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-061bc1374f494f88a5714bb01002e417": {
+        "predicted": "B",
+        "gold": "B",
+        "correct": true
+      },
+      "supergpqa-63f8e31dcf0648999f7a7689bdd18288": {
+        "predicted": "H",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-ef82d6c3c726483799345a038f11b6d0": {
+        "predicted": "I",
+        "gold": "J",
+        "correct": false
+      },
+      "supergpqa-09efc8c69d0c4ceabb0495a6606ed414": {
+        "predicted": "F",
+        "gold": "D",
+        "correct": false
+      },
+      "supergpqa-da37dc35b8c541718216c0701f73b7a3": {
+        "predicted": "G",
+        "gold": "G",
+        "correct": true
+      },
+      "supergpqa-864ff73cad4541a49532ddd7cfcc967b": {
+        "predicted": "C",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-ea1eee5a4df641c9aa1ebd9a7af1ddd9": {
+        "predicted": "E",
+        "gold": "E",
+        "correct": true
+      },
+      "supergpqa-1bd13c0fc8b8474da9496ce331cac130": {
+        "predicted": "A",
+        "gold": "A",
+        "correct": true
+      },
+      "supergpqa-d5dcfdafccd84996bdce2493e3e3c89b": {
+        "predicted": "G",
+        "gold": "G",
+        "correct": true
+      },
+      "supergpqa-3dfd8cc75b5d436da19f9636c566bfd5": {
+        "predicted": "A",
+        "gold": "J",
+        "correct": false
+      },
+      "supergpqa-516d503bc577497ca525587700d09a22": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-322028a61af94127931b0e55f7a7a43c": {
+        "predicted": "H",
+        "gold": "H",
+        "correct": true
+      },
+      "supergpqa-dee0b6020db3404784ff1de753dbfb2a": {
+        "predicted": "E",
+        "gold": "E",
+        "correct": true
+      },
+      "supergpqa-807700f0a68841948cc4a8cbc1615f6b": {
+        "predicted": "J",
+        "gold": "J",
+        "correct": true
+      },
+      "supergpqa-1cea9a1e8f1f42f18a0bd929f8364424": {
+        "predicted": "D",
+        "gold": "D",
+        "correct": true
+      },
+      "supergpqa-acaa645367004dbfafd6ba1ee37afd11": {
+        "predicted": "A",
+        "gold": "A",
+        "correct": true
+      },
+      "supergpqa-34e01e0e5ee844a198d6b2ee22f09f99": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-c33e0558a93d4af494937712a45fe345": {
+        "predicted": "E",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-6adbf75b0e004af09f90820282d8f67a": {
+        "predicted": "A",
+        "gold": "A",
+        "correct": true
+      },
+      "supergpqa-319876d9dae8430aa8c25ae3b9da1577": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-16607ddd9f0e41c4ad7645431bd5bf1f": {
+        "predicted": "E",
+        "gold": "E",
+        "correct": true
+      },
+      "supergpqa-7985ceff6cff4ba1b97fa918f4b1f75b": {
+        "predicted": "A",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-005aee195958493784ff7ebb30af06ed": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-cf441e2845964ab78d64dfa14e0e0e56": {
+        "predicted": "A",
+        "gold": "A",
+        "correct": true
+      },
+      "supergpqa-4ada85f2019946768031f02a42368dc6": {
+        "predicted": "A",
+        "gold": "A",
+        "correct": true
+      },
+      "supergpqa-6427df29217541d893618503533e394f": {
+        "predicted": "I",
+        "gold": "G",
+        "correct": false
+      },
+      "supergpqa-d891fd81d1ac4f5392917b7c8ba8916e": {
+        "predicted": "A",
+        "gold": "D",
+        "correct": false
+      },
+      "supergpqa-80def4fd5a7544a69f9bc7bbd1860e0a": {
+        "predicted": "D",
+        "gold": "D",
+        "correct": true
+      },
+      "supergpqa-509924b668c146a087d3d7465b7e2098": {
+        "predicted": "A",
+        "gold": "H",
+        "correct": false
+      },
+      "supergpqa-fbe47191095848c58684be9e95e08d5e": {
+        "predicted": "A",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-fa5dad1ac1d043d6ab67ac74284fe068": {
+        "predicted": "B",
+        "gold": "D",
+        "correct": false
+      },
+      "supergpqa-081b00459e7c4799b0d62e54263990eb": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-f5c858921f564035acc4688a602d9262": {
+        "predicted": "A",
+        "gold": "A",
+        "correct": true
+      },
+      "supergpqa-70ef60aeaff2444aa6bf50985bf8fb8d": {
+        "predicted": "C",
+        "gold": "G",
+        "correct": false
+      },
+      "supergpqa-7ca71b86327744b78e93185a45bc5cef": {
+        "predicted": "D",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-4c37f40af9e84ef5a99c153d47dac5f5": {
+        "predicted": "D",
+        "gold": "D",
+        "correct": true
+      },
+      "supergpqa-9f55cb8921cd42f78e4ae3e67345c2b9": {
+        "predicted": "J",
+        "gold": "H",
+        "correct": false
+      },
+      "supergpqa-0a17de3f76d141a4abf081610dee0248": {
+        "predicted": "G",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-070c2810cf8149a8bd1fca080db1aa92": {
+        "predicted": "E",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-691ef39b02d14555af7b2c94ef5f1d07": {
+        "predicted": "A",
+        "gold": "G",
+        "correct": false
+      },
+      "supergpqa-38f904179b65433a8a899016a4d7413d": {
+        "predicted": "I",
+        "gold": "G",
+        "correct": false
+      },
+      "supergpqa-e4a0ca4dc3b84e30b9a8ee44108f9f53": {
+        "predicted": "G",
+        "gold": "G",
+        "correct": true
+      },
+      "supergpqa-dbd6d8f99f4f4411841ef22a36fcc5ea": {
+        "predicted": "D",
+        "gold": "G",
+        "correct": false
+      },
+      "supergpqa-4daef6beb1394da6b85de66940dcca0e": {
+        "predicted": "A",
+        "gold": "G",
+        "correct": false
+      },
+      "supergpqa-1905f146c3d8449c9706b73e83685763": {
+        "predicted": "H",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-839a0a0e14a74503a090b979316ee01b": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-bf3c0f81915d47968fd631992f065d99": {
+        "predicted": "D",
+        "gold": "G",
+        "correct": false
+      },
+      "supergpqa-2e8d0ef1557a48feaaee2d30c0e62b5d": {
+        "predicted": "C",
+        "gold": "J",
+        "correct": false
+      },
+      "supergpqa-934f160baf024dc4835e4009b7af193a": {
+        "predicted": "G",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-fa0628835ffd471cbe58a0ff7ac882e7": {
+        "predicted": "G",
+        "gold": "G",
+        "correct": true
+      },
+      "supergpqa-be132b568f4e4affbb94268dbdffcd2e": {
+        "predicted": "D",
+        "gold": "J",
+        "correct": false
+      },
+      "supergpqa-9dbdc87db6e74bcfbd84367da10e29be": {
+        "predicted": "G",
+        "gold": "G",
+        "correct": true
+      },
+      "supergpqa-e040142037e64227a3aa4bb20d3de6f1": {
+        "predicted": "I",
+        "gold": "D",
+        "correct": false
+      },
+      "supergpqa-d131798674604dc6aadbf980d7b1410c": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-59b27fbd729a47bea44084dd23052606": {
+        "predicted": "I",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-1d9befc5b615413b8ddee42d5088165e": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-715a30e028ae448e84ca415445269453": {
+        "predicted": "A",
+        "gold": "A",
+        "correct": true
+      },
+      "supergpqa-b4b4849087bd4039aafb6894e3786afa": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-9eb98f671e434a55a7f10425949c389e": {
+        "predicted": "A",
+        "gold": "C",
+        "correct": false
+      },
+      "supergpqa-2b6fde17f50a4143a6dd8175387ddde2": {
+        "predicted": "J",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-81ea8f53b9054f1d8bafdd953f3fa01c": {
+        "predicted": "J",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-2c66bf14324d477f995aa747ba05ac9b": {
+        "predicted": "C",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-0e9ae67466474359a2c81227ce6b89cb": {
+        "predicted": "F",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-0671518b930b49c68a9f2418560d7e4b": {
+        "predicted": "D",
+        "gold": "D",
+        "correct": true
+      },
+      "supergpqa-b779446e47db45c19fb2d53319089af4": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-b09f721c85064fc19a5e6209015f1ee2": {
+        "predicted": "C",
+        "gold": "B",
+        "correct": false
+      },
+      "supergpqa-e5e400b279c34eb991cbb3bc6c238358": {
+        "predicted": "A",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-729103e93cda40b59f19784283c98914": {
+        "predicted": "A",
+        "gold": "H",
+        "correct": false
+      },
+      "supergpqa-4025a2ff3e0e476abf7b1de436c2939a": {
+        "predicted": "H",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-411be51e7219413f83048c71dfe1420e": {
+        "predicted": "E",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-4364729bfd7c496fbae430aa484560eb": {
+        "predicted": "A",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-6d4c5a9d5c20400a8d530ca5fb7b9917": {
+        "predicted": "H",
+        "gold": "A",
+        "correct": false
+      },
+      "supergpqa-1a6095730ba04ba99c77bfb363a9f2ec": {
+        "predicted": "J",
+        "gold": "J",
+        "correct": true
+      },
+      "supergpqa-4da05e34056d469b84905b4d54dc0569": {
+        "predicted": "A",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-fc1d7128ca664899a674174e6df70437": {
+        "predicted": "D",
+        "gold": "G",
+        "correct": false
+      },
+      "supergpqa-5601f40a068741db8ef83b3beaa2371b": {
+        "predicted": "H",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-17ad654c0bfb42dda93e08b1bd4657c6": {
+        "predicted": "J",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-ff50b8bcf2a543afa77dc88d4c499805": {
+        "predicted": "J",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-e7f11989a01448bda5893fdd9421d23a": {
+        "predicted": "H",
+        "gold": "H",
+        "correct": true
+      },
+      "supergpqa-9a6b5968add74feeb78af9d6a7ca580d": {
+        "predicted": "J",
+        "gold": "D",
+        "correct": false
+      },
+      "supergpqa-dd8a54c9b4124a45a71dd305a6b841ac": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-fbe3a87525b2450cb5d3e7d28df0a072": {
+        "predicted": "H",
+        "gold": "H",
+        "correct": true
+      },
+      "supergpqa-bc435b5ed5ca420a9627e689b8ff974b": {
+        "predicted": "D",
+        "gold": "A",
+        "correct": false
+      },
+      "supergpqa-d8ddbd4d810f422ab5f6215ad6ebf777": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-1eeb7af63b454d14923e35a783ee48ee": {
+        "predicted": "D",
+        "gold": "D",
+        "correct": true
+      },
+      "supergpqa-f33a1f4c473149eba64dc0ca8dd54413": {
+        "predicted": "F",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-07e6a7d8a14648c9b5b5433c85b882a3": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-d473f92f707c4068982e7c4a1ed5b3f7": {
+        "predicted": "C",
+        "gold": "D",
+        "correct": false
+      },
+      "supergpqa-16660528d57d49228980cbea48e5c952": {
+        "predicted": "F",
+        "gold": "A",
+        "correct": false
+      },
+      "supergpqa-5502b4740a734f728c47f726301302fe": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-1064a97f4a8c491cb97afe2ff8c9adc7": {
+        "predicted": "E",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-1f9468f2f6244ebda6ed6c4138d908fb": {
+        "predicted": "D",
+        "gold": "C",
+        "correct": false
+      },
+      "supergpqa-5312e96991f040a7bb2e0a4667364ecf": {
+        "predicted": "H",
+        "gold": "I",
+        "correct": false
+      },
+      "supergpqa-9f5adcc55f2e46d4bafa5f07e2dd3149": {
+        "predicted": "A",
+        "gold": "G",
+        "correct": false
+      },
+      "supergpqa-0340dcefc8134351ad7f600485a49dca": {
+        "predicted": "C",
+        "gold": "C",
+        "correct": true
+      },
+      "supergpqa-e19a2f538ca24414a3eb303b867f9913": {
+        "predicted": "E",
+        "gold": "C",
+        "correct": false
+      },
+      "supergpqa-b1df1909625f46e996ce401cd22c0110": {
+        "predicted": "E",
+        "gold": "J",
+        "correct": false
+      },
+      "supergpqa-6dd76c1d48d0436f90f92321746cb27a": {
+        "predicted": "D",
+        "gold": "D",
+        "correct": true
+      },
+      "supergpqa-2adca578b9b74511a354ec60d6a491a2": {
+        "predicted": "A",
+        "gold": "A",
+        "correct": true
+      },
+      "supergpqa-bc092256ac1940bf9740a4a5dee7f2d7": {
+        "predicted": "J",
+        "gold": "F",
+        "correct": false
+      },
+      "supergpqa-fbecf774b62840a8bdf085344ddb5de6": {
+        "predicted": "I",
+        "gold": "I",
+        "correct": true
+      },
+      "supergpqa-9f116af7569b43aa938574b2dbe85a05": {
+        "predicted": "D",
+        "gold": "E",
+        "correct": false
+      },
+      "supergpqa-9f0e886c968e4894827a5f983c420f8a": {
+        "predicted": "F",
+        "gold": "F",
+        "correct": true
+      },
+      "supergpqa-187f07340b1d4f4f9c7d00919194aa0c": {
+        "predicted": "H",
+        "gold": "H",
+        "correct": true
+      }
+    }
+  },
+  "elapsed_seconds": 4555.9957909584045
+}

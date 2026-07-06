@@ -1,0 +1,12 @@
+[
+  {
+    "name": "pilot_std_mmlu_pro_s555",
+    "status": "ok",
+    "elapsed_seconds": 1173.019742488861
+  },
+  {
+    "name": "pilot_cond_mmlu_pro_s555",
+    "status": "ok",
+    "elapsed_seconds": 1014.8856778144836
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "c7_run002_team_mmlu_pro_s2",
+    "status": "ok",
+    "elapsed_seconds": 3186.342056751251
+  },
+  {
+    "name": "c7_run002_team_math500_s2",
+    "status": "ok",
+    "elapsed_seconds": 2402.253560066223
+  },
+  {
+    "name": "c7_run002_team_supergpqa_s2",
+    "status": "ok",
+    "elapsed_seconds": 3122.0228621959686
+  },
+  {
+    "name": "c7_run002_team_mmlu_pro_s3",
+    "status": "ok",
+    "elapsed_seconds": 3102.19109916687
+  },
+  {
+    "name": "c7_run002_team_math500_s3",
+    "status": "ok",
+    "elapsed_seconds": 2377.0943632125854
+  },
+  {
+    "name": "c7_run002_team_supergpqa_s3",
+    "status": "ok",
+    "elapsed_seconds": 2877.710103750229
+  }
+]

@@ -1,0 +1,1035 @@
+{
+  "task": "math500",
+  "n": 200,
+  "seed": 1,
+  "rounds": 1,
+  "mode": "team",
+  "agents": [
+    {
+      "name": "critic",
+      "model": "g0_critic",
+      "persona": "あなたは厳密な検証を重視する批判的思考家。反証・例外・境界条件に敏感。"
+    },
+    {
+      "name": "pragmatist",
+      "model": "g0_pragmatist",
+      "persona": "あなたは応用志向の実務家。意思決定に役立つ実装可能性とコストを重視。"
+    },
+    {
+      "name": "explorer",
+      "model": "g0_explorer",
+      "persona": "あなたは創発を促す発想家。仮説生成と多角的比喩で発想を広げる。"
+    }
+  ],
+  "generation": {
+    "temperature": 0.7,
+    "max_tokens": 512
+  },
+  "team": {
+    "accuracy": 0.015,
+    "n": 200,
+    "per_item": {
+      "math500-test-376": {
+        "predicted": "(8,-2)",
+        "gold": "(8,-2)",
+        "correct": true
+      },
+      "math500-test-179": {
+        "predicted": "c",
+        "gold": "5x-7y+11z+4=0",
+        "correct": false
+      },
+      "math500-test-354": {
+        "predicted": "c",
+        "gold": "81",
+        "correct": false
+      },
+      "math500-test-385": {
+        "predicted": "e",
+        "gold": "22",
+        "correct": false
+      },
+      "math500-test-173": {
+        "predicted": "a",
+        "gold": "4",
+        "correct": false
+      },
+      "math500-test-405": {
+        "predicted": "c",
+        "gold": "60",
+        "correct": false
+      },
+      "math500-test-355": {
+        "predicted": null,
+        "gold": "100",
+        "correct": false
+      },
+      "math500-test-482": {
+        "predicted": "e",
+        "gold": "202",
+        "correct": false
+      },
+      "math500-test-251": {
+        "predicted": "e",
+        "gold": "540",
+        "correct": false
+      },
+      "math500-test-434": {
+        "predicted": "c",
+        "gold": "32",
+        "correct": false
+      },
+      "math500-test-80": {
+        "predicted": null,
+        "gold": "501",
+        "correct": false
+      },
+      "math500-test-63": {
+        "predicted": "e",
+        "gold": "10",
+        "correct": false
+      },
+      "math500-test-71": {
+        "predicted": null,
+        "gold": "2516_8",
+        "correct": false
+      },
+      "math500-test-47": {
+        "predicted": "e",
+        "gold": "5",
+        "correct": false
+      },
+      "math500-test-166": {
+        "predicted": "a",
+        "gold": "frac2707degrees",
+        "correct": false
+      },
+      "math500-test-78": {
+        "predicted": "e",
+        "gold": "(-2,1)",
+        "correct": false
+      },
+      "math500-test-123": {
+        "predicted": "c",
+        "gold": "8",
+        "correct": false
+      },
+      "math500-test-335": {
+        "predicted": "c",
+        "gold": "3",
+        "correct": false
+      },
+      "math500-test-421": {
+        "predicted": null,
+        "gold": "27",
+        "correct": false
+      },
+      "math500-test-409": {
+        "predicted": "e",
+        "gold": "2sqrt(5)",
+        "correct": false
+      },
+      "math500-test-407": {
+        "predicted": "c",
+        "gold": "9",
+        "correct": false
+      },
+      "math500-test-323": {
+        "predicted": "c",
+        "gold": "1/3",
+        "correct": false
+      },
+      "math500-test-62": {
+        "predicted": "c",
+        "gold": "4",
+        "correct": false
+      },
+      "math500-test-184": {
+        "predicted": null,
+        "gold": "(2,infty)",
+        "correct": false
+      },
+      "math500-test-165": {
+        "predicted": "c",
+        "gold": "4/9",
+        "correct": false
+      },
+      "math500-test-200": {
+        "predicted": "d",
+        "gold": "40",
+        "correct": false
+      },
+      "math500-test-67": {
+        "predicted": "c",
+        "gold": "10",
+        "correct": false
+      },
+      "math500-test-158": {
+        "predicted": "c",
+        "gold": "2107",
+        "correct": false
+      },
+      "math500-test-135": {
+        "predicted": "c",
+        "gold": "9",
+        "correct": false
+      },
+      "math500-test-89": {
+        "predicted": null,
+        "gold": "21",
+        "correct": false
+      },
+      "math500-test-432": {
+        "predicted": null,
+        "gold": "331",
+        "correct": false
+      },
+      "math500-test-214": {
+        "predicted": "c",
+        "gold": "110",
+        "correct": false
+      },
+      "math500-test-488": {
+        "predicted": "c",
+        "gold": "36",
+        "correct": false
+      },
+      "math500-test-315": {
+        "predicted": "c",
+        "gold": "41",
+        "correct": false
+      },
+      "math500-test-41": {
+        "predicted": "c",
+        "gold": "17",
+        "correct": false
+      },
+      "math500-test-73": {
+        "predicted": "c",
+        "gold": "frac3sqrt(3)4",
+        "correct": false
+      },
+      "math500-test-239": {
+        "predicted": null,
+        "gold": "16",
+        "correct": false
+      },
+      "math500-test-320": {
+        "predicted": "e",
+        "gold": "-24/25",
+        "correct": false
+      },
+      "math500-test-408": {
+        "predicted": null,
+        "gold": "beginpmatrix1/5-18/5endpmatrix",
+        "correct": false
+      },
+      "math500-test-238": {
+        "predicted": "a",
+        "gold": "-4",
+        "correct": false
+      },
+      "math500-test-431": {
+        "predicted": "c",
+        "gold": "[pi^2/8,5pi^2/4]",
+        "correct": false
+      },
+      "math500-test-330": {
+        "predicted": "e",
+        "gold": "1940",
+        "correct": false
+      },
+      "math500-test-31": {
+        "predicted": "c",
+        "gold": "11sqrt2",
+        "correct": false
+      },
+      "math500-test-497": {
+        "predicted": null,
+        "gold": "7/2",
+        "correct": false
+      },
+      "math500-test-292": {
+        "predicted": null,
+        "gold": "898",
+        "correct": false
+      },
+      "math500-test-321": {
+        "predicted": "c",
+        "gold": "10",
+        "correct": false
+      },
+      "math500-test-443": {
+        "predicted": "c",
+        "gold": "45",
+        "correct": false
+      },
+      "math500-test-84": {
+        "predicted": "d",
+        "gold": "-1",
+        "correct": false
+      },
+      "math500-test-329": {
+        "predicted": "d",
+        "gold": "4",
+        "correct": false
+      },
+      "math500-test-288": {
+        "predicted": null,
+        "gold": "7",
+        "correct": false
+      },
+      "math500-test-50": {
+        "predicted": "a",
+        "gold": "203",
+        "correct": false
+      },
+      "math500-test-349": {
+        "predicted": "e",
+        "gold": "10080",
+        "correct": false
+      },
+      "math500-test-297": {
+        "predicted": "c",
+        "gold": "103",
+        "correct": false
+      },
+      "math500-test-473": {
+        "predicted": "c",
+        "gold": "7",
+        "correct": false
+      },
+      "math500-test-168": {
+        "predicted": null,
+        "gold": "19",
+        "correct": false
+      },
+      "math500-test-383": {
+        "predicted": "c",
+        "gold": "xin[-2,7]",
+        "correct": false
+      },
+      "math500-test-352": {
+        "predicted": null,
+        "gold": "11sqrt(5)+11",
+        "correct": false
+      },
+      "math500-test-415": {
+        "predicted": "e",
+        "gold": "9",
+        "correct": false
+      },
+      "math500-test-425": {
+        "predicted": null,
+        "gold": "3r^2",
+        "correct": false
+      },
+      "math500-test-379": {
+        "predicted": "d",
+        "gold": "12",
+        "correct": false
+      },
+      "math500-test-134": {
+        "predicted": "e",
+        "gold": "16",
+        "correct": false
+      },
+      "math500-test-69": {
+        "predicted": "e",
+        "gold": "-1",
+        "correct": false
+      },
+      "math500-test-103": {
+        "predicted": null,
+        "gold": "(3,4]",
+        "correct": false
+      },
+      "math500-test-460": {
+        "predicted": null,
+        "gold": "75^circ",
+        "correct": false
+      },
+      "math500-test-479": {
+        "predicted": "c",
+        "gold": "2",
+        "correct": false
+      },
+      "math500-test-422": {
+        "predicted": null,
+        "gold": "1pmsqrt(5),-2",
+        "correct": false
+      },
+      "math500-test-147": {
+        "predicted": null,
+        "gold": "16",
+        "correct": false
+      },
+      "math500-test-142": {
+        "predicted": "c",
+        "gold": "28800",
+        "correct": false
+      },
+      "math500-test-229": {
+        "predicted": "e",
+        "gold": "90",
+        "correct": false
+      },
+      "math500-test-131": {
+        "predicted": "e",
+        "gold": "8",
+        "correct": false
+      },
+      "math500-test-100": {
+        "predicted": null,
+        "gold": "145^circ",
+        "correct": false
+      },
+      "math500-test-475": {
+        "predicted": null,
+        "gold": "29",
+        "correct": false
+      },
+      "math500-test-188": {
+        "predicted": "c",
+        "gold": "6",
+        "correct": false
+      },
+      "math500-test-101": {
+        "predicted": null,
+        "gold": "850",
+        "correct": false
+      },
+      "math500-test-448": {
+        "predicted": "e",
+        "gold": "44",
+        "correct": false
+      },
+      "math500-test-23": {
+        "predicted": "b",
+        "gold": "x=5",
+        "correct": false
+      },
+      "math500-test-138": {
+        "predicted": "e",
+        "gold": "1/3",
+        "correct": false
+      },
+      "math500-test-435": {
+        "predicted": "c",
+        "gold": "(-infty,2)cup(3,infty)",
+        "correct": false
+      },
+      "math500-test-419": {
+        "predicted": null,
+        "gold": "beginpmatrix-7165endpmatrix",
+        "correct": false
+      },
+      "math500-test-93": {
+        "predicted": "c",
+        "gold": "33",
+        "correct": false
+      },
+      "math500-test-417": {
+        "predicted": "e",
+        "gold": "-2",
+        "correct": false
+      },
+      "math500-test-252": {
+        "predicted": "a",
+        "gold": "81",
+        "correct": false
+      },
+      "math500-test-279": {
+        "predicted": "c",
+        "gold": "7pi",
+        "correct": false
+      },
+      "math500-test-163": {
+        "predicted": null,
+        "gold": "-35/9",
+        "correct": false
+      },
+      "math500-test-454": {
+        "predicted": "e",
+        "gold": "y=2x+3",
+        "correct": false
+      },
+      "math500-test-494": {
+        "predicted": null,
+        "gold": "1/4",
+        "correct": false
+      },
+      "math500-test-400": {
+        "predicted": "r",
+        "gold": "14/3",
+        "correct": false
+      },
+      "math500-test-293": {
+        "predicted": "c",
+        "gold": "(3/5,8/3]",
+        "correct": false
+      },
+      "math500-test-104": {
+        "predicted": "e",
+        "gold": "40",
+        "correct": false
+      },
+      "math500-test-272": {
+        "predicted": "e",
+        "gold": "1030",
+        "correct": false
+      },
+      "math500-test-210": {
+        "predicted": "c",
+        "gold": "10",
+        "correct": false
+      },
+      "math500-test-305": {
+        "predicted": "c",
+        "gold": "frac919",
+        "correct": false
+      },
+      "math500-test-125": {
+        "predicted": "c",
+        "gold": "-3",
+        "correct": false
+      },
+      "math500-test-154": {
+        "predicted": null,
+        "gold": "2sqrt(113)",
+        "correct": false
+      },
+      "math500-test-274": {
+        "predicted": "c",
+        "gold": "18+2pi",
+        "correct": false
+      },
+      "math500-test-306": {
+        "predicted": null,
+        "gold": "6",
+        "correct": false
+      },
+      "math500-test-153": {
+        "predicted": "c",
+        "gold": "2/21",
+        "correct": false
+      },
+      "math500-test-466": {
+        "predicted": null,
+        "gold": "8pi",
+        "correct": false
+      },
+      "math500-test-394": {
+        "predicted": null,
+        "gold": "-3/8",
+        "correct": false
+      },
+      "math500-test-308": {
+        "predicted": null,
+        "gold": "1+2sqrt(3)",
+        "correct": false
+      },
+      "math500-test-183": {
+        "predicted": "e",
+        "gold": "23",
+        "correct": false
+      },
+      "math500-test-470": {
+        "predicted": "a",
+        "gold": "27648",
+        "correct": false
+      },
+      "math500-test-445": {
+        "predicted": null,
+        "gold": "15",
+        "correct": false
+      },
+      "math500-test-140": {
+        "predicted": "c",
+        "gold": "13",
+        "correct": false
+      },
+      "math500-test-286": {
+        "predicted": null,
+        "gold": "17/21",
+        "correct": false
+      },
+      "math500-test-499": {
+        "predicted": "c",
+        "gold": "106^circ",
+        "correct": false
+      },
+      "math500-test-109": {
+        "predicted": null,
+        "gold": "120^circ",
+        "correct": false
+      },
+      "math500-test-298": {
+        "predicted": "c",
+        "gold": "beginpmatrix-18-4996endpmatrix",
+        "correct": false
+      },
+      "math500-test-34": {
+        "predicted": "c",
+        "gold": "-125",
+        "correct": false
+      },
+      "math500-test-244": {
+        "predicted": "c",
+        "gold": "8",
+        "correct": false
+      },
+      "math500-test-459": {
+        "predicted": "c",
+        "gold": "18.9",
+        "correct": false
+      },
+      "math500-test-220": {
+        "predicted": "c",
+        "gold": "16/27",
+        "correct": false
+      },
+      "math500-test-204": {
+        "predicted": null,
+        "gold": "0",
+        "correct": false
+      },
+      "math500-test-412": {
+        "predicted": null,
+        "gold": "406",
+        "correct": false
+      },
+      "math500-test-388": {
+        "predicted": "c",
+        "gold": "11/2",
+        "correct": false
+      },
+      "math500-test-75": {
+        "predicted": "c",
+        "gold": "11/36",
+        "correct": false
+      },
+      "math500-test-423": {
+        "predicted": null,
+        "gold": "1440",
+        "correct": false
+      },
+      "math500-test-26": {
+        "predicted": null,
+        "gold": "144",
+        "correct": false
+      },
+      "math500-test-126": {
+        "predicted": null,
+        "gold": "1+274i",
+        "correct": false
+      },
+      "math500-test-49": {
+        "predicted": "c",
+        "gold": "83",
+        "correct": false
+      },
+      "math500-test-236": {
+        "predicted": "c",
+        "gold": "12",
+        "correct": false
+      },
+      "math500-test-465": {
+        "predicted": "e",
+        "gold": "121",
+        "correct": false
+      },
+      "math500-test-25": {
+        "predicted": "-21",
+        "gold": "1,-2",
+        "correct": false
+      },
+      "math500-test-401": {
+        "predicted": null,
+        "gold": "13/4",
+        "correct": false
+      },
+      "math500-test-285": {
+        "predicted": null,
+        "gold": "440",
+        "correct": false
+      },
+      "math500-test-398": {
+        "predicted": "a",
+        "gold": "navin",
+        "correct": false
+      },
+      "math500-test-478": {
+        "predicted": null,
+        "gold": "2/1005",
+        "correct": false
+      },
+      "math500-test-271": {
+        "predicted": "c",
+        "gold": "333",
+        "correct": false
+      },
+      "math500-test-222": {
+        "predicted": "c",
+        "gold": "54",
+        "correct": false
+      },
+      "math500-test-43": {
+        "predicted": null,
+        "gold": "70sqrt(2)",
+        "correct": false
+      },
+      "math500-test-324": {
+        "predicted": null,
+        "gold": "120",
+        "correct": false
+      },
+      "math500-test-414": {
+        "predicted": "a",
+        "gold": "10",
+        "correct": false
+      },
+      "math500-test-341": {
+        "predicted": "c",
+        "gold": "-2",
+        "correct": false
+      },
+      "math500-test-373": {
+        "predicted": null,
+        "gold": "1+2i",
+        "correct": false
+      },
+      "math500-test-217": {
+        "predicted": "e",
+        "gold": "11111111100",
+        "correct": false
+      },
+      "math500-test-353": {
+        "predicted": "c",
+        "gold": "480",
+        "correct": false
+      },
+      "math500-test-33": {
+        "predicted": "243/625",
+        "gold": "243/625",
+        "correct": true
+      },
+      "math500-test-190": {
+        "predicted": "c",
+        "gold": "13/18",
+        "correct": false
+      },
+      "math500-test-381": {
+        "predicted": null,
+        "gold": "1/2",
+        "correct": false
+      },
+      "math500-test-327": {
+        "predicted": null,
+        "gold": "15",
+        "correct": false
+      },
+      "math500-test-219": {
+        "predicted": null,
+        "gold": "1/2",
+        "correct": false
+      },
+      "math500-test-273": {
+        "predicted": "d",
+        "gold": "1250",
+        "correct": false
+      },
+      "math500-test-24": {
+        "predicted": "10",
+        "gold": "10",
+        "correct": true
+      },
+      "math500-test-64": {
+        "predicted": "d",
+        "gold": "35/64",
+        "correct": false
+      },
+      "math500-test-152": {
+        "predicted": null,
+        "gold": "8",
+        "correct": false
+      },
+      "math500-test-294": {
+        "predicted": "e",
+        "gold": "58",
+        "correct": false
+      },
+      "math500-test-202": {
+        "predicted": "c",
+        "gold": "2/3",
+        "correct": false
+      },
+      "math500-test-382": {
+        "predicted": "c",
+        "gold": "20000/pi",
+        "correct": false
+      },
+      "math500-test-264": {
+        "predicted": "c",
+        "gold": "14/5",
+        "correct": false
+      },
+      "math500-test-418": {
+        "predicted": "b",
+        "gold": "2sqrt(5)",
+        "correct": false
+      },
+      "math500-test-82": {
+        "predicted": null,
+        "gold": "3/2",
+        "correct": false
+      },
+      "math500-test-9": {
+        "predicted": null,
+        "gold": "4",
+        "correct": false
+      },
+      "math500-test-129": {
+        "predicted": "c",
+        "gold": "3840/289",
+        "correct": false
+      },
+      "math500-test-96": {
+        "predicted": null,
+        "gold": "1pmsqrt(19)",
+        "correct": false
+      },
+      "math500-test-215": {
+        "predicted": "c",
+        "gold": "2",
+        "correct": false
+      },
+      "math500-test-197": {
+        "predicted": "c",
+        "gold": "6",
+        "correct": false
+      },
+      "math500-test-159": {
+        "predicted": "e",
+        "gold": "3.21",
+        "correct": false
+      },
+      "math500-test-12": {
+        "predicted": "e",
+        "gold": "284",
+        "correct": false
+      },
+      "math500-test-242": {
+        "predicted": "c",
+        "gold": "32348",
+        "correct": false
+      },
+      "math500-test-254": {
+        "predicted": "c",
+        "gold": "28",
+        "correct": false
+      },
+      "math500-test-232": {
+        "predicted": null,
+        "gold": "1997/2",
+        "correct": false
+      },
+      "math500-test-150": {
+        "predicted": null,
+        "gold": "1",
+        "correct": false
+      },
+      "math500-test-317": {
+        "predicted": null,
+        "gold": "0",
+        "correct": false
+      },
+      "math500-test-85": {
+        "predicted": "c",
+        "gold": "sqrt(5)",
+        "correct": false
+      },
+      "math500-test-436": {
+        "predicted": "d",
+        "gold": "4",
+        "correct": false
+      },
+      "math500-test-361": {
+        "predicted": "c",
+        "gold": "16sqrt(3)",
+        "correct": false
+      },
+      "math500-test-94": {
+        "predicted": "c",
+        "gold": "80",
+        "correct": false
+      },
+      "math500-test-357": {
+        "predicted": "d",
+        "gold": "4",
+        "correct": false
+      },
+      "math500-test-7": {
+        "predicted": "c",
+        "gold": "90^circ",
+        "correct": false
+      },
+      "math500-test-231": {
+        "predicted": "c",
+        "gold": "10",
+        "correct": false
+      },
+      "math500-test-493": {
+        "predicted": null,
+        "gold": "20",
+        "correct": false
+      },
+      "math500-test-282": {
+        "predicted": "e",
+        "gold": "129",
+        "correct": false
+      },
+      "math500-test-92": {
+        "predicted": "d",
+        "gold": "448/15625",
+        "correct": false
+      },
+      "math500-test-299": {
+        "predicted": "c",
+        "gold": "63",
+        "correct": false
+      },
+      "math500-test-281": {
+        "predicted": "c",
+        "gold": "36^circ",
+        "correct": false
+      },
+      "math500-test-450": {
+        "predicted": "c",
+        "gold": "64",
+        "correct": false
+      },
+      "math500-test-313": {
+        "predicted": "c",
+        "gold": "12pi",
+        "correct": false
+      },
+      "math500-test-366": {
+        "predicted": "d",
+        "gold": "4",
+        "correct": false
+      },
+      "math500-test-248": {
+        "predicted": null,
+        "gold": "beginpmatrix-1&00&-1endpmatrix",
+        "correct": false
+      },
+      "math500-test-367": {
+        "predicted": "a",
+        "gold": "1",
+        "correct": false
+      },
+      "math500-test-444": {
+        "predicted": null,
+        "gold": "1/2",
+        "correct": false
+      },
+      "math500-test-498": {
+        "predicted": null,
+        "gold": "-1",
+        "correct": false
+      },
+      "math500-test-186": {
+        "predicted": "c",
+        "gold": "7",
+        "correct": false
+      },
+      "math500-test-287": {
+        "predicted": "c",
+        "gold": "36",
+        "correct": false
+      },
+      "math500-test-365": {
+        "predicted": "e",
+        "gold": "8",
+        "correct": false
+      },
+      "math500-test-137": {
+        "predicted": "c",
+        "gold": "204_5",
+        "correct": false
+      },
+      "math500-test-442": {
+        "predicted": "c",
+        "gold": "256",
+        "correct": false
+      },
+      "math500-test-263": {
+        "predicted": "e",
+        "gold": "15",
+        "correct": false
+      },
+      "math500-test-441": {
+        "predicted": "c",
+        "gold": "550",
+        "correct": false
+      },
+      "math500-test-276": {
+        "predicted": "e",
+        "gold": "11",
+        "correct": false
+      },
+      "math500-test-257": {
+        "predicted": "c",
+        "gold": "864mboxinches^2",
+        "correct": false
+      },
+      "math500-test-331": {
+        "predicted": null,
+        "gold": "13/6",
+        "correct": false
+      },
+      "math500-test-303": {
+        "predicted": null,
+        "gold": "28",
+        "correct": false
+      },
+      "math500-test-22": {
+        "predicted": "e",
+        "gold": "5",
+        "correct": false
+      },
+      "math500-test-240": {
+        "predicted": "c",
+        "gold": "116",
+        "correct": false
+      },
+      "math500-test-375": {
+        "predicted": "e",
+        "gold": "25",
+        "correct": false
+      },
+      "math500-test-250": {
+        "predicted": "e",
+        "gold": "13",
+        "correct": false
+      },
+      "math500-test-189": {
+        "predicted": null,
+        "gold": "160",
+        "correct": false
+      },
+      "math500-test-468": {
+        "predicted": "e",
+        "gold": "8",
+        "correct": false
+      },
+      "math500-test-55": {
+        "predicted": "c",
+        "gold": "3",
+        "correct": false
+      }
+    }
+  },
+  "elapsed_seconds": 405.72465896606445
+}

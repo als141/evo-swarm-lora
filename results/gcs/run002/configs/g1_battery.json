@@ -1,0 +1,79 @@
+[
+ {
+  "name": "g1_run002_solo_mmlu_pro",
+  "args": [
+   "--task",
+   "mmlu_pro",
+   "--n",
+   "200",
+   "--seed",
+   "9",
+   "--mode",
+   "solo",
+   "--load-adapters",
+   "r2_critic=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run002/training/model/adapters/persona_a",
+   "r2_pragmatist=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run002/training/model/adapters/persona_b",
+   "r2_explorer=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run002/training/model/adapters/persona_c",
+   "--agents",
+   "critic=r2_critic",
+   "pragmatist=r2_pragmatist",
+   "explorer=r2_explorer",
+   "--exclude-items-file",
+   "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+   "--max-tokens",
+   "8192",
+   "--workers",
+   "32"
+  ]
+ },
+ {
+  "name": "g1_run002_solo_math500",
+  "args": [
+   "--task",
+   "math500",
+   "--n",
+   "200",
+   "--seed",
+   "9",
+   "--mode",
+   "solo",
+   "--load-adapters",
+   "r2_critic=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run002/training/model/adapters/persona_a",
+   "r2_pragmatist=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run002/training/model/adapters/persona_b",
+   "r2_explorer=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run002/training/model/adapters/persona_c",
+   "--agents",
+   "critic=r2_critic",
+   "pragmatist=r2_pragmatist",
+   "explorer=r2_explorer",
+   "--max-tokens",
+   "8192",
+   "--workers",
+   "32"
+  ]
+ },
+ {
+  "name": "g1_run002_solo_supergpqa",
+  "args": [
+   "--task",
+   "supergpqa",
+   "--n",
+   "200",
+   "--seed",
+   "9",
+   "--mode",
+   "solo",
+   "--load-adapters",
+   "r2_critic=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run002/training/model/adapters/persona_a",
+   "r2_pragmatist=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run002/training/model/adapters/persona_b",
+   "r2_explorer=/gcs/evo-swarm-lora-usc1-research-501308/experiments/run002/training/model/adapters/persona_c",
+   "--agents",
+   "critic=r2_critic",
+   "pragmatist=r2_pragmatist",
+   "explorer=r2_explorer",
+   "--max-tokens",
+   "8192",
+   "--workers",
+   "32"
+  ]
+ }
+]

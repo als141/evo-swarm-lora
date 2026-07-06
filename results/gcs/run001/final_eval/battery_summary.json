@@ -1,0 +1,134 @@
+[
+  {
+    "name": "c1_base_solo_mmlu_pro_s1",
+    "status": "skipped"
+  },
+  {
+    "name": "c3_base_team_mmlu_pro_s1",
+    "status": "skipped"
+  },
+  {
+    "name": "c4_gen0_team_mmlu_pro_s1",
+    "status": "skipped"
+  },
+  {
+    "name": "c6_evolved_solo_mmlu_pro_s1",
+    "status": "ok",
+    "elapsed_seconds": 382.25400829315186
+  },
+  {
+    "name": "c2_sc9_mmlu_pro_s2",
+    "status": "ok",
+    "elapsed_seconds": 1544.7526297569275
+  },
+  {
+    "name": "c3p_prompt_persona_team_mmlu_pro_s2",
+    "status": "ok",
+    "elapsed_seconds": 1256.288346529007
+  },
+  {
+    "name": "c5_evolved_team_mmlu_pro_s2",
+    "status": "ok",
+    "elapsed_seconds": 1157.8436348438263
+  },
+  {
+    "name": "c1_base_solo_mmlu_pro_s3",
+    "status": "ok",
+    "elapsed_seconds": 234.68931674957275
+  },
+  {
+    "name": "c3_base_team_mmlu_pro_s3",
+    "status": "ok",
+    "elapsed_seconds": 1225.3614897727966
+  },
+  {
+    "name": "c4_gen0_team_mmlu_pro_s3",
+    "status": "ok",
+    "elapsed_seconds": 1126.1366860866547
+  },
+  {
+    "name": "c6_evolved_solo_mmlu_pro_s3",
+    "status": "ok",
+    "elapsed_seconds": 663.795891046524
+  },
+  {
+    "name": "c2_sc9_math500_s1",
+    "status": "ok",
+    "elapsed_seconds": 652.295768737793
+  },
+  {
+    "name": "c3p_prompt_persona_team_math500_s1",
+    "status": "ok",
+    "elapsed_seconds": 546.7021679878235
+  },
+  {
+    "name": "c5_evolved_team_math500_s1",
+    "status": "ok",
+    "elapsed_seconds": 539.6653861999512
+  },
+  {
+    "name": "c1_base_solo_math500_s2",
+    "status": "ok",
+    "elapsed_seconds": 97.11480736732483
+  },
+  {
+    "name": "c3_base_team_math500_s2",
+    "status": "ok",
+    "elapsed_seconds": 546.8056056499481
+  },
+  {
+    "name": "c4_gen0_team_math500_s2",
+    "status": "ok",
+    "elapsed_seconds": 535.3524713516235
+  },
+  {
+    "name": "c6_evolved_solo_math500_s2",
+    "status": "ok",
+    "elapsed_seconds": 261.9190638065338
+  },
+  {
+    "name": "c2_sc9_math500_s3",
+    "status": "ok",
+    "elapsed_seconds": 652.4161357879639
+  },
+  {
+    "name": "c3p_prompt_persona_team_math500_s3",
+    "status": "ok",
+    "elapsed_seconds": 509.834037065506
+  },
+  {
+    "name": "c5_evolved_team_math500_s3",
+    "status": "ok",
+    "elapsed_seconds": 516.3770411014557
+  },
+  {
+    "name": "c1_base_solo_supergpqa_s1",
+    "status": "ok",
+    "elapsed_seconds": 150.73649215698242
+  },
+  {
+    "name": "c3_base_team_supergpqa_s1",
+    "status": "ok",
+    "elapsed_seconds": 787.6543588638306
+  },
+  {
+    "name": "c4_gen0_team_supergpqa_s1",
+    "status": "ok",
+    "elapsed_seconds": 732.5970544815063
+  },
+  {
+    "name": "c6_evolved_solo_supergpqa_s1",
+    "status": "ok",
+    "elapsed_seconds": 408.3014442920685
+  },
+  {
+    "name": "c2_sc9_supergpqa_s2",
+    "status": "ok",
+    "elapsed_seconds": 974.6977336406708
+  },
+  {
+    "name": "c3p_prompt_persona_team_supergpqa_s2",
+    "status": "ok",
+    "elapsed_seconds": 775.2626504898071
+  }
+]

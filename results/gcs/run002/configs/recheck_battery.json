@@ -1,0 +1,26 @@
+[
+ {
+  "name": "c2_sc9_mmlu_pro_s1_recheck",
+  "args": [
+   "--task",
+   "mmlu_pro",
+   "--n",
+   "500",
+   "--seed",
+   "1",
+   "--exclude-items-file",
+   "/gcs/evo-swarm-lora-usc1-research-501308/experiments/run001/evolution/run_log.json",
+   "--mode",
+   "sc",
+   "--sc-k",
+   "9",
+   "--agents",
+   "base=Qwen/Qwen3-4B-Instruct-2507",
+   "--no-persona-prompt",
+   "--max-tokens",
+   "8192",
+   "--workers",
+   "32"
+  ]
+ }
+]

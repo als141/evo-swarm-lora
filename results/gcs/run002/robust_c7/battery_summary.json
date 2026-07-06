@@ -1,0 +1,47 @@
+[
+  {
+    "name": "c7_run002_team_mmlu_pro_s4",
+    "status": "ok",
+    "elapsed_seconds": 3133.7588369846344
+  },
+  {
+    "name": "c7_run002_team_math500_s4",
+    "status": "ok",
+    "elapsed_seconds": 2177.578919172287
+  },
+  {
+    "name": "c7_run002_team_supergpqa_s4",
+    "status": "ok",
+    "elapsed_seconds": 2944.2228395938873
+  },
+  {
+    "name": "c7_run002_team_mmlu_pro_s5",
+    "status": "ok",
+    "elapsed_seconds": 2948.6904118061066
+  },
+  {
+    "name": "c7_run002_team_math500_s5",
+    "status": "ok",
+    "elapsed_seconds": 2006.4414899349213
+  },
+  {
+    "name": "c7_run002_team_supergpqa_s5",
+    "status": "ok",
+    "elapsed_seconds": 2889.4037067890167
+  },
+  {
+    "name": "c7_run002_team_mmlu_pro_s6",
+    "status": "ok",
+    "elapsed_seconds": 3087.4037306308746
+  },
+  {
+    "name": "c7_run002_team_math500_s6",
+    "status": "ok",
+    "elapsed_seconds": 2070.279650449753
+  },
+  {
+    "name": "c7_run002_team_supergpqa_s6",
+    "status": "ok",
+    "elapsed_seconds": 2965.537246465683
+  }
+]
