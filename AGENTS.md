@@ -134,6 +134,16 @@ uv run python scripts/ping_vllm_persona.py --persona persona_a
 
 ## 研究ログ（随時追記・新しいものを上に）
 
+### 2026-07-07: 【研究一式の納品完了】修論最終化・全文整合・データ完全ローカル化・GitHub push 済み
+- **表紙確定**: 舛田 岳（「増田 学」は誤りだった）/ 新潟大学 自然科学研究科 電気情報工学専攻 情報社会デザイン科学コース / 学籍番号 F25C142E。残TODOは「年度」と「指導教員の職位確認」の2箇所のみ（ユーザー確認事項）。
+- **全文整合性検査（専任エージェント）**: 24件の指摘を全件修正——貢献3点→4点、A1/A2/A3の「検証する」→「実装済み・未実施」への時制統一（Sec2/Sec3）、+3.5→+3.2pt統一、生成設定の進化ループ/最終評価分離明記、RQ表記の廃止、副次評価（LLM-as-judge/多様性推移）の未実施明記、ΔWノルム比1.00と26問flipをSec4.6.2へ正式記載、旧チーム呼称の初出定義、進化ループ生成条件のlimitation追加ほか。**主要数値の照合は全一致**（旧稿数値の誤残存なし）。
+- **refer.bib**: 全63エントリの実在・書誌を原典照合済み（別エントリ参照）。本文側もSec2表2.2の「Meta-Team」→実題「Evolve as a Team」、Sec3のjudge2025bottleneck引用文を実論文内容（意思決定者の力）に整合。
+- **最終コンパイル**: platex→pbibtex→platex×2→dvipdfmx でLaTeXエラー0・bibエラー0・未解決参照0、main.pdf 535KB。
+- **データ完全ローカル化（GCS不要化）**: `results/gcs/` = 全実験データミラー（評価JSON・生会話・LLM完全記録・進化ログ・リプレイ、gzip圧縮812MB→199MB、git管理）+ データカタログREADME（環境系統差の注意付き）。`artifacts_local/` = 全LoRAアダプタ実体5.7GB（gen0/進化全世代/run002、git外）。
+- **GitHub push完了**（origin/master、5コミット）: ①評価・学習基盤のコード変更 ②設計文書docs ③修論一式 ④実験データアーカイブ+分析スクリプト ⑤AGENTS.md+.gitignore。LaTeXビルド生成物はuntrack化。
+- **コスト最終実測**（ユーザー提供コンソール値）: 総額¥39,879、無料クレジット残¥4,071。**残クレジットが少ないため、今後クラウド作業を再開する場合は課金アカウント付け替え（別アカウントのBilling Account User権限付与→`gcloud billing projects link research-501308 --billing-account=<新ID>`）を先に行うこと**。データは全てローカルにあるためGCSが消えても研究は無傷。
+- **残タスク**: 表紙の年度・指導教員職位（ユーザー確認）のみ。研究の余地（ハイブリッドSC@3×3体、進化v3、A1アブレーション）はSec6.2と research_design_v3.md に保存済み。
+
 ### 2026-07-06: refer.bib 全63エントリの書誌全数点検が完了（実在未確認ゼロ・削除ゼロ）
 - 全エントリを arXiv abs ページ / ACM DL / ACL Anthology / ICLR proceedings と照合。**63件すべて実在確認**。修正済み bib 全文は点検エージェントの報告として返却（refer.bib への反映は親セッションで実施）。citation key は \cite 互換のため全て維持。
 - **プレースホルダ解決**: judge2025bottleneck (arXiv:2511.11040) の実体は「Key Decision-Makers in Multi-Agent Debates: Who Holds the Power?」(Qian Zhang+ 2025)。MADC・Truth Last の提案論文で、文献調査ログの「MADC: Qwen-3Bで+8.8%」と同一論文。
