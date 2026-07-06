@@ -1,8 +1,9 @@
 % ==========================================================================
 % refer.bib -- 修士論文参考文献（docs/thesis/*.md の章末リストを統合・重複除去）
 % citation key は著者年形式（例: du2023improving）
-% TODO: 提出前に全文献の原典・書誌情報（著者名・掲載誌・年）を必ず確認すること
-%       （docs/literature_notes.md 冒頭の注意書き参照）
+% 2026-07-06: 全63エントリの実在・書誌情報を点検済み（arXiv abs ページ /
+%             ACM DL / ACL Anthology / ICLR proceedings と照合）。
+%             arXiv 上で改題された論文は点検時点の最新版タイトルを採用。
 % ==========================================================================
 
 % -------------------- マルチエージェント議論 --------------------
@@ -31,7 +32,7 @@
 }
 
 @inproceedings{smit2024should,
-  author    = {Smit, Andries P. and others},
+  author    = {Smit, Andries and Duckworth, Paul and Grinsztajn, Nathan and Barrett, Thomas D. and Pretorius, Arnu},
   title     = {Should We Be Going {MAD}? {A} Look at Multi-Agent Debate Strategies for {LLMs}},
   booktitle = {Proceedings of the 41st International Conference on Machine Learning (ICML)},
   year      = {2024},
@@ -39,28 +40,30 @@
 }
 
 @misc{zhang2025debate,
-  author       = {Zhang, Hangfan and others},
-  title        = {If Multi-Agent Debate Is the Answer, What Is the Question?},
+  author       = {Zhang, Hangfan and Cui, Zhiyao and Chen, Jianhao and Wang, Xinrun and Zhang, Qiaosheng and Wang, Zhen and Wu, Dinghao and Hu, Shuyue},
+  title        = {Stop Overvaluing Multi-Agent Debate --- We Must Rethink Evaluation and Embrace Model Heterogeneity},
   howpublished = {arXiv:2502.08788},
-  year         = {2025}
+  year         = {2025},
+  note         = {初版タイトル: If Multi-Agent Debate Is the Answer, What Is the Question?}
 }
 
 @misc{talk2025cheap,
+  author       = {Wynn, Andrea and Satija, Harsh and Hadfield, Gillian},
   title        = {Talk Isn't Always Cheap: Understanding Failure Modes in Multi-Agent Debate},
   howpublished = {arXiv:2509.05396},
   year         = {2025},
-  note         = {著者情報要確認}
+  note         = {ICML 2025 MAS Workshop}
 }
 
 @misc{cost2026consensus,
-  title        = {The Cost of Consensus: Inefficiency and Instability of Homogeneous Multi-Agent Debate},
+  author       = {Bertalani{\v{c}}, Bla{\v{z}} and Fortuna, Carolina},
+  title        = {The Cost of Consensus: Isolated Self-Correction Prevails Over Unguided Homogeneous Multi-Agent Debate},
   howpublished = {arXiv:2605.00914},
-  year         = {2026},
-  note         = {著者情報要確認}
+  year         = {2026}
 }
 
 @inproceedings{park2025maporl,
-  author    = {Park, Chanwoo and others},
+  author    = {Park, Chanwoo and Han, Seungju and Guo, Xingzhi and Ozdaglar, Asuman and Zhang, Kaiqing and Kim, Joo-Kyung},
   title     = {{MAPoRL}: Multi-Agent Post-Co-Training for Collaborative Large Language Models with Reinforcement Learning},
   booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (ACL)},
   year      = {2025},
@@ -76,14 +79,15 @@
 }
 
 @misc{maca2025preference,
-  title        = {{MACA}: Preference Learning from Debate Traces for Small Models},
+  author       = {Samanta, Ankur and others},
+  title        = {Self-Improvement of Language Models by Post-Training on Multi-Agent Debate},
   howpublished = {arXiv:2509.15172},
   year         = {2025},
-  note         = {著者情報要確認}
+  note         = {MACA (Multi-Agent Consensus Alignment) の提案論文}
 }
 
 @inproceedings{wang2024mixture,
-  author    = {Wang, Junlin and others},
+  author    = {Wang, Junlin and Wang, Jue and Athiwaratkun, Ben and Zhang, Ce and Zou, James},
   title     = {Mixture-of-Agents Enhances Large Language Model Capabilities},
   booktitle = {Proceedings of the 13th International Conference on Learning Representations (ICLR)},
   year      = {2025},
@@ -91,21 +95,23 @@
 }
 
 @misc{li2025rethinking,
-  author       = {Li, Wenzhe and others},
-  title        = {Rethinking Mixture-of-Agents: Is Mixing Different Large Language Models Beneficial? ({Self-MoA})},
+  author       = {Li, Wenzhe and Lin, Yong and Xia, Mengzhou and Jin, Chi},
+  title        = {Rethinking Mixture-of-Agents: Is Mixing Different Large Language Models Beneficial?},
   howpublished = {arXiv:2502.00674},
-  year         = {2025}
+  year         = {2025},
+  note         = {Self-MoA の提案論文}
 }
 
-@misc{choi2025debate,
-  author       = {Choi, S. and others},
-  title        = {Debate or Vote: Which Yields Better Decisions in Multi-Agent Large Language Models?},
-  howpublished = {arXiv:2508.17536},
-  year         = {2025}
+@inproceedings{choi2025debate,
+  author    = {Choi, Hyeong Kyu and Zhu, Xiaojin and Li, Sharon},
+  title     = {Debate or Vote: Which Yields Better Decisions in Multi-Agent Large Language Models?},
+  booktitle = {Advances in Neural Information Processing Systems 38 (NeurIPS)},
+  year      = {2025},
+  note      = {arXiv:2508.17536, NeurIPS 2025 Spotlight}
 }
 
 @inproceedings{kaesberg2025voting,
-  author    = {Kaesberg, Lars Benedikt and others},
+  author    = {Kaesberg, Lars Benedikt and Becker, Jonas and Wahle, Jan Philip and Ruas, Terry and Gipp, Bela},
   title     = {Voting or Consensus? {Decision-Making} in Multi-Agent Debate},
   booktitle = {Findings of the Association for Computational Linguistics: ACL 2025},
   year      = {2025},
@@ -113,16 +119,18 @@
 }
 
 @misc{demystifying2026mad,
-  title        = {Demystifying Multi-Agent Debate: Conditions for Success},
+  author       = {Zhu, Xiaochen and Zhang, Caiqi and Chi, Yizhou and Stafford, Tom and Collier, Nigel and Vlachos, Andreas},
+  title        = {Demystifying Multi-Agent Debate: The Role of Confidence and Diversity},
   howpublished = {arXiv:2601.19921},
-  year         = {2026},
-  note         = {著者情報要確認}
+  year         = {2026}
 }
 
 @misc{judge2025bottleneck,
-  title        = {（タイトル・著者要確認：judge 集約の判定能力ボトルネックに関する報告）},
+  author       = {Zhang, Qian and Zheng, Yan and Liu, Jinyi and Liang, Hebin and Wang, Lanjun},
+  title        = {Key Decision-Makers in Multi-Agent Debates: Who Holds the Power?},
   howpublished = {arXiv:2511.11040},
-  year         = {2025}
+  year         = {2025},
+  note         = {MADC・Truth Last 戦略の提案論文}
 }
 
 % -------------------- モデルマージと LoRA 合成 --------------------
@@ -153,34 +161,34 @@
 
 @inproceedings{yu2023language,
   author    = {Yu, Le and others},
-  title     = {Language Models are Super Mario: Absorbing Abilities from Homologous Models as a Free Lunch ({DARE})},
+  title     = {Language Models are Super Mario: Absorbing Abilities from Homologous Models as a Free Lunch},
   booktitle = {Proceedings of the 41st International Conference on Machine Learning (ICML)},
   year      = {2024},
-  note      = {arXiv:2311.03099}
+  note      = {arXiv:2311.03099 (DARE)}
 }
 
 @inproceedings{stoica2024knots,
-  author    = {Stoica, George and others},
-  title     = {Model Merging with {SVD} to Tie the Knots ({KnOTS})},
+  author    = {Stoica, George and Ramesh, Pratik and Ecsedi, Boglarka and Choshen, Leshem and Hoffman, Judy},
+  title     = {Model Merging with {SVD} to Tie the {Knots}},
   booktitle = {Proceedings of the 13th International Conference on Learning Representations (ICLR)},
   year      = {2025},
-  note      = {arXiv:2410.19735}
+  note      = {arXiv:2410.19735 (KnOTS)}
 }
 
 @inproceedings{prabhakar2024lora,
-  author    = {Prabhakar, Akshara and others},
+  author    = {Prabhakar, Akshara and Li, Yuanzhi and Narasimhan, Karthik and Kakade, Sham and Malach, Eran and Jelassi, Samy},
   title     = {{LoRA} Soups: Merging {LoRAs} for Practical Skill Composition Tasks},
-  booktitle = {Proceedings of the 31st International Conference on Computational Linguistics (COLING)},
+  booktitle = {Proceedings of the 31st International Conference on Computational Linguistics (COLING), Industry Track},
   year      = {2025},
   note      = {arXiv:2410.13025}
 }
 
 @article{yang2024model,
-  author  = {Yang, Enneng and others},
-  title   = {Model Merging in {LLMs}, {MLLMs}, and Beyond: Methods, Theories, Applications and Opportunities},
+  author  = {Yang, Enneng and Shen, Li and Guo, Guibing and Wang, Xingwei and Cao, Xiaochun and Zhang, Jie and Tao, Dacheng},
+  title   = {Model Merging in {LLMs}, {MLLMs}, and Beyond: Methods, Theories, Applications, and Opportunities},
   journal = {ACM Computing Surveys},
   year    = {2026},
-  note    = {arXiv:2408.07666}
+  note    = {arXiv:2408.07666, DOI: 10.1145/3787849}
 }
 
 @misc{hu2021lora,
@@ -193,7 +201,7 @@
 % -------------------- 進化的モデル最適化 --------------------
 
 @article{akiba2024evolutionary,
-  author  = {Akiba, Takuya and others},
+  author  = {Akiba, Takuya and Shing, Makoto and Tang, Yujin and Sun, Qi and Ha, David},
   title   = {Evolutionary Optimization of Model Merging Recipes},
   journal = {Nature Machine Intelligence},
   year    = {2025},
@@ -217,28 +225,29 @@
 }
 
 @misc{zhang2025genome,
-  author       = {Zhang, W. and others},
-  title        = {{GENOME}: Nature-Inspired Population-Based Evolution of Large Language Models},
+  author       = {Zhang, Yiqun and Ye, Peng and Yang, Xiaocui and Feng, Shi and Zhang, Shufei and Bai, Lei and Ouyang, Wanli and Hu, Shuyue},
+  title        = {Nature-Inspired Population-Based Evolution of Large Language Models},
   howpublished = {arXiv:2503.01155},
-  year         = {2025}
+  year         = {2025},
+  note         = {GENOME/GENOME+ の提案論文}
 }
 
 @misc{creuscastanyer2026populora,
-  author       = {Creus Castanyer, R. and others},
-  title        = {{PopuLoRA}: Adversarial Co-Evolution of {LoRA} Populations},
+  author       = {{Creus Castanyer}, Roger and Bradway, Geoffrey and Wolf, Lorenz and Lin, Maxwill and Mavor-Parker, Augustine N. and Sargent, Matthew James},
+  title        = {{PopuLoRA}: Co-Evolving {LLM} Populations for Reasoning Self-Play},
   howpublished = {arXiv:2605.16727},
   year         = {2026}
 }
 
 @misc{evopref2026evolutionary,
-  title        = {{EvoPref}: Evolutionary Multi-Objective {LoRA} Optimization for Preference Alignment},
+  author       = {Guo, Dongxin and Wu, Jikun and Yiu, Siu Ming},
+  title        = {{EvoPref}: Multi-Objective Evolutionary Optimization Discovers Diverse {LLM} Alignments Beyond Gradient Descent},
   howpublished = {arXiv:2605.09777},
-  year         = {2026},
-  note         = {著者情報要確認}
+  year         = {2026}
 }
 
 @inproceedings{minut2025mergenetic,
-  author    = {Minut, S. and others},
+  author    = {Minut, Adrian Robert and Mencattini, Tommaso and Santilli, Andrea and Crisostomi, Donato and Rodol{\`a}, Emanuele},
   title     = {Mergenetic: A Simple Evolutionary Model Merging Library},
   booktitle = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (ACL), System Demonstrations},
   year      = {2025},
@@ -246,31 +255,33 @@
 }
 
 @misc{evomas2026evolving,
-  title        = {{EvoMAS}: Evolving Multi-Agent Systems with Team-Level Fitness},
+  author       = {Hu, Yuntong and Zhang, Yuting and Trager, Matthew and Zhang, Yi and Yang, Shuo and Xia, Wei and Soatto, Stefano},
+  title        = {{EvoMAS}: Evolutionary Generation of Multi-Agent Systems},
   howpublished = {arXiv:2602.06511},
   year         = {2026},
-  note         = {著者情報要確認}
+  note         = {ICML 2026 採録}
 }
 
 @misc{metateam2026meta,
-  title        = {{Meta-Team}: Meta-Optimization of Agent Team Configurations},
+  author       = {Hao, Zhezheng and others},
+  title        = {Evolve as a Team: Collaborative Self-Evolution for {LLM}-based Multi-Agent Systems},
   howpublished = {arXiv:2605.29790},
-  year         = {2026},
-  note         = {著者情報要確認}
+  year         = {2026}
 }
 
-@misc{survey2025selfevolving,
-  title        = {A Survey of Self-Evolving Agents},
-  howpublished = {arXiv:2507.21046},
-  year         = {2025},
-  note         = {著者情報要確認}
+@article{survey2025selfevolving,
+  author  = {Gao, Huan-ang and others},
+  title   = {A Survey of Self-Evolving Agents: What, When, How, and Where to Evolve on the Path to Artificial Super Intelligence},
+  journal = {Transactions on Machine Learning Research},
+  year    = {2026},
+  note    = {arXiv:2507.21046}
 }
 
 @misc{comprehensive2025survey,
-  title        = {A Comprehensive Survey of Self-Evolving {AI} Agents},
+  author       = {Fang, Jinyuan and others},
+  title        = {A Comprehensive Survey of Self-Evolving {AI} Agents: A New Paradigm Bridging Foundation Models and Lifelong Agentic Systems},
   howpublished = {arXiv:2508.07407},
-  year         = {2025},
-  note         = {著者情報要確認}
+  year         = {2025}
 }
 
 % -------------------- 協調の定量化・適応度設計・進化計算の理論 --------------------
@@ -307,10 +318,10 @@
 
 @inproceedings{foerster2018counterfactual,
   author    = {Foerster, Jakob and others},
-  title     = {Counterfactual Multi-Agent Policy Gradients ({COMA})},
+  title     = {Counterfactual Multi-Agent Policy Gradients},
   booktitle = {Proceedings of the 32nd AAAI Conference on Artificial Intelligence},
   year      = {2018},
-  note      = {arXiv:1705.08926}
+  note      = {arXiv:1705.08926 (COMA)}
 }
 
 @inproceedings{potter1994cooperative,
@@ -422,7 +433,7 @@
 @inproceedings{wang2024mmlupro,
   author    = {Wang, Yubo and others},
   title     = {{MMLU-Pro}: A More Robust and Challenging Multi-Task Language Understanding Benchmark},
-  booktitle = {Advances in Neural Information Processing Systems 37 (NeurIPS)},
+  booktitle = {Advances in Neural Information Processing Systems 37 (NeurIPS), Datasets and Benchmarks Track},
   year      = {2024},
   note      = {arXiv:2406.01574}
 }
@@ -430,7 +441,7 @@
 @misc{lightman2023lets,
   author       = {Lightman, Hunter and others},
   title        = {Let's Verify Step by Step},
-  howpublished = {arXiv:2305.20050},
+  howpublished = {arXiv:2305.20050 (ICLR 2024)},
   year         = {2023},
   note         = {MATH-500 はこの評価分割に由来}
 }
@@ -444,7 +455,7 @@
 }
 
 @misc{du2025supergpqa,
-  author       = {Du, X. and others},
+  author       = {{M-A-P Team} and Du, Xinrun and others},
   title        = {{SuperGPQA}: Scaling {LLM} Evaluation across 285 Graduate Disciplines},
   howpublished = {arXiv:2502.14739},
   year         = {2025}
@@ -453,15 +464,16 @@
 @misc{rein2023gpqa,
   author       = {Rein, David and others},
   title        = {{GPQA}: A Graduate-Level Google-Proof {Q\&A} Benchmark},
-  howpublished = {arXiv:2311.12022},
+  howpublished = {arXiv:2311.12022 (COLM 2024)},
   year         = {2023}
 }
 
 @misc{cobbe2021training,
   author       = {Cobbe, Karl and others},
-  title        = {Training Verifiers to Solve Math Word Problems ({GSM8K})},
+  title        = {Training Verifiers to Solve Math Word Problems},
   howpublished = {arXiv:2110.14168},
-  year         = {2021}
+  year         = {2021},
+  note         = {GSM8K の提案論文}
 }
 
 @inproceedings{wang2023selfconsistency,
@@ -484,10 +496,10 @@
 
 @inproceedings{kwon2023efficient,
   author    = {Kwon, Woosuk and others},
-  title     = {Efficient Memory Management for Large Language Model Serving with {PagedAttention} ({vLLM})},
+  title     = {Efficient Memory Management for Large Language Model Serving with {PagedAttention}},
   booktitle = {Proceedings of the 29th ACM Symposium on Operating Systems Principles (SOSP)},
   year      = {2023},
-  note      = {arXiv:2309.06180}
+  note      = {arXiv:2309.06180 (vLLM)}
 }
 
 @misc{qwen2025qwen3,
