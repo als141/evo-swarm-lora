@@ -15,9 +15,22 @@ adapters/
 !adapters/.gitkeep
 *.safetensors
 
+# ローカル専用アーカイブ（GCSミラーの重量物: LoRAアダプタ実体。README参照）
+artifacts_local/
+
 # Hugging Face caches / outputs
 .cache/
 out/
 
 # Docker / misc
 *.log
+
+# LaTeX ビルド生成物（main.pdf は成果物としてトラックする）
+thesis/*.aux
+thesis/*.dvi
+thesis/*.toc
+thesis/*.lof
+thesis/*.lot
+thesis/*.bbl
+thesis/*.blg
+thesis/*.out
