@@ -1,0 +1,38 @@
+{
+  "critic": {
+    "modules": 252,
+    "cos_global": 1.0000839853781607,
+    "cos_module_mean": 0.9999961268767178,
+    "cos_module_min": 0.9995977918341282,
+    "cos_module_max": 1.0004532415237624,
+    "norm_ratio_total": 1.0001858312407994
+  },
+  "pragmatist": {
+    "modules": 252,
+    "cos_global": 0.9998969641929145,
+    "cos_module_mean": 0.9998348907855807,
+    "cos_module_min": 0.9993891377490768,
+    "cos_module_max": 1.0004532425477835,
+    "norm_ratio_total": 1.000346369869612
+  },
+  "explorer": {
+    "modules": 252,
+    "cos_global": 1.0001042238254603,
+    "cos_module_mean": 1.0000221213884115,
+    "cos_module_min": 0.999606130570304,
+    "cos_module_max": 1.0003945425678002,
+    "norm_ratio_total": 1.0001643035820358
+  },
+  "変異1回 (persona_b vs gen0_mutant)": {
+    "cos": 0.9997332784895937,
+    "norm_ratio": 1.0002530680619772
+  },
+  "交叉1回 (persona_b vs gen1_child)": {
+    "cos": 0.9997890682377831,
+    "norm_ratio": 1.00019821029621
+  },
+  "gen1→gen5 (4世代分)": {
+    "cos": 0.9998172393994219,
+    "norm_ratio": 1.0001481125336582
+  }
+}
