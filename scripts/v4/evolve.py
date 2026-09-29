@@ -187,10 +187,14 @@ class Runner:
                             break
         rng = random.Random(stable_seed(self.args.lineage, "data", len(ids)))
         for role in ROLES:
-            a = data[role]["a"]
-            b = a + data[role]["b"]
-            data[role]["a"] = rng.sample(a, min(len(a), self.args.max_examples))
-            data[role]["b"] = rng.sample(b, min(len(b), self.args.max_examples))
+            own = data[role]["a"]
+            peer = data[role]["b"]
+            data[role]["a"] = rng.sample(own, min(len(own), self.args.max_examples))
+            # b: 他者から学ぶ例（自分が誤り他者が正解）を必ず全部入れ、残りを自己学習の例で埋める
+            peer_keep = rng.sample(peer, min(len(peer), self.args.max_examples))
+            fill = rng.sample(own, min(len(own), max(0, self.args.max_examples - len(peer_keep))))
+            data[role]["b"] = peer_keep + fill
+            rng.shuffle(data[role]["b"])
         return data
 
     def generation(self, t: int) -> None:

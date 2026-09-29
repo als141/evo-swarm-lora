@@ -1,0 +1,35 @@
+{
+ "items": "data/v4/items/test.jsonl",
+ "evals": [
+  {
+   "kind": "team",
+   "protocol": "july",
+   "gen_seeds": [
+    1
+   ],
+   "agents": [
+    {
+     "agent_id": "c7.critic",
+     "role": "critic",
+     "model": "c7_critic",
+     "persona": "あなたは厳密な検証を重視する批判的思考家。反証・例外・境界条件に敏感。",
+     "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/adapters/run002_replay/persona_a"
+    },
+    {
+     "agent_id": "c7.pragmatist",
+     "role": "pragmatist",
+     "model": "c7_pragmatist",
+     "persona": "あなたは応用志向の実務家。意思決定に役立つ実装可能性とコストを重視。",
+     "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/adapters/run002_replay/persona_b"
+    },
+    {
+     "agent_id": "c7.explorer",
+     "role": "explorer",
+     "model": "c7_explorer",
+     "persona": "あなたは創発を促す発想家。仮説生成と多角的比喩で発想を広げる。",
+     "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/adapters/run002_replay/persona_c"
+    }
+   ]
+  }
+ ]
+}

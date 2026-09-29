@@ -1,0 +1,62 @@
+{
+ "n_records": 5648,
+ "finish_counts": {
+  "stop": 5459,
+  "length": 189
+ },
+ "loop_abort_rate": 0.0,
+ "length_hit_rate": 0.0335,
+ "steady_out_tok_per_s": {
+  "sc": 2675.6,
+  "r0": 1642.7,
+  "r1": 543.3
+ },
+ "mean_out_tokens": {
+  "sc": 2534.7,
+  "r0": 2490.7,
+  "r1": 1019.2
+ },
+ "sweep": {
+  "64": {
+   "calls": 480,
+   "elapsed_s": 975.6,
+   "out_tokens": 1411034,
+   "out_tok_per_s": 1446.3
+  },
+  "128": {
+   "calls": 480,
+   "elapsed_s": 709.1,
+   "out_tokens": 1094372,
+   "out_tok_per_s": 1543.4
+  },
+  "256": {
+   "calls": 480,
+   "elapsed_s": 727.7,
+   "out_tokens": 1144506,
+   "out_tok_per_s": 1572.7
+  }
+ },
+ "conformity_default_trio": {
+  "v4": {
+   "minority_correct_switch_rate": 0.81,
+   "n_minority_correct": 21,
+   "minority_wrong_switch_rate": 0.857,
+   "n_minority_wrong": 42,
+   "majority_keep_rate": 0.946
+  },
+  "v4c": {
+   "minority_correct_switch_rate": 0.905,
+   "n_minority_correct": 21,
+   "minority_wrong_switch_rate": 0.905,
+   "n_minority_wrong": 42,
+   "majority_keep_rate": 0.948
+  },
+  "july": {
+   "minority_correct_switch_rate": 0.952,
+   "n_minority_correct": 21,
+   "minority_wrong_switch_rate": 0.952,
+   "n_minority_wrong": 42,
+   "majority_keep_rate": 0.927
+  }
+ }
+}
