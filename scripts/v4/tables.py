@@ -1,0 +1,135 @@
+"""修論第5章の表（LaTeX の tabular 断片）をパイロット・最終解析の JSON から作る。
+
+  python3 scripts/v4/tables.py --pilot results/v4/pilot2_summary.json --stats results/v4/stats_final.json \
+      --out thesis/tab
+出力: persona_stage1.tex / persona_stage2.tex / persona_stage3.tex / main_results.tex / comparisons.tex
+（入力が無い表は作らない。Sec5.tex から \\input する）
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+NAMES = {"plant": "Plant", "monitor_evaluator": "Monitor Evaluator", "specialist": "Specialist",
+         "shaper": "Shaper", "implementer": "Implementer", "completer_finisher": "Completer Finisher",
+         "coordinator": "Co-ordinator", "teamworker": "Teamworker", "resource_investigator": "Resource Investigator",
+         "plain": "plain", "plain_b": "plain（複製1）", "plain_c": "plain（複製2）"}
+SHORT = {"plant": "PL", "monitor_evaluator": "ME", "specialist": "SP", "shaper": "SH", "implementer": "IMP",
+         "completer_finisher": "CF", "coordinator": "CO", "teamworker": "TW", "resource_investigator": "RI",
+         "plain": "plain", "plain_b": "plain", "plain_c": "plain"}
+COND = {"g0": "世代0の社会", "S_final": "系統S（最終世代）", "N_final": "系統N（最終世代）",
+        "A1_final": "系統A1（最終世代）", "base_single": "ベースモデル単体", "base_sc3": "SC@3",
+        "base_sc4": "SC@4", "base_sc5": "SC@5", "base_sc6": "SC@6", "base_sc9": "SC@9",
+        "rft_single": "RFT単体", "rft_sc9": "RFTのSC@9", "c7_july": "7月のチーム"}
+
+
+def pct(x: float, digits: int = 1) -> str:
+    return f"{100 * x:.{digits}f}"
+
+
+def signed(x: float, digits: int = 1) -> str:
+    return f"{100 * x:+.{digits}f}".replace("-", "$-$")
+
+
+def team_label(key: str) -> str:
+    return "＋".join(SHORT[m] for m in key.split("+"))
+
+
+def stage1(pilot: dict) -> str:
+    s1 = pilot["stage1"]
+    rows = []
+    for name, acc in sorted(s1["solo_macro"].items(), key=lambda kv: -kv[1]):
+        tax = s1["capability_tax"].get(name)
+        exc = s1.get("excess_disagreement_vs_plain", {}).get(name)
+        tax_s = (f"{signed(tax['diff_vs_plain'])} [{signed(tax['ci90'][0])}, {signed(tax['ci90'][1])}]"
+                 if tax else "--")
+        exc_s = signed(exc) if exc is not None else "--"
+        rows.append(f"{NAMES[name]} & {pct(acc)} & {tax_s} & {exc_s} \\\\")
+    return "\n".join(rows) + "\n"
+
+
+def stage2(pilot: dict, pool: dict) -> str:
+    s2 = pilot["stage2"]
+    kind = {"+".join(sorted(t["members"])): ("同質型" if t["type"] == "homogeneous" else "バランス型")
+            for t in pool["design_teams"]}
+    kind["+".join(sorted(pool["default_trio"]))] = "既定トリオ"
+    kind["+".join(pool["plain_team"])] = "plain×3"
+    rows = []
+    for key, acc in sorted(s2["team_acc_devA"].items(), key=lambda kv: -kv[1]):
+        rows.append(f"{team_label(key)} & {kind.get(key, '')} & {pct(acc)} \\\\")
+    return "\n".join(rows) + "\n"
+
+
+def stage3(pilot: dict) -> str:
+    s3 = pilot["stage3"]
+    label = {"F0_default": "F0（既定トリオ）", "F1_best_observed": "F1（段階2の観測最良）",
+             "F2_main_effect_top3": "F2（主効果の上位3）", "F3_solo_top3": "F3（単独の上位3）",
+             "C_plain": "C（plain×3）"}
+    rows = []
+    for name, key in s3["finalists"].items():
+        mark = "（採用）" if key == s3["adopted"] else ""
+        rows.append(f"{label[name]} & {team_label(key)} & {pct(s3['acc_devB'][key])}{mark} \\\\")
+    return "\n".join(rows) + "\n"
+
+
+def main_results(stats: dict) -> str:
+    rows = []
+    for name, label in COND.items():
+        a = stats["accuracy"].get(name)
+        if not a:
+            continue
+        rows.append(f"{label} & {pct(a.get('mmlu_pro', float('nan')))} & {pct(a.get('supergpqa', float('nan')))} & "
+                    f"{pct(a.get('math', float('nan')))} & {pct(a['macro'])} & {a['n']} \\\\")
+    return "\n".join(rows) + "\n"
+
+
+def comparisons(stats: dict) -> str:
+    holm = stats.get("holm_adjusted", {})
+    rows = []
+    for key, c in stats["comparisons"].items():
+        a, b = key.split(" vs ")
+        p = c["p"]
+        p_s = "$<10^{-4}$" if p < 1e-4 else f"{p:.4f}"
+        h = holm.get(key)
+        h_s = ("$<10^{-4}$" if h is not None and h < 1e-4 else (f"{h:.4f}" if h is not None else "--"))
+        rows.append(f"{COND.get(a, a)} vs {COND.get(b, b)} & {signed(c['diff_macro'], 2)} & "
+                    f"[{signed(c['ci95'][0], 2)}, {signed(c['ci95'][1], 2)}] & {p_s} & {h_s} \\\\")
+    return "\n".join(rows) + "\n"
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--pilot")
+    parser.add_argument("--stats")
+    parser.add_argument("--pool", default=str(ROOT / "configs/v4/persona_pool.json"))
+    parser.add_argument("--out", required=True)
+    args = parser.parse_args()
+    out = Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
+    made = []
+    if args.pilot and Path(args.pilot).exists():
+        pilot = json.loads(Path(args.pilot).read_text())
+        pool = json.loads(Path(args.pool).read_text())
+        if "stage1" in pilot:
+            (out / "persona_stage1.tex").write_text(stage1(pilot))
+            made.append("persona_stage1")
+        if "stage2" in pilot:
+            (out / "persona_stage2.tex").write_text(stage2(pilot, pool))
+            made.append("persona_stage2")
+        if "stage3" in pilot:
+            (out / "persona_stage3.tex").write_text(stage3(pilot))
+            made.append("persona_stage3")
+    if args.stats and Path(args.stats).exists():
+        stats = json.loads(Path(args.stats).read_text())
+        (out / "main_results.tex").write_text(main_results(stats))
+        made.append("main_results")
+        (out / "comparisons.tex").write_text(comparisons(stats))
+        made.append("comparisons")
+    print(made)
+
+
+if __name__ == "__main__":
+    main()
