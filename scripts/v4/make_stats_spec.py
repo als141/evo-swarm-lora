@@ -15,7 +15,7 @@ import argparse
 import json
 from pathlib import Path
 
-SC_KS = (3, 6, 9)
+SC_KS = tuple(range(1, 10))
 
 
 def team(agents, seeds, protocol="v4t", gate=True) -> dict:
@@ -29,6 +29,8 @@ def main() -> None:
     parser.add_argument("--test-seeds", default="1,2")
     parser.add_argument("--rft-agent", default="rft.base")
     parser.add_argument("--no-c7", action="store_true")
+    parser.add_argument("--match-k", default="",
+                        help="計算量を揃えた SC の k（生成回数一致,出力トークン一致。事前登録 §5 の副次）")
     parser.add_argument("--out", required=True)
     args = parser.parse_args()
 
@@ -61,7 +63,8 @@ def main() -> None:
     s = finals.get("S", "S_final")
     holm = [[s, "g0"]] + [[s, finals[x]] for x in ("N", "A1") if x in finals]
     comparisons = list(holm)
-    for other in ["base_single", "base_sc3", "base_sc6", "base_sc9", "rft_single", "rft_sc9", "c7_july"]:
+    match = [f"base_sc{int(k)}" for k in args.match_k.split(",") if k.strip()]
+    for other in ["base_single", "base_sc3", "base_sc6", "base_sc9", *match, "rft_single", "rft_sc9", "c7_july"]:
         if other in conds:
             comparisons.append([s, other])
     for other in ["base_single", "base_sc3", "base_sc9"]:
