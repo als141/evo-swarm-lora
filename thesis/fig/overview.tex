@@ -1,0 +1,44 @@
+% 図: 進化的社会学習の全体像（第3章）
+\begin{tikzpicture}[
+  font=\footnotesize,
+  stage/.style={draw, rounded corners=2pt, align=left, text width=#1, inner sep=4pt, fill=white},
+  stage/.default=3.3cm,
+  loop/.style={stage=3.3cm, minimum height=3.1cm},
+  arr/.style={-{Stealth[length=2.2mm]}, thick},
+  lab/.style={font=\scriptsize, align=center},
+]
+% 世代0
+\node[stage=14.4cm, fill=gray!8] (g0) {%
+  {\bfseries 世代0: ペルソナの選定（プロンプト空間，devだけを使用）}\\[1pt]
+  Belbinの9役割を推論の手続きとして操作化＋plain \,$\rightarrow$\, 段階1: 単独の精度と能力税 \,$\rightarrow$\, 段階2: 釣り合い型の12チーム＋既定トリオ＋plain×3（役割の主効果）\,$\rightarrow$\, 段階3: devの別の半分で確認し，事前の決定規則で3体を採用};
+
+% 世代 t のループ
+\node[loop, below=9mm of g0.south west, anchor=north west] (deb) {%
+  {\bfseries (1) 社会の議論}\\
+  親の社会$\mathcal{T}^{(t-1)}$が学習用の問題$Q_{t-1}$（1,200問）を議論する．全員の答えが一致した問題ではround1を省く};
+\node[loop, right=3mm of deb] (dat) {%
+  {\bfseries (2) 学習データ}\\
+  a（自己学習）: 自分が正解した発話\\[2pt]
+  b（社会学習）: 自分が誤り他者が正解した問題での他者の解き方＋自分が正解した発話};
+\node[loop, right=3mm of dat] (tra) {%
+  {\bfseries (3) 子の生成}\\
+  親のLoRAから子aと子bを継続学習する\\[2pt]
+  兄弟交叉: aとbの$\Delta W$を平均し，rank 16に再分解して子cを作る};
+\node[loop, right=3mm of tra, text width=3.6cm] (sel) {%
+  {\bfseries (4) 選抜（重み空間）}\\
+  候補\{親, a, b, c\}ごとに，親の社会の文脈で全7連合の精度をdevで実測し，厳密Shapley値が最大の候補を次の代表にする};
+
+\draw[arr] (deb) -- (dat);
+\draw[arr] (dat) -- (tra);
+\draw[arr] (tra) -- (sel);
+\draw[arr] ($(g0.south west)+(1.7,0)$) -- node[lab, right] {$t=1$} ($(deb.north west)+(1.7,0)$);
+
+% 次世代へのループと test
+\node[stage=5.0cm, below=8mm of tra.south west, anchor=north, fill=gray!8] (new) {%
+  {\bfseries 新しい社会$\mathcal{T}^{(t)}$}（3役割の代表）};
+\node[stage=5.0cm, below=6mm of new, draw=gray, dashed] (test) {%
+  testで評価（推移の記録のみ．選抜・設計には使わない）};
+\draw[arr] (sel.south) |- (new.east);
+\draw[arr] (new.west) -| node[lab, pos=0.25, below] {$t \leftarrow t+1$（$t \le G$）} (deb.south);
+\draw[arr, dashed, gray] (new) -- (test);
+\end{tikzpicture}

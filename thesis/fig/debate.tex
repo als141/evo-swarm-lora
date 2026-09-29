@@ -1,0 +1,33 @@
+% 図: 議論のプロトコル（第3章）
+\begin{tikzpicture}[
+  font=\footnotesize,
+  ag/.style={draw, rounded corners=2pt, align=center, text width=3.1cm, inner sep=3pt, fill=white},
+  msg/.style={draw, align=left, text width=9.0cm, inner sep=2.5pt, font=\scriptsize},
+  arr/.style={-{Stealth[length=2mm]}, thick},
+  lab/.style={font=\scriptsize, align=center},
+]
+\node[draw, rounded corners=2pt, fill=gray!8, inner sep=4pt] (q) {問題$q$};
+\node[ag, below=7mm of q] (a2) {エージェント2\\（ペルソナ文$\pi_2$）};
+\node[ag, left=4mm of a2] (a1) {エージェント1\\（ペルソナ文$\pi_1$）};
+\node[ag, right=4mm of a2] (a3) {エージェント3\\（ペルソナ文$\pi_3$）};
+\foreach \i in {1,2,3} { \draw[arr] (q.south) -- (a\i.north); }
+\node[lab, left=1mm of a1, anchor=east, text width=1.9cm] {round0\\（独立に回答）};
+
+\node[draw, diamond, aspect=2.4, inner sep=1.5pt, below=7mm of a2, font=\scriptsize] (u) {全員の答えが一致？};
+\foreach \i in {1,2,3} { \draw[arr] (a\i.south) -- node[lab, fill=white, inner sep=1pt] {$y_{\i}^{(0)}$} (u); }
+\node[draw, rounded corners=2pt, fill=gray!8, right=12mm of u, text width=2.6cm, align=center] (fin0) {最終回答$=$一致した答え（議論しない）};
+\draw[arr] (u.east) -- node[lab, above] {はい} (fin0.west);
+
+% round1 のメッセージ構成
+\node[msg, below=9mm of u] (m1) {system: ペルソナ文$\pi_i$＋回答書式の指示};
+\node[msg, below=0mm of m1] (m2) {user: 問題$q$};
+\node[msg, below=0mm of m2, fill=gray!10] (m3) {assistant: 自分のround0の回答（末尾3,000文字）};
+\node[msg, below=0mm of m3] (m4) {user: 他者のround0の回答（匿名化・提示順をシャッフル，各末尾3,000文字）＋更新の指示（中立版）};
+\draw[arr] (u.south) -- node[lab, right] {いいえ} (m1.north);
+\node[lab, left=1mm of m2.south west, anchor=east, text width=2.0cm, yshift=-1mm] {round1\\（エージェント$i$の入力）};
+
+\node[draw, rounded corners=2pt, below=7mm of m4, text width=6.4cm, align=center] (vote) {更新した回答$y_1^{(1)}, y_2^{(1)}, y_3^{(1)}$の多数決\\（同数なら確信度，次に役割名で決める）};
+\draw[arr] (m4.south) -- (vote.north);
+\node[draw, rounded corners=2pt, fill=gray!8, right=6mm of vote] (fin1) {最終回答};
+\draw[arr] (vote) -- (fin1);
+\end{tikzpicture}
