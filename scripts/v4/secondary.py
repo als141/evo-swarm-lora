@@ -46,13 +46,14 @@ def macro_of(values: dict, bench_of: dict) -> float:
 
 def sc_curve(agent: str, ids, scorer: Scorer, bench_of: dict, seed: int = 1, kmax: int = 9) -> dict:
     per_k = {k: {} for k in range(1, kmax + 1)}
-    tokens = []
+    tokens, in_tokens = [], []
     for item_id in ids:
         item = scorer.items[item_id]
         keys = [Society.sc_key(Agent(agent, "base", "", ""), item_id, seed, k) for k in range(kmax)]
         if any(scorer.store.get(k) is None for k in keys):
             continue
         tokens.append(np.mean([scorer.store.get(k).get("n_out", 0) for k in keys]))
+        in_tokens.append(np.mean([scorer.store.get(k).get("n_in", 0) or 0 for k in keys]))
         scored = [scorer.correct_of(k) for k in keys]
         for k in range(1, kmax + 1):
             accs = []
@@ -61,6 +62,7 @@ def sc_curve(agent: str, ids, scorer: Scorer, bench_of: dict, seed: int = 1, kma
                 accs.append(float(is_correct(final, item.gold, item.answer_type)))
             per_k[k][item_id] = float(np.mean(accs))
     return {"n_items": len(per_k[1]), "mean_out_tokens_per_call": float(np.mean(tokens)) if tokens else None,
+            "mean_in_tokens_per_call": float(np.mean(in_tokens)) if in_tokens else None,
             "macro_by_k": {k: macro_of(v, bench_of) for k, v in per_k.items() if v}}
 
 
@@ -81,7 +83,7 @@ def team_dynamics(cond: dict, ids, scorer: Scorer, bench_of: dict) -> dict:
                   gate=bool(cond.get("gate", False)))
     agents = [Agent(a, role_of(a), "", "") for a in cond["agents"]]
     c = collections.Counter()
-    calls, out_tokens, n_items = [], [], 0
+    calls, out_tokens, in_tokens, n_items = [], [], [], 0
     disagree = []
     solo = {a.agent_id: {} for a in agents}  # 構成員の round0 の単独正答（問題ごと、生成 seed 平均）
     r0_vote = {}
@@ -111,6 +113,7 @@ def team_dynamics(cond: dict, ids, scorer: Scorer, bench_of: dict) -> dict:
             c["majority0_correct"] += n_ok0 >= 2
             c[f"r0_correct_{n_ok0}"] += 1
             tok = sum(r.get("n_out", 0) for r in recs0)
+            tok_in = sum(r.get("n_in", 0) or 0 for r in recs0)
             n_call = 3
             res = soc.coalition_result(agents, item_id, seed)
             c["final_correct"] += bool(res["correct"])
@@ -118,6 +121,7 @@ def team_dynamics(cond: dict, ids, scorer: Scorer, bench_of: dict) -> dict:
                 c["gated"] += 1
             else:
                 tok += sum(r.get("n_out", 0) for r in recs1)
+                tok_in += sum(r.get("n_in", 0) or 0 for r in recs1)
                 n_call += 3
                 ok1 = [bool(scorer.correct_of(k)[2]) for k in r1_keys]
                 for before, after in zip(ok0, ok1):
@@ -132,6 +136,7 @@ def team_dynamics(cond: dict, ids, scorer: Scorer, bench_of: dict) -> dict:
                     c["majority_team_correct"] += bool(res["correct"])
             calls.append(n_call)
             out_tokens.append(tok)
+            in_tokens.append(tok_in)
     if not n_items:
         return {"n": 0}
     kept = c["trans_11"] + c["trans_10"]
@@ -143,6 +148,7 @@ def team_dynamics(cond: dict, ids, scorer: Scorer, bench_of: dict) -> dict:
         "member_solo_mean": float(np.mean(list(solo_macro.values()))),
         "r0_majority_macro": macro_of({i: float(np.mean(v)) for i, v in r0_vote.items()}, bench_of),
         "calls_per_item": float(np.mean(calls)), "out_tokens_per_item": float(np.mean(out_tokens)),
+        "in_tokens_per_item": float(np.mean(in_tokens)),
         "gated_rate": c["gated"] / n_items, "oracle3": c["oracle3"] / n_items,
         "majority0_correct": c["majority0_correct"] / n_items, "final_correct": c["final_correct"] / n_items,
         "r0_pair_disagreement": float(np.mean(disagree)),
