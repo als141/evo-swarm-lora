@@ -1,0 +1,276 @@
+{
+ "base_sc|mmlu_pro": {
+  "n": 27000,
+  "changed_rate": 0.1267037037037037,
+  "old_spurious_A_rate": 0.1267037037037037,
+  "acc_new": 0.7244444444444444,
+  "acc_old_logic": 0.6308148148148148,
+  "acc_drop_pt": 9.362962962962962,
+  "examples": [
+   {
+    "new": "H",
+    "old": "A",
+    "gold": "H",
+    "last_line": "ANSWER: H"
+   },
+   {
+    "new": "E",
+    "old": "A",
+    "gold": "J",
+    "last_line": "ANSWER: E"
+   },
+   {
+    "new": "J",
+    "old": "A",
+    "gold": "J",
+    "last_line": "ANSWER: J"
+   }
+  ]
+ },
+ "base_sc|supergpqa": {
+  "n": 16200,
+  "changed_rate": 0.155,
+  "old_spurious_A_rate": 0.155,
+  "acc_new": 0.45141975308641974,
+  "acc_old_logic": 0.36333333333333334,
+  "acc_drop_pt": 8.808641975308642,
+  "examples": [
+   {
+    "new": "G",
+    "old": "A",
+    "gold": "G",
+    "last_line": "ANSWER: G"
+   },
+   {
+    "new": "H",
+    "old": "A",
+    "gold": "H",
+    "last_line": "ANSWER: H"
+   },
+   {
+    "new": "F",
+    "old": "A",
+    "gold": "F",
+    "last_line": "ANSWER: F"
+   }
+  ]
+ },
+ "base_solo|mmlu_pro": {
+  "n": 1500,
+  "changed_rate": 0.126,
+  "old_spurious_A_rate": 0.126,
+  "acc_new": 0.7266666666666667,
+  "acc_old_logic": 0.63,
+  "acc_drop_pt": 9.666666666666666,
+  "examples": [
+   {
+    "new": "E",
+    "old": "A",
+    "gold": "J",
+    "last_line": "ANSWER: E"
+   },
+   {
+    "new": "H",
+    "old": "A",
+    "gold": "H",
+    "last_line": "ANSWER: H"
+   },
+   {
+    "new": "E",
+    "old": "A",
+    "gold": "E",
+    "last_line": "ANSWER: E"
+   }
+  ]
+ },
+ "base_solo|supergpqa": {
+  "n": 900,
+  "changed_rate": 0.15555555555555556,
+  "old_spurious_A_rate": 0.15555555555555556,
+  "acc_new": 0.4311111111111111,
+  "acc_old_logic": 0.34,
+  "acc_drop_pt": 9.11111111111111,
+  "examples": [
+   {
+    "new": "G",
+    "old": "A",
+    "gold": "G",
+    "last_line": "ANSWER: G"
+   },
+   {
+    "new": "H",
+    "old": "A",
+    "gold": "H",
+    "last_line": "ANSWER: H"
+   },
+   {
+    "new": "B",
+    "old": "A",
+    "gold": "C",
+    "last_line": "ANSWER: B"
+   }
+  ]
+ },
+ "c5_team_r0|mmlu_pro": {
+  "n": 4500,
+  "changed_rate": 0.00022222222222222223,
+  "old_spurious_A_rate": 0.00022222222222222223,
+  "acc_new": 0.6468888888888888,
+  "acc_old_logic": 0.6468888888888888,
+  "acc_drop_pt": 0.0,
+  "examples": [
+   {
+    "new": "C",
+    "old": "A",
+    "gold": "D",
+    "last_line": "ANSWER: C"
+   }
+  ]
+ },
+ "c5_team_r0|supergpqa": {
+  "n": 2700,
+  "changed_rate": 0.0,
+  "old_spurious_A_rate": 0.0,
+  "acc_new": 0.36185185185185187,
+  "acc_old_logic": 0.36185185185185187,
+  "acc_drop_pt": 0.0,
+  "examples": []
+ },
+ "c5_team_r1|mmlu_pro": {
+  "n": 4500,
+  "changed_rate": 0.00022222222222222223,
+  "old_spurious_A_rate": 0.00022222222222222223,
+  "acc_new": 0.674,
+  "acc_old_logic": 0.674,
+  "acc_drop_pt": 0.0,
+  "examples": [
+   {
+    "new": "G",
+    "old": "A",
+    "gold": "D",
+    "last_line": "ANSWER: G"
+   }
+  ]
+ },
+ "c5_team_r1|supergpqa": {
+  "n": 2700,
+  "changed_rate": 0.0,
+  "old_spurious_A_rate": 0.0,
+  "acc_new": 0.397037037037037,
+  "acc_old_logic": 0.397037037037037,
+  "acc_drop_pt": 0.0,
+  "examples": []
+ },
+ "c7_team_r0|mmlu_pro": {
+  "n": 9000,
+  "changed_rate": 0.03944444444444444,
+  "old_spurious_A_rate": 0.03944444444444444,
+  "acc_new": 0.6882222222222222,
+  "acc_old_logic": 0.6588888888888889,
+  "acc_drop_pt": 2.933333333333333,
+  "examples": [
+   {
+    "new": "B",
+    "old": "A",
+    "gold": "B",
+    "last_line": "ANSWER: B"
+   },
+   {
+    "new": "I",
+    "old": "A",
+    "gold": "I",
+    "last_line": "ANSWER: I"
+   },
+   {
+    "new": "C",
+    "old": "A",
+    "gold": "B",
+    "last_line": "ANSWER: C"
+   }
+  ]
+ },
+ "c7_team_r0|supergpqa": {
+  "n": 6750,
+  "changed_rate": 0.03837037037037037,
+  "old_spurious_A_rate": 0.03837037037037037,
+  "acc_new": 0.4022222222222222,
+  "acc_old_logic": 0.385037037037037,
+  "acc_drop_pt": 1.7185185185185186,
+  "examples": [
+   {
+    "new": "F",
+    "old": "A",
+    "gold": "A",
+    "last_line": "ANSWER: F"
+   },
+   {
+    "new": "H",
+    "old": "A",
+    "gold": "C",
+    "last_line": "ANSWER: H"
+   },
+   {
+    "new": "I",
+    "old": "A",
+    "gold": "I",
+    "last_line": "ANSWER: I"
+   }
+  ]
+ },
+ "c7_team_r1|mmlu_pro": {
+  "n": 9000,
+  "changed_rate": 0.015555555555555555,
+  "old_spurious_A_rate": 0.015555555555555555,
+  "acc_new": 0.7066666666666667,
+  "acc_old_logic": 0.6967777777777778,
+  "acc_drop_pt": 0.9888888888888889,
+  "examples": [
+   {
+    "new": "B",
+    "old": "A",
+    "gold": "B",
+    "last_line": "ANSWER: B"
+   },
+   {
+    "new": "C",
+    "old": "A",
+    "gold": "C",
+    "last_line": "ANSWER: C"
+   },
+   {
+    "new": "F",
+    "old": "A",
+    "gold": "F",
+    "last_line": "ANSWER: F"
+   }
+  ]
+ },
+ "c7_team_r1|supergpqa": {
+  "n": 6750,
+  "changed_rate": 0.010814814814814815,
+  "old_spurious_A_rate": 0.010814814814814815,
+  "acc_new": 0.42474074074074075,
+  "acc_old_logic": 0.4225185185185185,
+  "acc_drop_pt": 0.2222222222222222,
+  "examples": [
+   {
+    "new": "F",
+    "old": "A",
+    "gold": "A",
+    "last_line": "ANSWER: F"
+   },
+   {
+    "new": "F",
+    "old": "A",
+    "gold": "I",
+    "last_line": "ANSWER: F"
+   },
+   {
+    "new": "F",
+    "old": "A",
+    "gold": "I",
+    "last_line": "ANSWER: F"
+   }
+  ]
+ }
+}

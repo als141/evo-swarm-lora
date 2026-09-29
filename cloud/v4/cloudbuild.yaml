@@ -1,0 +1,18 @@
+# v4 実験環境イメージのビルド（1回だけ。以後は digest 固定で使う）
+#   gcloud builds submit --config cloud/v4/cloudbuild.yaml --substitutions=_TAG=20260929 .
+substitutions:
+  _REGION: us-central1
+  _REPO: evo-swarm
+  _TAG: dev
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: [build, -t, "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/env-v4:${_TAG}", -f, cloud/v4/Dockerfile, .]
+  - name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    args: [-c, "docker run --rm --entrypoint cat ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/env-v4:${_TAG} /opt/evo/pip_freeze.txt /opt/evo/cuda_compat_version.txt"]
+images:
+  - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/env-v4:${_TAG}
+options:
+  machineType: E2_HIGHCPU_8
+  diskSizeGb: 150
+timeout: 3600s

@@ -1,0 +1,211 @@
+{
+ "cross_seed_old": {
+  "c1:base|mmlu_pro": {
+   "n": 61,
+   "disagree": 0.26229508196721313,
+   "correct_discord": 0.19672131147540983
+  },
+  "c1:base|math500": {
+   "n": 454,
+   "disagree": 0.12334801762114538,
+   "correct_discord": 0.07048458149779736
+  },
+  "c2:sc|mmlu_pro": {
+   "n": 61,
+   "disagree": 0.13114754098360656,
+   "correct_discord": 0.08196721311475409
+  },
+  "c2:sc|math500": {
+   "n": 454,
+   "disagree": 0.024229074889867842,
+   "correct_discord": 0.006607929515418502
+  },
+  "c3:team|mmlu_pro": {
+   "n": 61,
+   "disagree": 0.22950819672131148,
+   "correct_discord": 0.18032786885245902
+  },
+  "c3:team|math500": {
+   "n": 454,
+   "disagree": 0.04405286343612335,
+   "correct_discord": 0.015418502202643172
+  },
+  "c3p:team|mmlu_pro": {
+   "n": 61,
+   "disagree": 0.2459016393442623,
+   "correct_discord": 0.13114754098360656
+  },
+  "c3p:team|math500": {
+   "n": 454,
+   "disagree": 0.06387665198237885,
+   "correct_discord": 0.037444933920704845
+  },
+  "c4:team|mmlu_pro": {
+   "n": 61,
+   "disagree": 0.2459016393442623,
+   "correct_discord": 0.14754098360655737
+  },
+  "c4:team|math500": {
+   "n": 454,
+   "disagree": 0.2092511013215859,
+   "correct_discord": 0.11013215859030837
+  },
+  "c5:team|mmlu_pro": {
+   "n": 61,
+   "disagree": 0.2786885245901639,
+   "correct_discord": 0.19672131147540983
+  },
+  "c5:team|math500": {
+   "n": 454,
+   "disagree": 0.17400881057268722,
+   "correct_discord": 0.09911894273127753
+  },
+  "c6:critic|mmlu_pro": {
+   "n": 61,
+   "disagree": 0.18032786885245902,
+   "correct_discord": 0.09836065573770492
+  },
+  "c6:pragmatist|mmlu_pro": {
+   "n": 61,
+   "disagree": 0.3770491803278688,
+   "correct_discord": 0.19672131147540983
+  },
+  "c6:explorer|mmlu_pro": {
+   "n": 61,
+   "disagree": 0.2459016393442623,
+   "correct_discord": 0.16393442622950818
+  },
+  "c6:critic|math500": {
+   "n": 454,
+   "disagree": 0.31718061674008813,
+   "correct_discord": 0.16519823788546256
+  },
+  "c6:pragmatist|math500": {
+   "n": 454,
+   "disagree": 0.3392070484581498,
+   "correct_discord": 0.1762114537444934
+  },
+  "c6:explorer|math500": {
+   "n": 454,
+   "disagree": 0.3502202643171806,
+   "correct_discord": 0.19383259911894274
+  }
+ },
+ "cross_seed_new": {
+  "c7:team|mmlu_pro": {
+   "n": 330,
+   "disagree": 0.1606060606060606,
+   "correct_discord": 0.08484848484848485
+  },
+  "c7:team|math500": {
+   "n": 2292,
+   "disagree": 0.06719022687609075,
+   "correct_discord": 0.027923211169284468
+  },
+  "c7:team|supergpqa": {
+   "n": 68,
+   "disagree": 0.2647058823529412,
+   "correct_discord": 0.17647058823529413
+  },
+  "c2:sc|mmlu_pro": {
+   "n": 330,
+   "disagree": 0.07272727272727272,
+   "correct_discord": 0.051515151515151514
+  },
+  "c2:sc|math500": {
+   "n": 2292,
+   "disagree": 0.03446771378708551,
+   "correct_discord": 0.010034904013961605
+  },
+  "c2:sc|supergpqa": {
+   "n": 68,
+   "disagree": 0.1323529411764706,
+   "correct_discord": 0.08823529411764706
+  },
+  "c1:base|mmlu_pro": {
+   "n": 61,
+   "disagree": 0.16393442622950818,
+   "correct_discord": 0.06557377049180328
+  },
+  "c1:base|math500": {
+   "n": 454,
+   "disagree": 0.11674008810572688,
+   "correct_discord": 0.06167400881057269
+  },
+  "c5:team|mmlu_pro": {
+   "n": 61,
+   "disagree": 0.29508196721311475,
+   "correct_discord": 0.14754098360655737
+  },
+  "c5:team|math500": {
+   "n": 454,
+   "disagree": 0.1762114537444934,
+   "correct_discord": 0.09251101321585903
+  }
+ },
+ "old_vs_new_same_seed": {
+  "c1|mmlu_pro": {
+   "n": 1500,
+   "disagree": 0.234,
+   "correct_discord": 0.16333333333333333,
+   "acc_old": 0.6393333333333333,
+   "acc_new": 0.7266666666666667
+  },
+  "c1|math500": {
+   "n": 600,
+   "disagree": 0.105,
+   "correct_discord": 0.055,
+   "acc_old": 0.83,
+   "acc_new": 0.8183333333333334
+  },
+  "c1|supergpqa": {
+   "n": 900,
+   "disagree": 0.23666666666666666,
+   "correct_discord": 0.11777777777777777,
+   "acc_old": 0.43555555555555553,
+   "acc_new": 0.4311111111111111
+  },
+  "c2|mmlu_pro": {
+   "n": 1500,
+   "disagree": 0.15066666666666667,
+   "correct_discord": 0.11133333333333334,
+   "acc_old": 0.6673333333333333,
+   "acc_new": 0.7413333333333333
+  },
+  "c2|math500": {
+   "n": 600,
+   "disagree": 0.03166666666666667,
+   "correct_discord": 0.011666666666666667,
+   "acc_old": 0.8616666666666667,
+   "acc_new": 0.8666666666666667
+  },
+  "c2|supergpqa": {
+   "n": 900,
+   "disagree": 0.11666666666666667,
+   "correct_discord": 0.06,
+   "acc_old": 0.4666666666666667,
+   "acc_new": 0.4777777777777778
+  },
+  "c5|mmlu_pro": {
+   "n": 1500,
+   "disagree": 0.18333333333333332,
+   "correct_discord": 0.112,
+   "acc_old": 0.6833333333333333,
+   "acc_new": 0.6846666666666666
+  },
+  "c5|math500": {
+   "n": 600,
+   "disagree": 0.14666666666666667,
+   "correct_discord": 0.08,
+   "acc_old": 0.8133333333333334,
+   "acc_new": 0.7933333333333333
+  },
+  "c5|supergpqa": {
+   "n": 900,
+   "disagree": 0.35,
+   "correct_discord": 0.17,
+   "acc_old": 0.3988888888888889,
+   "acc_new": 0.42
+  }
+ }
+}

@@ -1,0 +1,45 @@
+{
+  "stored_dtype_gen0": [
+    "torch.bfloat16"
+  ],
+  "stored_dtype_child": [
+    "torch.bfloat16"
+  ],
+  "mutation (gen0 persona_b -> gen0_pragmatist_mutant)": {
+    "cos": 0.9997332712995244,
+    "rel_change": 0.02310100530693581,
+    "norm_ratio": 1.0002530688000653
+  },
+  "crossover+mutation (gen0 persona_b -> gen1_pragmatist_child)": {
+    "cos": 0.9997890674639965,
+    "rel_change": 0.02054234599767614,
+    "norm_ratio": 1.0001982124456321
+  },
+  "6 generations (gen0 persona_b -> final gen5_pragmatist_child)": {
+    "cos": 0.9996163624117901,
+    "rel_change": 0.0277066938353841,
+    "norm_ratio": 1.0003463519096178
+  },
+  "different persona (gen0 persona_a vs persona_b)": {
+    "cos": 0.011776027300204207,
+    "rel_change": 1.4017969414336677,
+    "norm_ratio": 0.994208386209336
+  },
+  "different training recipe (run002 persona_a vs persona_b)": {
+    "cos": 0.007047598642665286,
+    "rel_change": 1.4090211009569165,
+    "norm_ratio": 0.9997157867037462
+  },
+  "blend persona_a+persona_b (gen0, r=32)": {
+    "modules": 252,
+    "energy_lost_frac": 0.1131407334205644
+  },
+  "blend persona_b+its mutant (near-clone, r=32)": {
+    "modules": 252,
+    "energy_lost_frac": 6.592503371965955e-09
+  },
+  "blend run002 persona_a+persona_b (r=16)": {
+    "modules": 252,
+    "energy_lost_frac": 0.13173631688373585
+  }
+}

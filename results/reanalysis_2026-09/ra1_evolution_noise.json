@@ -1,0 +1,828 @@
+{
+ "noise_by_coalition_size": {
+  "1": {
+   "n_coalitions": 10,
+   "n_measurements": 25,
+   "dof": 15,
+   "pooled_sd": 0.03188521078284833,
+   "mean_acc": 0.5036,
+   "binomial_se_100": 0.049998703983203406,
+   "sd_over_binom": 0.6377207455929231,
+   "mean_abs_pair_diff": 0.04050000000000002,
+   "max_abs_pair_diff": 0.10000000000000003
+  },
+  "2": {
+   "n_coalitions": 10,
+   "n_measurements": 21,
+   "dof": 11,
+   "pooled_sd": 0.03275251551754875,
+   "mean_acc": 0.5366666666666666,
+   "binomial_se_100": 0.049865374314804416,
+   "sd_over_binom": 0.6568188039816826,
+   "mean_abs_pair_diff": 0.033333333333333326,
+   "max_abs_pair_diff": 0.09999999999999998
+  },
+  "3": {
+   "n_coalitions": 3,
+   "n_measurements": 6,
+   "dof": 3,
+   "pooled_sd": 0.009128709291752777,
+   "mean_acc": 0.6083333333333333,
+   "binomial_se_100": 0.048812282152024905,
+   "sd_over_binom": 0.18701664600154505,
+   "mean_abs_pair_diff": 0.010000000000000009,
+   "max_abs_pair_diff": 0.020000000000000018
+  }
+ },
+ "sigma_all_sizes": 0.0306819052593679,
+ "repeated_coalitions": [
+  {
+   "members": [
+    "gen0_critic_base"
+   ],
+   "gens": [
+    0,
+    1,
+    2
+   ],
+   "values": [
+    0.53,
+    0.46,
+    0.56
+   ]
+  },
+  {
+   "members": [
+    "gen0_explorer_base"
+   ],
+   "gens": [
+    0,
+    1,
+    2
+   ],
+   "values": [
+    0.54,
+    0.48,
+    0.5
+   ]
+  },
+  {
+   "members": [
+    "gen0_critic_base",
+    "gen0_explorer_base"
+   ],
+   "gens": [
+    0,
+    1,
+    2
+   ],
+   "values": [
+    0.54,
+    0.54,
+    0.51
+   ]
+  },
+  {
+   "members": [
+    "gen0_pragmatist_mutant"
+   ],
+   "gens": [
+    0,
+    1
+   ],
+   "values": [
+    0.49,
+    0.47
+   ]
+  },
+  {
+   "members": [
+    "gen0_critic_base",
+    "gen0_pragmatist_mutant"
+   ],
+   "gens": [
+    0,
+    1
+   ],
+   "values": [
+    0.53,
+    0.53
+   ]
+  },
+  {
+   "members": [
+    "gen0_explorer_base",
+    "gen0_pragmatist_mutant"
+   ],
+   "gens": [
+    0,
+    1
+   ],
+   "values": [
+    0.58,
+    0.51
+   ]
+  },
+  {
+   "members": [
+    "gen0_critic_base",
+    "gen0_explorer_base",
+    "gen0_pragmatist_mutant"
+   ],
+   "gens": [
+    0,
+    1
+   ],
+   "values": [
+    0.63,
+    0.63
+   ]
+  },
+  {
+   "members": [
+    "gen1_pragmatist_child"
+   ],
+   "gens": [
+    1,
+    2,
+    3
+   ],
+   "values": [
+    0.46,
+    0.53,
+    0.51
+   ]
+  },
+  {
+   "members": [
+    "gen0_critic_base",
+    "gen1_pragmatist_child"
+   ],
+   "gens": [
+    1,
+    2
+   ],
+   "values": [
+    0.56,
+    0.54
+   ]
+  },
+  {
+   "members": [
+    "gen0_explorer_base",
+    "gen1_pragmatist_child"
+   ],
+   "gens": [
+    1,
+    2
+   ],
+   "values": [
+    0.55,
+    0.53
+   ]
+  },
+  {
+   "members": [
+    "gen0_critic_base",
+    "gen0_explorer_base",
+    "gen1_pragmatist_child"
+   ],
+   "gens": [
+    1,
+    2
+   ],
+   "values": [
+    0.62,
+    0.6
+   ]
+  },
+  {
+   "members": [
+    "gen2_critic_child"
+   ],
+   "gens": [
+    2,
+    3
+   ],
+   "values": [
+    0.51,
+    0.45
+   ]
+  },
+  {
+   "members": [
+    "gen1_pragmatist_child",
+    "gen2_critic_child"
+   ],
+   "gens": [
+    2,
+    3
+   ],
+   "values": [
+    0.57,
+    0.53
+   ]
+  },
+  {
+   "members": [
+    "gen2_explorer_child"
+   ],
+   "gens": [
+    2,
+    3
+   ],
+   "values": [
+    0.54,
+    0.52
+   ]
+  },
+  {
+   "members": [
+    "gen1_pragmatist_child",
+    "gen2_explorer_child"
+   ],
+   "gens": [
+    2,
+    3
+   ],
+   "values": [
+    0.51,
+    0.52
+   ]
+  },
+  {
+   "members": [
+    "gen3_critic_child"
+   ],
+   "gens": [
+    3,
+    4
+   ],
+   "values": [
+    0.51,
+    0.48
+   ]
+  },
+  {
+   "members": [
+    "gen3_explorer_child"
+   ],
+   "gens": [
+    3,
+    4,
+    5
+   ],
+   "values": [
+    0.56,
+    0.5,
+    0.53
+   ]
+  },
+  {
+   "members": [
+    "gen3_pragmatist_child"
+   ],
+   "gens": [
+    3,
+    4,
+    5
+   ],
+   "values": [
+    0.48,
+    0.47,
+    0.51
+   ]
+  },
+  {
+   "members": [
+    "gen3_explorer_child",
+    "gen3_pragmatist_child"
+   ],
+   "gens": [
+    4,
+    5
+   ],
+   "values": [
+    0.58,
+    0.48
+   ]
+  },
+  {
+   "members": [
+    "gen4_critic_child"
+   ],
+   "gens": [
+    4,
+    5
+   ],
+   "values": [
+    0.49,
+    0.51
+   ]
+  },
+  {
+   "members": [
+    "gen3_explorer_child",
+    "gen4_critic_child"
+   ],
+   "gens": [
+    4,
+    5
+   ],
+   "values": [
+    0.53,
+    0.54
+   ]
+  },
+  {
+   "members": [
+    "gen3_pragmatist_child",
+    "gen4_critic_child"
+   ],
+   "gens": [
+    4,
+    5
+   ],
+   "values": [
+    0.51,
+    0.58
+   ]
+  },
+  {
+   "members": [
+    "gen3_explorer_child",
+    "gen3_pragmatist_child",
+    "gen4_critic_child"
+   ],
+   "gens": [
+    4,
+    5
+   ],
+   "values": [
+    0.58,
+    0.59
+   ]
+  }
+ ],
+ "shapley_error": {
+  "sd_phi": 0.018907447804809154,
+  "sd_phi_diff": 0.01906925178491185,
+  "sigma_used": {
+   "solo": 0.03188521078284833,
+   "pair": 0.03275251551754875,
+   "team": 0.009128709291752777
+  }
+ },
+ "selection": {
+  "n_decisions": 18,
+  "median_abs_dphi_pt": 1.1666666666666659,
+  "median_z": 0.6118051614325879,
+  "frac_z_lt1": 0.6666666666666666,
+  "frac_z_lt2": 1.0,
+  "obs_mean_sq_dphi": 0.00027731481481481503,
+  "noise_var_dphi": 0.0003636363636363638,
+  "implied_true_sd_dphi": 0.0,
+  "agree_with_solo_rate": 0.4444444444444444,
+  "solo_ties": 2,
+  "agree_with_team_rate": 0.6111111111111112,
+  "team_ties": 2,
+  "p_correct_choice_if_true_diff": {
+   "1pt": 0.7000013599555117,
+   "2pt": 0.8528669478475185,
+   "3pt": 0.9421652784362011,
+   "5pt": 0.9956295121301609
+  }
+ },
+ "decisions": [
+  {
+   "gen": 0,
+   "role": "critic",
+   "selected": "gen0_critic_base",
+   "abs_dphi": 0.020000000000000046,
+   "z_dphi": 1.0488088481701539,
+   "abs_dsolo": 0.0,
+   "abs_dteam": 0.020000000000000018,
+   "agree_with_solo": false,
+   "solo_tie": true,
+   "agree_with_team": true,
+   "team_tie": false
+  },
+  {
+   "gen": 0,
+   "role": "explorer",
+   "selected": "gen0_explorer_base",
+   "abs_dphi": 0.006666666666666737,
+   "z_dphi": 0.34960294939005415,
+   "abs_dsolo": 0.030000000000000027,
+   "abs_dteam": 0.009999999999999898,
+   "agree_with_solo": true,
+   "solo_tie": false,
+   "agree_with_team": false,
+   "team_tie": false
+  },
+  {
+   "gen": 0,
+   "role": "pragmatist",
+   "selected": "gen0_pragmatist_mutant",
+   "abs_dphi": 0.01166666666666663,
+   "z_dphi": 0.6118051614325865,
+   "abs_dsolo": 0.07000000000000006,
+   "abs_dteam": 0.06999999999999995,
+   "agree_with_solo": false,
+   "solo_tie": false,
+   "agree_with_team": true,
+   "team_tie": false
+  },
+  {
+   "gen": 1,
+   "role": "critic",
+   "selected": "gen0_critic_base",
+   "abs_dphi": 0.011666666666666659,
+   "z_dphi": 0.6118051614325879,
+   "abs_dsolo": 0.03999999999999998,
+   "abs_dteam": 0.06000000000000005,
+   "agree_with_solo": false,
+   "solo_tie": false,
+   "agree_with_team": true,
+   "team_tie": false
+  },
+  {
+   "gen": 1,
+   "role": "explorer",
+   "selected": "gen0_explorer_base",
+   "abs_dphi": 0.003333333333333327,
+   "z_dphi": 0.1748014746950249,
+   "abs_dsolo": 0.010000000000000009,
+   "abs_dteam": 0.030000000000000027,
+   "agree_with_solo": false,
+   "solo_tie": false,
+   "agree_with_team": true,
+   "team_tie": false
+  },
+  {
+   "gen": 1,
+   "role": "pragmatist",
+   "selected": "gen1_pragmatist_child",
+   "abs_dphi": 0.0050000000000000044,
+   "z_dphi": 0.2622022120425381,
+   "abs_dsolo": 0.009999999999999953,
+   "abs_dteam": 0.010000000000000009,
+   "agree_with_solo": false,
+   "solo_tie": false,
+   "agree_with_team": false,
+   "team_tie": false
+  },
+  {
+   "gen": 2,
+   "role": "critic",
+   "selected": "gen2_critic_child",
+   "abs_dphi": 0.0033333333333332993,
+   "z_dphi": 0.17480147469502344,
+   "abs_dsolo": 0.050000000000000044,
+   "abs_dteam": 0.030000000000000027,
+   "agree_with_solo": false,
+   "solo_tie": false,
+   "agree_with_team": true,
+   "team_tie": false
+  },
+  {
+   "gen": 2,
+   "role": "explorer",
+   "selected": "gen2_explorer_child",
+   "abs_dphi": 0.011666666666666659,
+   "z_dphi": 0.6118051614325879,
+   "abs_dsolo": 0.040000000000000036,
+   "abs_dteam": 0.010000000000000009,
+   "agree_with_solo": true,
+   "solo_tie": false,
+   "agree_with_team": true,
+   "team_tie": false
+  },
+  {
+   "gen": 2,
+   "role": "pragmatist",
+   "selected": "gen1_pragmatist_child",
+   "abs_dphi": 0.006666666666666654,
+   "z_dphi": 0.3496029493900498,
+   "abs_dsolo": 0.010000000000000009,
+   "abs_dteam": 0.039999999999999925,
+   "agree_with_solo": false,
+   "solo_tie": false,
+   "agree_with_team": true,
+   "team_tie": false
+  },
+  {
+   "gen": 3,
+   "role": "critic",
+   "selected": "gen3_critic_child",
+   "abs_dphi": 0.026666666666666672,
+   "z_dphi": 1.3984117975602022,
+   "abs_dsolo": 0.06,
+   "abs_dteam": 0.0,
+   "agree_with_solo": true,
+   "solo_tie": false,
+   "agree_with_team": false,
+   "team_tie": true
+  },
+  {
+   "gen": 3,
+   "role": "explorer",
+   "selected": "gen3_explorer_child",
+   "abs_dphi": 0.033333333333333354,
+   "z_dphi": 1.7480147469502534,
+   "abs_dsolo": 0.040000000000000036,
+   "abs_dteam": 0.050000000000000044,
+   "agree_with_solo": true,
+   "solo_tie": false,
+   "agree_with_team": true,
+   "team_tie": false
+  },
+  {
+   "gen": 3,
+   "role": "pragmatist",
+   "selected": "gen3_pragmatist_child",
+   "abs_dphi": 0.01999999999999999,
+   "z_dphi": 1.0488088481701507,
+   "abs_dsolo": 0.030000000000000027,
+   "abs_dteam": 0.08000000000000007,
+   "agree_with_solo": false,
+   "solo_tie": false,
+   "agree_with_team": true,
+   "team_tie": false
+  },
+  {
+   "gen": 4,
+   "role": "critic",
+   "selected": "gen4_critic_child",
+   "abs_dphi": 0.0016666666666666774,
+   "z_dphi": 0.08740073734751318,
+   "abs_dsolo": 0.010000000000000009,
+   "abs_dteam": 0.020000000000000018,
+   "agree_with_solo": true,
+   "solo_tie": false,
+   "agree_with_team": false,
+   "team_tie": false
+  },
+  {
+   "gen": 4,
+   "role": "explorer",
+   "selected": "gen3_explorer_child",
+   "abs_dphi": 0.026666666666666672,
+   "z_dphi": 1.3984117975602022,
+   "abs_dsolo": 0.030000000000000027,
+   "abs_dteam": 0.030000000000000027,
+   "agree_with_solo": true,
+   "solo_tie": false,
+   "agree_with_team": true,
+   "team_tie": false
+  },
+  {
+   "gen": 4,
+   "role": "pragmatist",
+   "selected": "gen3_pragmatist_child",
+   "abs_dphi": 0.013333333333333308,
+   "z_dphi": 0.6992058987800996,
+   "abs_dsolo": 0.03999999999999998,
+   "abs_dteam": 0.010000000000000009,
+   "agree_with_solo": true,
+   "solo_tie": false,
+   "agree_with_team": false,
+   "team_tie": false
+  },
+  {
+   "gen": 5,
+   "role": "critic",
+   "selected": "gen4_critic_child",
+   "abs_dphi": 0.006666666666666654,
+   "z_dphi": 0.3496029493900498,
+   "abs_dsolo": 0.0,
+   "abs_dteam": 0.020000000000000018,
+   "agree_with_solo": false,
+   "solo_tie": true,
+   "agree_with_team": false,
+   "team_tie": false
+  },
+  {
+   "gen": 5,
+   "role": "explorer",
+   "selected": "gen5_explorer_child",
+   "abs_dphi": 0.013333333333333336,
+   "z_dphi": 0.6992058987801011,
+   "abs_dsolo": 0.030000000000000027,
+   "abs_dteam": 0.0,
+   "agree_with_solo": true,
+   "solo_tie": false,
+   "agree_with_team": false,
+   "team_tie": true
+  },
+  {
+   "gen": 5,
+   "role": "pragmatist",
+   "selected": "gen5_pragmatist_child",
+   "abs_dphi": 0.0266666666666667,
+   "z_dphi": 1.3984117975602035,
+   "abs_dsolo": 0.04999999999999999,
+   "abs_dteam": 0.09000000000000008,
+   "agree_with_solo": false,
+   "solo_tie": false,
+   "agree_with_team": true,
+   "team_tie": false
+  }
+ ],
+ "winners_curse": {
+  "cases": [
+   {
+    "gen": 0,
+    "role": "critic",
+    "selected": "gen0_critic_base",
+    "solo_at_sel": 0.53,
+    "solo_next": 0.46,
+    "loser_solo": 0.53
+   },
+   {
+    "gen": 0,
+    "role": "explorer",
+    "selected": "gen0_explorer_base",
+    "solo_at_sel": 0.54,
+    "solo_next": 0.48,
+    "loser_solo": 0.51
+   },
+   {
+    "gen": 0,
+    "role": "pragmatist",
+    "selected": "gen0_pragmatist_mutant",
+    "solo_at_sel": 0.49,
+    "solo_next": 0.47,
+    "loser_solo": 0.56
+   },
+   {
+    "gen": 1,
+    "role": "critic",
+    "selected": "gen0_critic_base",
+    "solo_at_sel": 0.46,
+    "solo_next": 0.56,
+    "loser_solo": 0.5
+   },
+   {
+    "gen": 1,
+    "role": "explorer",
+    "selected": "gen0_explorer_base",
+    "solo_at_sel": 0.48,
+    "solo_next": 0.5,
+    "loser_solo": 0.49
+   },
+   {
+    "gen": 1,
+    "role": "pragmatist",
+    "selected": "gen1_pragmatist_child",
+    "solo_at_sel": 0.46,
+    "solo_next": 0.53,
+    "loser_solo": 0.47
+   },
+   {
+    "gen": 2,
+    "role": "critic",
+    "selected": "gen2_critic_child",
+    "solo_at_sel": 0.51,
+    "solo_next": 0.45,
+    "loser_solo": 0.56
+   },
+   {
+    "gen": 2,
+    "role": "explorer",
+    "selected": "gen2_explorer_child",
+    "solo_at_sel": 0.54,
+    "solo_next": 0.52,
+    "loser_solo": 0.5
+   },
+   {
+    "gen": 2,
+    "role": "pragmatist",
+    "selected": "gen1_pragmatist_child",
+    "solo_at_sel": 0.53,
+    "solo_next": 0.51,
+    "loser_solo": 0.54
+   },
+   {
+    "gen": 3,
+    "role": "critic",
+    "selected": "gen3_critic_child",
+    "solo_at_sel": 0.51,
+    "solo_next": 0.48,
+    "loser_solo": 0.45
+   },
+   {
+    "gen": 3,
+    "role": "explorer",
+    "selected": "gen3_explorer_child",
+    "solo_at_sel": 0.56,
+    "solo_next": 0.5,
+    "loser_solo": 0.52
+   },
+   {
+    "gen": 3,
+    "role": "pragmatist",
+    "selected": "gen3_pragmatist_child",
+    "solo_at_sel": 0.48,
+    "solo_next": 0.47,
+    "loser_solo": 0.51
+   },
+   {
+    "gen": 4,
+    "role": "critic",
+    "selected": "gen4_critic_child",
+    "solo_at_sel": 0.49,
+    "solo_next": 0.51,
+    "loser_solo": 0.48
+   },
+   {
+    "gen": 4,
+    "role": "explorer",
+    "selected": "gen3_explorer_child",
+    "solo_at_sel": 0.5,
+    "solo_next": 0.53,
+    "loser_solo": 0.47
+   },
+   {
+    "gen": 4,
+    "role": "pragmatist",
+    "selected": "gen3_pragmatist_child",
+    "solo_at_sel": 0.47,
+    "solo_next": 0.51,
+    "loser_solo": 0.43
+   }
+  ],
+  "mean_solo_change_next_gen_pt": -0.46666666666666706,
+  "n": 15,
+  "rep_team_trajectory": [
+   {
+    "gen": 0,
+    "context_team": [
+     "gen0_critic_base",
+     "gen0_explorer_base",
+     "gen0_pragmatist_base"
+    ],
+    "context_team_acc": 0.56,
+    "max_candidate_team_acc": 0.63
+   },
+   {
+    "gen": 1,
+    "context_team": [
+     "gen0_critic_base",
+     "gen0_explorer_base",
+     "gen0_pragmatist_mutant"
+    ],
+    "context_team_acc": 0.63,
+    "max_candidate_team_acc": 0.63
+   },
+   {
+    "gen": 2,
+    "context_team": [
+     "gen0_critic_base",
+     "gen0_explorer_base",
+     "gen1_pragmatist_child"
+    ],
+    "context_team_acc": 0.6,
+    "max_candidate_team_acc": 0.63
+   },
+   {
+    "gen": 3,
+    "context_team": [
+     "gen1_pragmatist_child",
+     "gen2_critic_child",
+     "gen2_explorer_child"
+    ],
+    "context_team_acc": 0.57,
+    "max_candidate_team_acc": 0.65
+   },
+   {
+    "gen": 4,
+    "context_team": [
+     "gen3_critic_child",
+     "gen3_explorer_child",
+     "gen3_pragmatist_child"
+    ],
+    "context_team_acc": 0.6,
+    "max_candidate_team_acc": 0.61
+   },
+   {
+    "gen": 5,
+    "context_team": [
+     "gen3_explorer_child",
+     "gen3_pragmatist_child",
+     "gen4_critic_child"
+    ],
+    "context_team_acc": 0.59,
+    "max_candidate_team_acc": 0.68
+   }
+  ]
+ },
+ "shapley_correlations": {
+  "shapley_vs_solo": -0.07655662967696131,
+  "shapley_vs_team": 0.6354564401999169,
+  "coop_part_vs_solo": -0.5776185497067935,
+  "coop_part_vs_team": 0.7361473276739837,
+  "coop_part_share_of_phi_var": 1.4919020350507888,
+  "n": 36
+ }
+}

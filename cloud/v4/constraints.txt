@@ -1,0 +1,16 @@
+# vllm/vllm-openai:v0.8.5 に同梱の推論経路パッケージを現行版で固定する（2026-09-29 に Cloud Build で実測）。
+# 追加インストールがこれらを1つでも動かす場合はビルドを失敗させる（環境系統差の再発防止）。
+torch==2.6.0
+torchvision==0.21.0
+torchaudio==2.6.0
+transformers==4.51.3
+tokenizers==0.21.1
+vllm==0.8.5
+xformers==0.0.29.post2
+triton==3.2.0
+numpy==2.2.5
+safetensors==0.5.3
+huggingface-hub==0.30.2
+openai==1.76.0
+httpx==0.28.1
+accelerate==1.6.0

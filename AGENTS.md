@@ -102,7 +102,29 @@ uv run python scripts/ping_vllm_persona.py --persona persona_a
 
 ---
 
-## クラウド環境の現状（2026-07-03 構築）
+## クラウド環境の現状
+
+### 2026-09-29〜: Nexi プロジェクトへ移行（現行）
+
+| 項目 | 値 |
+|---|---|
+| GCPアカウント | gaku.masuda@nexi-inc.jp（プロジェクト owner。組織 nexi-inc.jp=1059105397833 の管理権限はなし） |
+| プロジェクト | `pro-plasma-510112-m7`（番号 487551565018、課金 01FBCA-9D91E5-175028 リンク済み） |
+| gcloud 設定 | **このディレクトリ専用**: `CLOUDSDK_CONFIG=~/.config/gcloud-evo-swarm-lora`（リポジトリ外。グローバル `~/.config/gcloud` とは完全分離）。ターミナルは `.envrc`（direnv, `~/.local/bin/direnv`）、Claude Code は `.claude/settings.local.json` の env で適用。両ファイルは `.git/info/exclude` で git 対象外 |
+| 認証 | `gcloud auth login --update-adc` 済み（gcloud と ADC が同一資格情報、ADC quota project 設定済み） |
+| 課金 | **無料トライアル ¥47,813（=$300）・残り90日（2026-12末まで）**。**「アップグレード」は押さない**（押さなければクレジット枯渇で停止し自動請求されない） |
+| 予算アラート | ¥45,000（実クレジットより約¥2,800手前）、クレジット差し引き前の総額ベース、25/50/70/85/95/100%＋予測90%（budget id 3e84e26f-…）。Pub/Sub 通知は組織ポリシーで不可 |
+| 課金エクスポート | BigQuery `pro-plasma-510112-m7:billing_export`（US、標準の使用料金、2026-09-29 ユーザーが有効化）。実課金は `bq query` で確認 |
+| 有効化済みAPI | compute / aiplatform / artifactregistry / cloudbuild / billingbudgets / cloudresourcemanager / iam / cloudquotas / pubsub ＋既定（storage・bigquery 等） |
+| GCSバケット | `gs://evo-swarm-lora-v4-pro-plasma-510112-m7`（us-central1。code/ adapters/ v4/ を置く） |
+| Artifact Registry | `us-central1-docker.pkg.dev/pro-plasma-510112-m7/evo-swarm`。**v4 実験環境は `env-v4@sha256:41ab7010…` に固定**（`cloud/v4/IMAGE.md`） |
+| GPUクォータ | Compute Engine は `GPUS_ALL_REGIONS=0`（GPU VM 不可）。Vertex AI は **Spot A100×8（us-central1 / asia-southeast1 / europe-west4）**、Spot T4×1 等。H100/A100-80GB/L4 の Spot は 2026-09-29 に増枠申請済み（結果待ち） |
+| IAM（手動付与） | Cloud Build 用に Compute 既定SAへ storage.objectAdmin・artifactregistry.writer・logging.logWriter。Vertex カスタムコード SA（service-487551565018@gcp-sa-aiplatform-cc）へ AR reader とバケット objectAdmin（新規プロジェクトでは自動付与されない） |
+
+- **認証の寿命**: 組織ポリシーで `iam.disableServiceAccountKeyCreation` が強制（SA鍵=無期限認証は不可）、`iam.allowedPolicyMemberDomains` で Nexi ドメインのみ許可（個人gmailの追加も不可）。よってユーザーの refresh token が唯一の手段で、寿命は Nexi Workspace の「Google Cloud セッション管理」の設定次第（未設定なら実質無期限、設定があればその時間で再認証。STARUP では約16時間だった）
+- **再ログイン**: このディレクトリで `gcloud auth login gaku.masuda@nexi-inc.jp --update-adc`（`.envrc` の `WSL_BROWSER_PROFILE="Profile 19"` により Windows Chrome の Nexi プロファイルで同意画面が開く）→ `gcloud auth application-default set-quota-project pro-plasma-510112-m7`
+
+### 2026-07-03〜09: STARUP プロジェクト（旧・実験完了済み。無料クレジット残¥4,071）
 
 計算資源は GCP で提供。**予算上限 $300（課金アカウントはJPY建てのため ¥45,000 で予算アラート設定済み: 50/80/95/100% で通知）**。
 
@@ -133,6 +155,40 @@ uv run python scripts/ping_vllm_persona.py --persona persona_a
 ---
 
 ## 研究ログ（随時追記・新しいものを上に）
+
+### 2026-09-29: 【研究再始動】多角的調査で 7 月の結果の重大な欠陥を発見 → v4「進化的社会学習」へ再設計、実験基盤を新プロジェクトに構築
+- **ユーザー指示**: 修論（仮稿、本人も未通読）を修士論文水準に仕上げる。新 GCP（無料クレジット$300）で研究を完遂し、必ず精度向上の成果を出す。締切は **2026年12月中**。テーマ（LoRA 進化的群知能: 性格の異なるペルソナが対話して精度が上がり、世代を重ねて進化する流れ）は維持し、手法・ライブラリは最適なものに変えてよい。
+- **調査4本**（報告は `docs/review_2026-09/`）: `thesis_critique.md`（審査目線、提出不可判定・必要最小11項目・章立て案）/ `literature_update.md`（7〜9月文献、新規性の最大脅威は Heterogeneous Swarms 2502.04510）/ `code_audit.md` / `reanalysis.md`（無料再解析、スクリプト `scripts/analysis/ra*.py`・`audit_*.py`）。
+- **【重大】実験1の MMLU-Pro はベース系4条件（c1/c2/c3/c3'）が抽出バグで汚染**: 旧正規表現 `ANSWER\s*[:：]\s*(.+)` が改行をまたぎ「Final answer:\nANSWER: H」から単語 ANSWER の 'A' を抽出。修正前に完了した MMLU-Pro エントリが再採点されずに残った。**§4.6.4 の「イメージ間系統差 +6pt」の正体はこれ**（コンテナではない）。「MMLU-Pro で LoRA チームのみ有効」「素の議論は MMLU-Pro で有害」「2軸トレードオフ」は根拠消失。
+- **【重大】MATH 採点器の偽陰性 約6.5%**（`\sqrt2`・`\frac59`・`^\circ`・`x=` 等）。全条件ほぼ一様に過小評価。正しく採点すると c7 vs SC@9（MATH）は +0.01pt で同等。
+- **7 月の LoRA ペルソナは多様性ゼロ・議論は同調**: 別ペルソナ間の不一致率は同一エージェント再サンプリングと ±1pp で同じ、チームの oracle@3 はベース3サンプル以下。round1 に自分の前回回答を見せていないため、少数派は自分が正解でも 95% が多数派に同調。c7 は同じ6生成の SC@6 にも −2.9pt、SC@3 にも −2.4pt で負けていた。
+- **進化 v1 の根本原因**: 初期集団が「SFT個体＋2%ノイズの複製」で遺伝的多様性ゼロ。適応度の差はノイズ（再測定SD 3.2pt）以下で、選抜は硬貨投げ相当。行動距離（sharing）もサンプリングノイズを測っていた。**vLLM の seed は出力を再現しない**（同一リクエストの一致 0.9〜3.2%）。
+- **スループット実測（7月、A100・並列32）**: チーム ~720 out tok/s、SC ~1,080 tok/s、GPU 未飽和。8192 到達（2〜6%）が計算の 10〜22% を浪費（正答率ほぼ0）。
+- **v4 の方針（ユーザー合意）**: 重み GA ではなく **文化的進化（進化的社会学習）** — 世代0 = ベースモデル上の英語・推論戦略ペルソナ3体の社会 → 各世代、議論で正解に至った発話を各ペルソナの LoRA に学習（自己学習 a / 他者から学ぶ b）＋兄弟交叉 c → **チーム貢献（厳密 Shapley）で代表を選抜** → test で評価。対照: 選抜なし（常に b）、solo 適応度（A1）、単一モデル自己学習（RFT）。
+- **v4 基盤（新規、`src/evo4/`・`scripts/v4/`・`cloud/v4/`）**: ①環境のみのイメージを digest 固定、コードは起動時に GCS から取得（再ビルドによる系統差を根絶） ②採点器を全面修正（同一行限定の ANSWER 抽出、独立トークンの選択肢、math-verify による記号的同値判定。偽 'A'・「Option C→I」も修正。監査 `scripts/v4/audit_extractor.py`） ③ストリーミング生成＋完全反復ループの早期打ち切り ④全呼び出しを一意キーで保存し二度生成しない（round0 はエージェント単位で全連合共有）、依存関係付き並列でラウンド間の GPU 待ちをなくす ⑤round1 は自分の前回解答を assistant ターンとして提示（Du et al. 原型） ⑥bf16 LoRA 学習（最後の assistant 発話のみに損失、長いプロンプトでも出力位置だけ lm_head、seed 固定、親からの継続学習）。偽 vLLM サーバでの結合試験 `tests/v4/test_engine_e2e.py` 合格。
+- **問題集合（事前登録、`data/v4/items/` + `MANIFEST.json` の SHA256）**: test = 7月未使用の新規問題（MMLU-Pro 500 / SuperGPQA 500 / MATH test 全体 L4-5 から MATH-500 を除いた 300）。dev = 7月使用済みから難易度層化 400（0<p<1 を70%・p=1 を30%、p はベース生出力を v4 採点器で再採点）。学習用 train_g0..g5 各1,200（重複ゼロ）。
+- **インフラの詰まり**: 新規プロジェクトでは Cloud Build 用 SA・Vertex カスタムコード SA に権限が自動付与されない（手動付与済み）。Pub/Sub の予算通知は組織ポリシー（ドメイン制限）で不可。パイロット第1回の Internal error ×3 は**新規プロジェクト初回の「実行基盤の準備」中の一時エラー**だった（CPU／T4 試験ジョブは成功。無料トライアルでも Vertex の GPU ジョブは使える）。
+- **初期ペルソナの根拠づけ（ユーザー指摘「適当に決めたペルソナは修士発表で詰められる」への対応）**: 文献調査（`docs/review_2026-09/persona_design.md`）の知見は2つ。性格ラベルだけのペルソナは客観課題の精度をほぼ変えない（Zheng+ EMNLP Findings 2024: 162役割で効果はほぼランダム）。議論で効くのは推論手続きの多様性である（DMAD, ICLR 2025）。これを踏まえ、**Belbin の9チーム役割を全て候補にし（取捨選択なし）、各役割を確立した推論手続き（消去法・Self-Verification・Step-Back・Plan-and-Solve・類推など）として操作化**した（`configs/v4/persona_pool.json`）。対照は plain。元の3人は Monitor Evaluator / Implementer / Plant に対応し、これを既定トリオとする。選定の手順は次のとおり。
+  - dev を A/B に分ける
+  - 段階1: 単独評価と能力税フィルタ
+  - 段階2: AG(2,3) の釣り合い型12チームで役割の主効果を推定する。Belbin のバランス仮説も検定する
+  - 段階3: B で確認し、事前登録の規則（既定トリオを +1.5pt 以上かつ 90%CI 下限>0 で上回るときだけ置換）で決める
+  この手順をパイロットに組み込んだ（`scripts/v4/pilot.py`）。
+- **Spot A100 の在庫不足**: us-central1 で "Resources are insufficient" が続いた。対処は2つ。複数リージョン（us-central1 / europe-west4 / asia-southeast1。A100 の Spot 枠は各8）に同じジョブを投入し、最初に起動した1本以外を自動で取り消す（`race_monitor.sh` 方式）。あわせて **Flex-start（DWS）** も併用する（Spot 枠を使い、起動後はプリエンプトされない。料金はオンデマンドの最大53%引き）。H100・A100-80GB・L4 の Spot 増枠申請は却下（付与0）。
+- **パイロットで判明したこと（2026-09-30）**:
+  - A100 40GB の実効スループットは約 2,100 out tok/s（並列 128〜256 で頭打ち。並列 64 は約 1,630）。本実験は並列 192 で行う。
+  - dev の出力は平均約 2,900 トークンと長い（中難度に濃縮したため）。
+  - 8192 上限に達した生成（約5〜6%）は完全反復ではなく迷走で、早期打ち切りは発動しない。
+  - 全員が迷走した問題では round1 の入力が約 2.5 万トークンになり、コンテキスト 32,768 を超えて 400 エラーになる → max_model_len を 49,152 に拡張し、400 は再試行しないよう修正した。
+  - 課金エクスポートの BigQuery テーブル `gcp_billing_export_v1_01FBCA_9D91E5_175028` は作成済みだが、データはまだ入っていない（`scripts/v4/cost.sh` で確認する）。
+- **【重要】Vertex の GPU ホストのドライバが 580.173（CUDA 13 世代）に更新されていた**（7 月は 535 系=CUDA 12.2）。7 月向けにイメージへ入れた cuda-compat-12-4 を LD_LIBRARY_PATH で強制すると **Error 803 で CUDA が使えなくなる**。対処: イメージの ENTRYPOINT をジョブの `command` で置き換え、コード側の `scripts/v4/job_entry.sh`（まず compat なしで CUDA を試し、駄目なときだけ compat を有効化）を使う。イメージは再ビルドしていない。**教訓: GPU ホストのドライバは予告なく変わる。compat は条件付きで使う。**
+
+### 2026-09-29: GCP を Nexi プロジェクト（pro-plasma-510112-m7）へ移行、ディレクトリ専用の gcloud 認証を構築
+- **ユーザー指示**: このディレクトリだけで有効・できるだけ長く続く gcloud 認証を gaku.masuda@nexi-inc.jp / pro-plasma-510112-m7 で。
+- **構成**: `CLOUDSDK_CONFIG` を リポジトリ外の `~/.config/gcloud-evo-swarm-lora` に向ける方式（Docker/Cloud Build のコンテキストに資格情報が紛れ込まない）。direnv 2.37.1 を `~/.local/bin` に導入し `~/.bashrc` にフック追加。`~/.local/bin/wsl-browser` に `WSL_BROWSER_PROFILE` 対応を追加（OAuth を任意の Chrome プロファイルで開ける。未設定時は従来動作）。詳細は「クラウド環境の現状」。
+- **検証**: グローバル設定は無変更（親ディレクトリでは従来の jarvis 構成のまま）、このディレクトリでは nexi アカウントでトークン取得・google-auth の ADC も project/quota=pro-plasma-510112-m7 で refresh 成功。
+- **長期化の限界（組織ポリシーで確認）**: SA鍵作成禁止が強制・メンバーは Nexi ドメイン限定 → ユーザーログインが唯一の手段。これ以上延ばすには Nexi の Workspace 管理者に「Google Cloud セッション管理」の再認証を「不要」にしてもらう（またはこのアカウントのOUを除外）か、組織ポリシー管理者に SA 鍵作成の例外を依頼する必要がある。
+- **未対応（実験再開時に必要）**: aiplatform/artifactregistry/cloudbuild/compute API の有効化、同リージョンの GCS バケット・Artifact Registry 作成、Vertex Spot GPU クォータ確認、`submit_job.sh`・battery JSON の旧バケット参照の置換、予算アラート設定。
 
 ### 2026-07-10: 【査読対応・無料範囲の全面改訂】外部査読(GPT-5.6)の指摘を検証し、修論を統計再解析・主張弱化で全面修正
 - **経緯**: ユーザーが外部LLM査読（Major Revision判定）を受領。指摘をコード・生データで検証し、無料でできる範囲（手元データ＋文言修正）を全て実施。**検証の結果、査読の主要指摘はほぼ正しく、一部は我々の解釈がさらに深く誤っていた**。

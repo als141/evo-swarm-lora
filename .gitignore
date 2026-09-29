@@ -34,3 +34,7 @@ thesis/*.lot
 thesis/*.bbl
 thesis/*.blg
 thesis/*.out
+
+# v4 の生ログのミラー（GCS の v4/store が一次保存先。容量が大きく増え続けるため追跡しない）
+results/v4/store_mirror/
+results/v4/pilot_raw/

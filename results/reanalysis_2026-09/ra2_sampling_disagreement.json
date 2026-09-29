@@ -1,0 +1,343 @@
+{
+ "a_same_request_repeat_sgpqa": {
+  "full": {
+   "n_pairs": 1350,
+   "disagree": 0.29555555555555557,
+   "correct_discord": 0.1362962962962963,
+   "none_rate": 0.017037037037037038
+  },
+  "512": {
+   "n_pairs": 1350,
+   "disagree": 0.2644444444444444,
+   "correct_discord": 0.0874074074074074,
+   "none_rate": 0.45185185185185184
+  },
+  "2048": {
+   "n_pairs": 1350,
+   "disagree": 0.2911111111111111,
+   "correct_discord": 0.1288888888888889,
+   "none_rate": 0.11925925925925926
+  }
+ },
+ "b_base_sc_resample": {
+  "mmlu_pro": {
+   "full": {
+    "n_pairs": 108000,
+    "disagree": 0.14939814814814814,
+    "correct_discord": 0.0884074074074074,
+    "none_rate": 0.0044444444444444444
+   },
+   "512": {
+    "n_pairs": 108000,
+    "disagree": 0.2016574074074074,
+    "correct_discord": 0.09501851851851852,
+    "none_rate": 0.545074074074074
+   },
+   "2048": {
+    "n_pairs": 108000,
+    "disagree": 0.17862037037037037,
+    "correct_discord": 0.10262962962962963,
+    "none_rate": 0.0917037037037037
+   },
+   "per_item_mean_full": 0.14939814814814814
+  },
+  "math500": {
+   "full": {
+    "n_pairs": 43200,
+    "disagree": 0.10493055555555555,
+    "correct_discord": 0.06189814814814815,
+    "none_rate": 0.039074074074074074
+   },
+   "512": {
+    "n_pairs": 43200,
+    "disagree": 0.04928240740740741,
+    "correct_discord": 0.03722222222222222,
+    "none_rate": 0.7551851851851852
+   },
+   "2048": {
+    "n_pairs": 43200,
+    "disagree": 0.10326388888888889,
+    "correct_discord": 0.08856481481481482,
+    "none_rate": 0.31712962962962965
+   },
+   "per_item_mean_full": 0.10493055555555554
+  },
+  "supergpqa": {
+   "full": {
+    "n_pairs": 64800,
+    "disagree": 0.26146604938271606,
+    "correct_discord": 0.1463888888888889,
+    "none_rate": 0.015987654320987654
+   },
+   "512": {
+    "n_pairs": 64800,
+    "disagree": 0.220108024691358,
+    "correct_discord": 0.07200617283950617,
+    "none_rate": 0.6301234567901235
+   },
+   "2048": {
+    "n_pairs": 64800,
+    "disagree": 0.28402777777777777,
+    "correct_discord": 0.1438888888888889,
+    "none_rate": 0.2064814814814815
+   },
+   "per_item_mean_full": 0.26146604938271606
+  }
+ },
+ "c_same_agent_cross_seed": {
+  "c7_mmlu_pro": {
+   "full": {
+    "n_pairs": 990,
+    "disagree": 0.2080808080808081,
+    "correct_discord": 0.12828282828282828,
+    "none_rate": 0.0032679738562091504
+   },
+   "512": {
+    "n_pairs": 990,
+    "disagree": 0.2828282828282828,
+    "correct_discord": 0.1494949494949495,
+    "none_rate": 0.3164488017429194
+   },
+   "2048": {
+    "n_pairs": 990,
+    "disagree": 0.2313131313131313,
+    "correct_discord": 0.1383838383838384,
+    "none_rate": 0.041938997821350764
+   },
+   "n_items": 894
+  },
+  "c7_math500": {
+   "full": {
+    "n_pairs": 6876,
+    "disagree": 0.12638161721931354,
+    "correct_discord": 0.07446189645142524,
+    "none_rate": 0.03780928551570754
+   },
+   "512": {
+    "n_pairs": 6876,
+    "disagree": 0.07431646305991856,
+    "correct_discord": 0.060209424083769635,
+    "none_rate": 0.7203224909646928
+   },
+   "2048": {
+    "n_pairs": 6876,
+    "disagree": 0.11460151250727167,
+    "correct_discord": 0.09773123909249563,
+    "none_rate": 0.29886016124548237
+   },
+   "n_items": 783
+  },
+  "c7_supergpqa": {
+   "full": {
+    "n_pairs": 204,
+    "disagree": 0.3627450980392157,
+    "correct_discord": 0.23529411764705882,
+    "none_rate": 0.007874015748031496
+   },
+   "512": {
+    "n_pairs": 204,
+    "disagree": 0.37745098039215685,
+    "correct_discord": 0.20098039215686275,
+    "none_rate": 0.47506561679790027
+   },
+   "2048": {
+    "n_pairs": 204,
+    "disagree": 0.4166666666666667,
+    "correct_discord": 0.25980392156862747,
+    "none_rate": 0.11811023622047244
+   },
+   "n_items": 186
+  },
+  "c5_mmlu_pro": {
+   "full": {
+    "n_pairs": 183,
+    "disagree": 0.2896174863387978,
+    "correct_discord": 0.1912568306010929,
+    "none_rate": 0.0
+   },
+   "512": {
+    "n_pairs": 183,
+    "disagree": 0.34972677595628415,
+    "correct_discord": 0.22404371584699453,
+    "none_rate": 0.1092896174863388
+   },
+   "2048": {
+    "n_pairs": 183,
+    "disagree": 0.30601092896174864,
+    "correct_discord": 0.20765027322404372,
+    "none_rate": 0.00819672131147541
+   },
+   "n_items": 183
+  },
+  "c5_math500": {
+   "full": {
+    "n_pairs": 1362,
+    "disagree": 0.3076358296622614,
+    "correct_discord": 0.16886930983847284,
+    "none_rate": 0.03046280023432923
+   },
+   "512": {
+    "n_pairs": 1362,
+    "disagree": 0.20851688693098386,
+    "correct_discord": 0.14317180616740088,
+    "none_rate": 0.4956063268892794
+   },
+   "2048": {
+    "n_pairs": 1362,
+    "disagree": 0.3010279001468429,
+    "correct_discord": 0.16152716593245228,
+    "none_rate": 0.15700058582308143
+   },
+   "n_items": 684
+  },
+  "c5_supergpqa": {
+   "full": {
+    "n_pairs": 42,
+    "disagree": 0.4523809523809524,
+    "correct_discord": 0.35714285714285715,
+    "none_rate": 0.0
+   },
+   "512": {
+    "n_pairs": 42,
+    "disagree": 0.40476190476190477,
+    "correct_discord": 0.23809523809523808,
+    "none_rate": 0.32142857142857145
+   },
+   "2048": {
+    "n_pairs": 42,
+    "disagree": 0.42857142857142855,
+    "correct_discord": 0.35714285714285715,
+    "none_rate": 0.10714285714285714
+   },
+   "n_items": 42
+  }
+ },
+ "d_inter_persona_r0": {
+  "c7_mmlu_pro": {
+   "full": {
+    "n_pairs": 9000,
+    "disagree": 0.21566666666666667,
+    "correct_discord": 0.13,
+    "none_rate": 0.006666666666666667
+   },
+   "512": {
+    "n_pairs": 9000,
+    "disagree": 0.31133333333333335,
+    "correct_discord": 0.17155555555555554,
+    "none_rate": 0.3438888888888889
+   },
+   "2048": {
+    "n_pairs": 9000,
+    "disagree": 0.23755555555555555,
+    "correct_discord": 0.14066666666666666,
+    "none_rate": 0.053
+   }
+  },
+  "c7_math500": {
+   "full": {
+    "n_pairs": 3600,
+    "disagree": 0.12083333333333333,
+    "correct_discord": 0.07055555555555555,
+    "none_rate": 0.03777777777777778
+   },
+   "512": {
+    "n_pairs": 3600,
+    "disagree": 0.08916666666666667,
+    "correct_discord": 0.07055555555555555,
+    "none_rate": 0.7205555555555555
+   },
+   "2048": {
+    "n_pairs": 3600,
+    "disagree": 0.13166666666666665,
+    "correct_discord": 0.11166666666666666,
+    "none_rate": 0.2986111111111111
+   }
+  },
+  "c7_supergpqa": {
+   "full": {
+    "n_pairs": 5400,
+    "disagree": 0.35777777777777775,
+    "correct_discord": 0.1874074074074074,
+    "none_rate": 0.019074074074074073
+   },
+   "512": {
+    "n_pairs": 5400,
+    "disagree": 0.36,
+    "correct_discord": 0.13666666666666666,
+    "none_rate": 0.44092592592592594
+   },
+   "2048": {
+    "n_pairs": 5400,
+    "disagree": 0.3811111111111111,
+    "correct_discord": 0.18518518518518517,
+    "none_rate": 0.1437037037037037
+   }
+  },
+  "c5_mmlu_pro": {
+   "full": {
+    "n_pairs": 4500,
+    "disagree": 0.2848888888888889,
+    "correct_discord": 0.1902222222222222,
+    "none_rate": 0.0033333333333333335
+   },
+   "512": {
+    "n_pairs": 4500,
+    "disagree": 0.3277777777777778,
+    "correct_discord": 0.20355555555555555,
+    "none_rate": 0.14533333333333334
+   },
+   "2048": {
+    "n_pairs": 4500,
+    "disagree": 0.2931111111111111,
+    "correct_discord": 0.19333333333333333,
+    "none_rate": 0.020666666666666667
+   }
+  },
+  "c5_math500": {
+   "full": {
+    "n_pairs": 1800,
+    "disagree": 0.31333333333333335,
+    "correct_discord": 0.18555555555555556,
+    "none_rate": 0.029444444444444443
+   },
+   "512": {
+    "n_pairs": 1800,
+    "disagree": 0.2411111111111111,
+    "correct_discord": 0.16666666666666666,
+    "none_rate": 0.49722222222222223
+   },
+   "2048": {
+    "n_pairs": 1800,
+    "disagree": 0.3111111111111111,
+    "correct_discord": 0.18333333333333332,
+    "none_rate": 0.1527777777777778
+   }
+  },
+  "c5_supergpqa": {
+   "full": {
+    "n_pairs": 2700,
+    "disagree": 0.47444444444444445,
+    "correct_discord": 0.2437037037037037,
+    "none_rate": 0.013333333333333334
+   },
+   "512": {
+    "n_pairs": 2700,
+    "disagree": 0.4414814814814815,
+    "correct_discord": 0.2111111111111111,
+    "none_rate": 0.26037037037037036
+   },
+   "2048": {
+    "n_pairs": 2700,
+    "disagree": 0.4803703703703704,
+    "correct_discord": 0.2348148148148148,
+    "none_rate": 0.06296296296296296
+   }
+  }
+ },
+ "evolution_behavioral_distance": {
+  "mean": 0.3583333333333334,
+  "min": 0.28,
+  "max": 0.45,
+  "n": 18
+ }
+}
