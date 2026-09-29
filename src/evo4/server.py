@@ -44,7 +44,27 @@ class VllmServer:
     def base_url(self) -> str:
         return f"http://localhost:{self.port}/v1"
 
+    @staticmethod
+    def ensure_model(retries: int = 5) -> None:
+        """モデルを事前に取得する（HF からの取得の一時的な失敗で vLLM が起動できない事故を防ぐ）。
+
+        2026-09-30 に Xet 経由の取得が途中で切れて vLLM が起動できず、ジョブが失敗した。
+        """
+        from huggingface_hub import snapshot_download
+
+        for attempt in range(retries):
+            try:
+                snapshot_download(BASE_MODEL, allow_patterns=["*.json", "*.safetensors", "*.txt", "*.model",
+                                                             "*.jinja", "tokenizer*", "merges.txt", "vocab*"])
+                return
+            except Exception as error:  # noqa: BLE001
+                print(f"[server] model download failed (attempt {attempt + 1}): {error}", flush=True)
+                time.sleep(30 * (attempt + 1))
+        raise RuntimeError("model download failed repeatedly")
+
     def start(self, timeout: float = 1800.0) -> None:
+        os.environ.setdefault("HF_HUB_DISABLE_XET", "1")  # Xet 経由の取得は途中で切れたことがある
+        self.ensure_model()
         env = dict(os.environ, VLLM_ALLOW_RUNTIME_LORA_UPDATING="True")
         log = open(self.log_path, "a")
         self.proc = subprocess.Popen(self.args, stdout=log, stderr=subprocess.STDOUT, env=env)

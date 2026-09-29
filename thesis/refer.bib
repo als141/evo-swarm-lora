@@ -1,9 +1,17 @@
 % ==========================================================================
-% refer.bib -- 修士論文参考文献（docs/thesis/*.md の章末リストを統合・重複除去）
+% refer.bib -- 修士論文参考文献
 % citation key は著者年形式（例: du2023improving）
-% 2026-07-06: 全63エントリの実在・書誌情報を点検済み（arXiv abs ページ /
+% 2026-07-06: 既存63エントリの実在・書誌情報を点検済み（arXiv abs ページ /
 %             ACM DL / ACL Anthology / ICLR proceedings と照合）。
 %             arXiv 上で改題された論文は点検時点の最新版タイトルを採用。
+% 2026-09-30: 第2章の全面改訂に合わせて更新。
+%             - 既存エントリの修正: zhang2025genome（ACL 2026 main）, li2024more（TMLR）,
+%               cost2026consensus（venue 追記）, evomas2026evolving（ICML 2026）,
+%               subramaniam2025multiagent / maca2025preference（著者を補完）
+%             - note 欄の日本語メモを削除（参考文献一覧に出力されるため）
+%             - 追加68件は docs/review_2026-09/literature_update.md,
+%               persona_design.md で確認済みのもの、または 2026-09-30 に
+%               arXiv abs / Crossref / 出版社ページで確認したもの
 % ==========================================================================
 
 % -------------------- マルチエージェント議論 --------------------
@@ -24,11 +32,12 @@
   note      = {arXiv:2305.19118}
 }
 
-@misc{li2024more,
-  author       = {Li, Junyou and others},
-  title        = {More Agents Is All You Need},
-  howpublished = {arXiv:2402.05120},
-  year         = {2024}
+@article{li2024more,
+  author  = {Li, Junyou and others},
+  title   = {More Agents Is All You Need},
+  journal = {Transactions on Machine Learning Research},
+  year    = {2024},
+  note    = {arXiv:2402.05120}
 }
 
 @inproceedings{smit2024should,
@@ -43,8 +52,7 @@
   author       = {Zhang, Hangfan and Cui, Zhiyao and Chen, Jianhao and Wang, Xinrun and Zhang, Qiaosheng and Wang, Zhen and Wu, Dinghao and Hu, Shuyue},
   title        = {Stop Overvaluing Multi-Agent Debate --- We Must Rethink Evaluation and Embrace Model Heterogeneity},
   howpublished = {arXiv:2502.08788},
-  year         = {2025},
-  note         = {初版タイトル: If Multi-Agent Debate Is the Answer, What Is the Question?}
+  year         = {2025}
 }
 
 @misc{talk2025cheap,
@@ -59,7 +67,8 @@
   author       = {Bertalani{\v{c}}, Bla{\v{z}} and Fortuna, Carolina},
   title        = {The Cost of Consensus: Isolated Self-Correction Prevails Over Unguided Homogeneous Multi-Agent Debate},
   howpublished = {arXiv:2605.00914},
-  year         = {2026}
+  year         = {2026},
+  note         = {ACM Conference on AI and Agentic Systems}
 }
 
 @inproceedings{park2025maporl,
@@ -71,7 +80,7 @@
 }
 
 @inproceedings{subramaniam2025multiagent,
-  author    = {Subramaniam, Vighnesh and others},
+  author    = {Subramaniam, Vighnesh and Du, Yilun and Tenenbaum, Joshua B. and Torralba, Antonio and Li, Shuang and Mordatch, Igor},
   title     = {Multiagent Finetuning: Self Improvement with Diverse Reasoning Chains},
   booktitle = {Proceedings of the 13th International Conference on Learning Representations (ICLR)},
   year      = {2025},
@@ -79,11 +88,10 @@
 }
 
 @misc{maca2025preference,
-  author       = {Samanta, Ankur and others},
+  author       = {Samanta, Ankur and Magesh, Akshayaa and Wu, Runzhe and Jain, Ayush and Yu, Youliang and Jiang, Daniel and Vidolov, Boris and Sajda, Paul and Efroni, Yonathan and Hassani, Kaveh},
   title        = {Self-Improvement of Language Models by Post-Training on Multi-Agent Debate},
   howpublished = {arXiv:2509.15172},
-  year         = {2025},
-  note         = {MACA (Multi-Agent Consensus Alignment) の提案論文}
+  year         = {2025}
 }
 
 @inproceedings{wang2024mixture,
@@ -98,8 +106,7 @@
   author       = {Li, Wenzhe and Lin, Yong and Xia, Mengzhou and Jin, Chi},
   title        = {Rethinking Mixture-of-Agents: Is Mixing Different Large Language Models Beneficial?},
   howpublished = {arXiv:2502.00674},
-  year         = {2025},
-  note         = {Self-MoA の提案論文}
+  year         = {2025}
 }
 
 @inproceedings{choi2025debate,
@@ -129,8 +136,362 @@
   author       = {Zhang, Qian and Zheng, Yan and Liu, Jinyi and Liang, Hebin and Wang, Lanjun},
   title        = {Key Decision-Makers in Multi-Agent Debates: Who Holds the Power?},
   howpublished = {arXiv:2511.11040},
+  year         = {2025}
+}
+
+@inproceedings{liu2025dmad,
+  author    = {Liu, Yexiang and Cao, Jie and Li, Zekun and He, Ran and Tan, Tieniu},
+  title     = {Breaking Mental Set to Improve Reasoning through Diverse Multi-Agent Debate},
+  booktitle = {Proceedings of the 13th International Conference on Learning Representations (ICLR)},
+  year      = {2025}
+}
+
+@misc{wu2025debate,
+  author       = {Wu, Haolun and Li, Zhenkun and Li, Lingyao},
+  title        = {Can {LLM} Agents Really Debate? {A} Controlled Study of Multi-Agent Debate in Logical Reasoning},
+  howpublished = {arXiv:2511.07784},
+  year         = {2025}
+}
+
+@inproceedings{zhang2024machinesom,
+  author    = {Zhang, Jintian and Xu, Xin and Zhang, Ningyu and Liu, Ruibo and Hooi, Bryan and Deng, Shumin},
+  title     = {Exploring Collaboration Mechanisms for {LLM} Agents: A Social Psychology View},
+  booktitle = {Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year      = {2024},
+  note      = {arXiv:2310.02124}
+}
+
+@inproceedings{chen2024reconcile,
+  author    = {Chen, Justin Chih-Yao and Saha, Swarnadeep and Bansal, Mohit},
+  title     = {{ReConcile}: Round-Table Conference Improves Reasoning via Consensus among Diverse {LLMs}},
+  booktitle = {Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year      = {2024},
+  note      = {arXiv:2309.13007}
+}
+
+@inproceedings{pappu2026experts,
+  author    = {Pappu, Aneesh and El, Batu and Cao, Hancheng and di Nolfo, Carmelo and Sun, Yanchao and Cao, Meng and Zou, James},
+  title     = {Multi-Agent Teams Hold Experts Back},
+  booktitle = {Proceedings of the 43rd International Conference on Machine Learning (ICML)},
+  year      = {2026},
+  note      = {arXiv:2602.01011}
+}
+
+@inproceedings{okawa2026biased,
+  author    = {Okawa, Maya},
+  title     = {Emergence of Biased Consensus in Multi-Agent {LLM} Debates},
+  booktitle = {Proceedings of the 43rd International Conference on Machine Learning (ICML)},
+  year      = {2026},
+  note      = {arXiv:2608.02827}
+}
+
+@misc{mirzaei2026samplemore,
+  author       = {Mirzaei, Iliya},
+  title        = {Sample More, Reflect Less: Self-Refine and Reflexion Lose to Repeated Sampling at Equal Token Cost, from 1.5{B} to 7{B}},
+  howpublished = {arXiv:2607.28576},
+  year         = {2026}
+}
+
+@misc{motger2026madsurvey,
+  author       = {Motger, Quim and Oriol, Marc and Marco, Jordi and Franch, Xavier},
+  title        = {Multi-Agent Debate Strategies: Survey, Taxonomy, and Challenges},
+  howpublished = {arXiv:2607.26212},
+  year         = {2026}
+}
+
+% -------------------- 回答の集約 --------------------
+
+@misc{toshniwal2025genselect,
+  author       = {Toshniwal, Shubham and Sorokin, Ivan and Ficek, Aleksander and Moshkov, Ivan and Gitman, Igor},
+  title        = {{GenSelect}: A Generative Approach to Best-of-{N}},
+  howpublished = {arXiv:2507.17797},
   year         = {2025},
-  note         = {MADC・Truth Last 戦略の提案論文}
+  note         = {2nd AI for Math Workshop at ICML 2025}
+}
+
+@misc{venkatraman2025rsa,
+  author       = {Venkatraman, Siddarth and Jain, Vineet and Mittal, Sarthak and Shah, Vedant and Obando-Ceron, Johan and Bengio, Yoshua and Bartoldson, Brian R. and Kailkhura, Bhavya and Lajoie, Guillaume and Berseth, Glen and Malkin, Nikolay and Jain, Moksh},
+  title        = {Recursive Self-Aggregation Unlocks Deep Thinking in Large Language Models},
+  howpublished = {arXiv:2509.26626},
+  year         = {2025}
+}
+
+@misc{farmanfarmaian2026candidatefree,
+  author       = {Farmanfarmaian, Guiv},
+  title        = {Selection, Recombination, or a Fresh Solve? {A} Candidate-Free Control for Single-Pass Test-Time Aggregation},
+  howpublished = {arXiv:2608.18379},
+  year         = {2026},
+  note         = {COLM 2026 Workshop on Efficient Reasoning}
+}
+
+@misc{fortuna2026disjunctive,
+  author       = {Fortuna, Carolina and Bertalani{\v{c}}, Bla{\v{z}}},
+  title        = {Multi-agent Scaling Across Disjunctive and Compensatory Tasks},
+  howpublished = {arXiv:2609.31563},
+  year         = {2026}
+}
+
+% -------------------- ペルソナと役割 --------------------
+
+@inproceedings{zheng2024persona,
+  author    = {Zheng, Mingqian and Pei, Jiaxin and Logeswaran, Lajanugen and Lee, Moontae and Jurgens, David},
+  title     = {When ``A Helpful Assistant'' Is Not Really Helpful: Personas in System Prompts Do Not Improve Performances of Large Language Models},
+  booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2024},
+  year      = {2024},
+  note      = {arXiv:2311.10054}
+}
+
+@misc{kim2024persona,
+  author       = {Kim, Junseok and Yang, Nakyeong and Jung, Kyomin},
+  title        = {Persona is a Double-edged Sword: Mitigating the Negative Impact of Role-playing Prompts in Zero-shot Reasoning Tasks},
+  howpublished = {arXiv:2408.08631},
+  year         = {2024}
+}
+
+@misc{hu2026prism,
+  author       = {Hu, Zizhao and Rostami, Mohammad and Thomason, Jesse},
+  title        = {Expert Personas Improve {LLM} Alignment but Damage Accuracy: Bootstrapping Intent-Based Persona Routing with {PRISM}},
+  howpublished = {arXiv:2603.18507},
+  year         = {2026}
+}
+
+@inproceedings{wang2024spp,
+  author    = {Wang, Zhenhailong and Mao, Shaoguang and Wu, Wenshan and Ge, Tao and Wei, Furu and Ji, Heng},
+  title     = {Unleashing the Emergent Cognitive Synergy in Large Language Models: A Task-Solving Agent through Multi-Persona Self-Collaboration},
+  booktitle = {Proceedings of the 2024 Conference of the North American Chapter of the Association for Computational Linguistics (NAACL)},
+  year      = {2024},
+  note      = {arXiv:2307.05300}
+}
+
+@inproceedings{keluskar2026personality,
+  author    = {Keluskar, Aryan and Bhattacharjee, Amrita and Liu, Huan},
+  title     = {When Does Personality Composition Matter for Multi-Agent {LLM} Teams?},
+  booktitle = {Proceedings of the Conference on Language Modeling (COLM)},
+  year      = {2026},
+  note      = {arXiv:2606.27443}
+}
+
+@misc{baines2026cartography,
+  author       = {Baines, Luke and others},
+  title        = {Persona Cartography: Charting Language Model Personality Traits in Weight Space},
+  howpublished = {arXiv:2607.07916},
+  year         = {2026}
+}
+
+@book{belbin1981management,
+  author    = {Belbin, R. Meredith},
+  title     = {Management Teams: Why They Succeed or Fail},
+  publisher = {Heinemann},
+  year      = {1981}
+}
+
+@book{belbin1993team,
+  author    = {Belbin, R. Meredith},
+  title     = {Team Roles at Work},
+  publisher = {Butterworth-Heinemann},
+  year      = {1993}
+}
+
+@article{furnham1993psychometric,
+  author  = {Furnham, Adrian and Steele, Howard and Pendleton, David},
+  title   = {A Psychometric Assessment of the {Belbin} Team-Role Self-Perception Inventory},
+  journal = {Journal of Occupational and Organizational Psychology},
+  volume  = {66},
+  number  = {3},
+  pages   = {245--257},
+  year    = {1993},
+  note    = {DOI: 10.1111/j.2044-8325.1993.tb00535.x}
+}
+
+@article{senior1997team,
+  author  = {Senior, Barbara},
+  title   = {Team Roles and Team Performance: Is There `Really' a Link?},
+  journal = {Journal of Occupational and Organizational Psychology},
+  volume  = {70},
+  number  = {3},
+  pages   = {241--258},
+  year    = {1997},
+  note    = {DOI: 10.1111/j.2044-8325.1997.tb00646.x}
+}
+
+@article{aritzeta2007belbin,
+  author  = {Aritzeta, Aitor and Swailes, Stephen and Senior, Barbara},
+  title   = {{Belbin's} Team Role Model: Development, Validity and Applications for Team Building},
+  journal = {Journal of Management Studies},
+  volume  = {44},
+  number  = {1},
+  pages   = {96--118},
+  year    = {2007},
+  note    = {DOI: 10.1111/j.1467-6486.2007.00666.x}
+}
+
+@book{debono1985six,
+  author    = {de Bono, Edward},
+  title     = {Six Thinking Hats},
+  publisher = {Little, Brown},
+  year      = {1985}
+}
+
+@article{hong2004groups,
+  author  = {Hong, Lu and Page, Scott E.},
+  title   = {Groups of Diverse Problem Solvers Can Outperform Groups of High-Ability Problem Solvers},
+  journal = {Proceedings of the National Academy of Sciences},
+  volume  = {101},
+  number  = {46},
+  pages   = {16385--16389},
+  year    = {2004},
+  note    = {DOI: 10.1073/pnas.0403723101}
+}
+
+@article{thompson2014does,
+  author  = {Thompson, Abigail},
+  title   = {Does Diversity Trump Ability? {An} Example of the Misuse of Mathematics in the Social Sciences},
+  journal = {Notices of the American Mathematical Society},
+  volume  = {61},
+  number  = {9},
+  pages   = {1024--1030},
+  year    = {2014}
+}
+
+@article{kuehn2017diversity,
+  author  = {Kuehn, Daniel},
+  title   = {Diversity, Ability, and Democracy: A Note on {Thompson's} Challenge to {Hong} and {Page}},
+  journal = {Critical Review},
+  volume  = {29},
+  number  = {1},
+  pages   = {72--87},
+  year    = {2017},
+  note    = {DOI: 10.1080/08913811.2017.1288455}
+}
+
+@misc{zhang2026dynamic,
+  author       = {Zhang, Miao and Kim, Junsik and Xiang, Siyuan and Gao, Jian and Cao, Cheng},
+  title        = {Dynamic Role Assignment for Multi-Agent Debate},
+  howpublished = {arXiv:2601.17152},
+  year         = {2026}
+}
+
+@inproceedings{liu2024dylan,
+  author    = {Liu, Zijun and Zhang, Yanzhe and Li, Peng and Liu, Yang and Yang, Diyi},
+  title     = {A Dynamic {LLM}-Powered Agent Network for Task-Oriented Agent Collaboration},
+  booktitle = {Proceedings of the 1st Conference on Language Modeling (COLM)},
+  year      = {2024},
+  note      = {arXiv:2310.02170 (DyLAN)}
+}
+
+@inproceedings{yuan2025evoagent,
+  author    = {Yuan, Siyu and Song, Kaitao and Chen, Jiangjie and Tan, Xu and Li, Dongsheng and Yang, Deqing},
+  title     = {{EvoAgent}: Towards Automatic Multi-Agent Generation via Evolutionary Algorithms},
+  booktitle = {Proceedings of the 2025 Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics (NAACL)},
+  year      = {2025},
+  note      = {arXiv:2406.14228}
+}
+
+@inproceedings{zhou2026mass,
+  author    = {Zhou, Han and Wan, Xingchen and Sun, Ruoxi and Palangi, Hamid and Iqbal, Shariq and Vuli{\'c}, Ivan and Korhonen, Anna and Ar{\i}k, Sercan {\"O}.},
+  title     = {Multi-Agent Design: Optimizing Agents with Better Prompts and Topologies},
+  booktitle = {Proceedings of the 14th International Conference on Learning Representations (ICLR)},
+  year      = {2026},
+  note      = {arXiv:2502.02533}
+}
+
+% -------------------- 推論手続き（プロンプト手法） --------------------
+
+@inproceedings{zheng2024stepback,
+  author    = {Zheng, Huaixiu Steven and Mishra, Swaroop and Chen, Xinyun and Cheng, Heng-Tze and Chi, Ed H. and Le, Quoc V. and Zhou, Denny},
+  title     = {Take a Step Back: Evoking Reasoning via Abstraction in Large Language Models},
+  booktitle = {Proceedings of the 12th International Conference on Learning Representations (ICLR)},
+  year      = {2024},
+  note      = {arXiv:2310.06117}
+}
+
+@inproceedings{wang2023plan,
+  author    = {Wang, Lei and Xu, Wanyu and Lan, Yihuai and Hu, Zhiqiang and Lan, Yunshi and Lee, Roy Ka-Wei and Lim, Ee-Peng},
+  title     = {Plan-and-Solve Prompting: Improving Zero-Shot Chain-of-Thought Reasoning by Large Language Models},
+  booktitle = {Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year      = {2023},
+  note      = {arXiv:2305.04091}
+}
+
+@inproceedings{zhou2023least,
+  author    = {Zhou, Denny and Sch{\"a}rli, Nathanael and Hou, Le and Wei, Jason and Scales, Nathan and Wang, Xuezhi and Schuurmans, Dale and Cui, Claire and Bousquet, Olivier and Le, Quoc and Chi, Ed},
+  title     = {Least-to-Most Prompting Enables Complex Reasoning in Large Language Models},
+  booktitle = {Proceedings of the 11th International Conference on Learning Representations (ICLR)},
+  year      = {2023},
+  note      = {arXiv:2205.10625}
+}
+
+@inproceedings{weng2023large,
+  author    = {Weng, Yixuan and Zhu, Minjun and Xia, Fei and Li, Bin and He, Shizhu and Liu, Shengping and Sun, Bin and Liu, Kang and Zhao, Jun},
+  title     = {Large Language Models are Better Reasoners with Self-Verification},
+  booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2023},
+  year      = {2023},
+  note      = {arXiv:2212.09561}
+}
+
+@inproceedings{yasunaga2024analogical,
+  author    = {Yasunaga, Michihiro and Chen, Xinyun and Li, Yujia and Pasupat, Panupong and Leskovec, Jure and Liang, Percy and Chi, Ed H. and Zhou, Denny},
+  title     = {Large Language Models as Analogical Reasoners},
+  booktitle = {Proceedings of the 12th International Conference on Learning Representations (ICLR)},
+  year      = {2024},
+  note      = {arXiv:2310.01714}
+}
+
+% -------------------- 自己生成データ・議論からの学習 --------------------
+
+@inproceedings{zelikman2022star,
+  author    = {Zelikman, Eric and Wu, Yuhuai and Mu, Jesse and Goodman, Noah D.},
+  title     = {{STaR}: Bootstrapping Reasoning With Reasoning},
+  booktitle = {Advances in Neural Information Processing Systems 35 (NeurIPS)},
+  year      = {2022},
+  note      = {arXiv:2203.14465}
+}
+
+@misc{yuan2023scaling,
+  author       = {Yuan, Zheng and Yuan, Hongyi and Li, Chengpeng and Dong, Guanting and Lu, Keming and Tan, Chuanqi and Zhou, Chang and Zhou, Jingren},
+  title        = {Scaling Relationship on Learning Mathematical Reasoning with Large Language Models},
+  howpublished = {arXiv:2308.01825},
+  year         = {2023}
+}
+
+@misc{gkountouras2026canon,
+  author       = {Gkountouras, John and Juki{\'c}, Josip and Titov, Ivan},
+  title        = {Consensus as Privileged Context for Label-Free Self-Distillation},
+  howpublished = {arXiv:2607.13643},
+  year         = {2026}
+}
+
+@misc{liu2026sdrl,
+  author       = {Liu, Chenxi and Chen, Yanshuo and Chen, Ruibo and Xiong, Tianyi and Zheng, Tong and Huang, Heng},
+  title        = {Learning from Self-Debate: Preparing Reasoning Models for Multi-Agent Debate},
+  howpublished = {arXiv:2601.22297},
+  year         = {2026}
+}
+
+@misc{pulici2026madarl,
+  author       = {Pulici, Martino M. L. and Chu, Cuong Xuan and Kharlamov, Evgeny and Ding, Zifeng and Tresp, Volker and Ma, Yunpu},
+  title        = {{MADA-RL}: Multi-Agent Debate-Aware Reinforcement Learning for Parameter-Efficient Reasoning in Compact Models},
+  howpublished = {arXiv:2607.18006},
+  year         = {2026}
+}
+
+@inproceedings{whitley1994lamarckian,
+  author    = {Whitley, Darrell and Gordon, V. Scott and Mathias, Keith},
+  title     = {Lamarckian Evolution, the {Baldwin} Effect and Function Optimization},
+  booktitle = {Parallel Problem Solving from Nature (PPSN III)},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {866},
+  pages     = {5--15},
+  publisher = {Springer},
+  year      = {1994},
+  note      = {DOI: 10.1007/3-540-58484-6\_245}
+}
+
+@book{boyd1985culture,
+  author    = {Boyd, Robert and Richerson, Peter J.},
+  title     = {Culture and the Evolutionary Process},
+  publisher = {University of Chicago Press},
+  year      = {1985}
 }
 
 % -------------------- モデルマージと LoRA 合成 --------------------
@@ -198,6 +559,22 @@
   year         = {2021}
 }
 
+@inproceedings{zhuang2025coto,
+  author    = {Zhuang, Zhan and Wang, Xiequn and Li, Wei and Zhang, Yulong and Huang, Qiushi and Chen, Shuhao and Wang, Xuehao and Wei, Yanbin and Nie, Yuhe and Ma, Kede and Zhang, Yu and Wei, Ying},
+  title     = {Come Together, But Not Right Now: A Progressive Strategy to Boost Low-Rank Adaptation},
+  booktitle = {Proceedings of the 42nd International Conference on Machine Learning (ICML)},
+  year      = {2025},
+  note      = {arXiv:2506.05713}
+}
+
+@inproceedings{salamanca2024seeded,
+  author    = {Salamanca, Alejandro R. and {\"U}st{\"u}n, Ahmet and Detlefsen, Nicki Skafte and Dettmers, Tim},
+  title     = {Seeded {LoRA}: Collaborative Fine-Tuning Through Seed Initialization of Adapters},
+  booktitle = {ICML 2024 Workshop on Efficient Systems for Foundation Models (ES-FoMo II)},
+  year      = {2024},
+  note      = {OpenReview: U3UtvOYMiw}
+}
+
 % -------------------- 進化的モデル最適化 --------------------
 
 @article{akiba2024evolutionary,
@@ -224,12 +601,21 @@
   note      = {arXiv:2410.11163}
 }
 
-@misc{zhang2025genome,
-  author       = {Zhang, Yiqun and Ye, Peng and Yang, Xiaocui and Feng, Shi and Zhang, Shufei and Bai, Lei and Ouyang, Wanli and Hu, Shuyue},
-  title        = {Nature-Inspired Population-Based Evolution of Large Language Models},
-  howpublished = {arXiv:2503.01155},
-  year         = {2025},
-  note         = {GENOME/GENOME+ の提案論文}
+@inproceedings{feng2025heterogeneous,
+  author    = {Feng, Shangbin and Wang, Zifeng and Goyal, Palash and Wang, Yike and Shi, Weijia and Xia, Huang and Palangi, Hamid and Zettlemoyer, Luke and Tsvetkov, Yulia and Lee, Chen-Yu and Pfister, Tomas},
+  title     = {Heterogeneous Swarms: Jointly Optimizing Model Roles and Weights for Multi-{LLM} Systems},
+  booktitle = {Advances in Neural Information Processing Systems 38 (NeurIPS)},
+  year      = {2025},
+  note      = {arXiv:2502.04510}
+}
+
+@inproceedings{zhang2025genome,
+  author    = {Zhang, Yiqun and Ye, Peng and Yang, Xiaocui and Feng, Shi and Zhang, Shufei and Bai, Lei and Ouyang, Wanli and Hu, Shuyue},
+  title     = {Nature-Inspired Population-Based Evolution of Large Language Models},
+  booktitle = {Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
+  pages     = {44187--44205},
+  year      = {2026},
+  note      = {DOI: 10.18653/v1/2026.acl-long.2044, arXiv:2503.01155}
 }
 
 @misc{creuscastanyer2026populora,
@@ -246,6 +632,30 @@
   year         = {2026}
 }
 
+@inproceedings{dai2026acdc,
+  author    = {Dai, Andrew and Meinardus, Boris and Regan, Ciaran and Tian, Yingtao and Tang, Yujin},
+  title     = {Discovering Novel {LLM} Experts via Task-Capability Coevolution},
+  booktitle = {Proceedings of the 14th International Conference on Learning Representations (ICLR)},
+  year      = {2026},
+  note      = {arXiv:2604.14969}
+}
+
+@inproceedings{kuroki2025cycleqd,
+  author    = {Kuroki, So and Nakamura, Taishi and Akiba, Takuya and Tang, Yujin},
+  title     = {Agent Skill Acquisition for Large Language Models via {CycleQD}},
+  booktitle = {Proceedings of the 13th International Conference on Learning Representations (ICLR)},
+  year      = {2025},
+  note      = {arXiv:2410.14735}
+}
+
+@inproceedings{qiu2026es,
+  author    = {Qiu, Xin and Gan, Yulu and Hayes, Conor F. and Liang, Qiyao and Xu, Yinggan and Dailey, Roberto and Meyerson, Elliot and Hodjat, Babak and Miikkulainen, Risto},
+  title     = {Evolution Strategies at Scale: {LLM} Fine-Tuning Beyond Reinforcement Learning},
+  booktitle = {Proceedings of the 43rd International Conference on Machine Learning (ICML)},
+  year      = {2026},
+  note      = {arXiv:2509.24372}
+}
+
 @inproceedings{minut2025mergenetic,
   author    = {Minut, Adrian Robert and Mencattini, Tommaso and Santilli, Andrea and Crisostomi, Donato and Rodol{\`a}, Emanuele},
   title     = {Mergenetic: A Simple Evolutionary Model Merging Library},
@@ -254,12 +664,12 @@
   note      = {arXiv:2505.11427}
 }
 
-@misc{evomas2026evolving,
-  author       = {Hu, Yuntong and Zhang, Yuting and Trager, Matthew and Zhang, Yi and Yang, Shuo and Xia, Wei and Soatto, Stefano},
-  title        = {{EvoMAS}: Evolutionary Generation of Multi-Agent Systems},
-  howpublished = {arXiv:2602.06511},
-  year         = {2026},
-  note         = {ICML 2026 採録}
+@inproceedings{evomas2026evolving,
+  author    = {Hu, Yuntong and Zhang, Yuting and Trager, Matthew and Zhang, Yi and Yang, Shuo and Xia, Wei and Soatto, Stefano},
+  title     = {{EvoMAS}: Evolutionary Generation of Multi-Agent Systems},
+  booktitle = {Proceedings of the 43rd International Conference on Machine Learning (ICML)},
+  year      = {2026},
+  note      = {arXiv:2602.06511}
 }
 
 @misc{metateam2026meta,
@@ -294,12 +704,29 @@
   year      = {1953}
 }
 
+@article{banzhaf1965weighted,
+  author  = {Banzhaf, III, John F.},
+  title   = {Weighted Voting Doesn't Work: A Mathematical Analysis},
+  journal = {Rutgers Law Review},
+  volume  = {19},
+  pages   = {317--343},
+  year    = {1965}
+}
+
 @inproceedings{ghorbani2019data,
   author    = {Ghorbani, Amirata and Zou, James},
   title     = {Data {Shapley}: Equitable Valuation of Data for Machine Learning},
   booktitle = {Proceedings of the 36th International Conference on Machine Learning (ICML)},
   year      = {2019},
   note      = {arXiv:1904.02868}
+}
+
+@inproceedings{wang2023databanzhaf,
+  author    = {Wang, Jiachen T. and Jia, Ruoxi},
+  title     = {Data {Banzhaf}: A Robust Data Valuation Framework for Machine Learning},
+  booktitle = {Proceedings of the 26th International Conference on Artificial Intelligence and Statistics (AISTATS)},
+  year      = {2023},
+  note      = {arXiv:2205.15466}
 }
 
 @inproceedings{rozemberczki2022shapley,
@@ -316,12 +743,30 @@
   year         = {1999}
 }
 
+@article{agogino2008efficient,
+  author  = {Agogino, Adrian K. and Tumer, Kagan},
+  title   = {Efficient Evaluation Functions for Evolving Coordination},
+  journal = {Evolutionary Computation},
+  volume  = {16},
+  number  = {2},
+  pages   = {257--288},
+  year    = {2008}
+}
+
 @inproceedings{foerster2018counterfactual,
   author    = {Foerster, Jakob and others},
   title     = {Counterfactual Multi-Agent Policy Gradients},
   booktitle = {Proceedings of the 32nd AAAI Conference on Artificial Intelligence},
   year      = {2018},
   note      = {arXiv:1705.08926 (COMA)}
+}
+
+@misc{rodriquez2026snn,
+  author       = {Rodriquez, Catherine and Ghawaly, Jr., James},
+  title        = {Co-Evolved Spiking Neural Network Ensembles via Marginal Contribution Fitness},
+  howpublished = {arXiv:2606.13985},
+  year         = {2026},
+  note         = {ACM International Conference on Neuromorphic Systems (ICONS) 2026}
 }
 
 @inproceedings{potter1994cooperative,
@@ -332,11 +777,65 @@
   year      = {1994}
 }
 
+@inproceedings{wiegand2001empirical,
+  author    = {Wiegand, R. Paul and Liles, William C. and De Jong, Kenneth A.},
+  title     = {An Empirical Analysis of Collaboration Methods in Cooperative Coevolutionary Algorithms},
+  booktitle = {Proceedings of the Genetic and Evolutionary Computation Conference (GECCO)},
+  pages     = {1235--1242},
+  year      = {2001}
+}
+
+@article{panait2006biasing,
+  author  = {Panait, Liviu and Luke, Sean and Wiegand, R. Paul},
+  title   = {Biasing Coevolutionary Search for Optimal Multiagent Behaviors},
+  journal = {IEEE Transactions on Evolutionary Computation},
+  volume  = {10},
+  number  = {6},
+  pages   = {629--645},
+  year    = {2006}
+}
+
 @misc{jaderberg2017population,
   author       = {Jaderberg, Max and others},
   title        = {Population Based Training of Neural Networks},
   howpublished = {arXiv:1711.09846},
   year         = {2017}
+}
+
+@misc{li2026sharp,
+  author       = {Li, Yanming and others},
+  title        = {Who Deserves the Reward? {SHARP}: Shapley Credit-based Optimization for Multi-Agent System},
+  howpublished = {arXiv:2602.08335},
+  year         = {2026}
+}
+
+@misc{chen2026trace,
+  author       = {Chen, Yanjun and Sun, Yirong and Wang, Hanlin and Wang, Jinghan and Zhang, Xinming and Shen, Xiaoyu and Li, Wenjie and Zhang, Wei},
+  title        = {The Trace Is the State: Exact Credit Assignment for {LLM} Agent Teams},
+  howpublished = {arXiv:2603.06859},
+  year         = {2026}
+}
+
+@misc{lu2026agents,
+  author       = {Lu, Mingyu and Huang, Yushan and Lin, Chris and Lee, Su-In},
+  title        = {Agents that Matter: Optimizing Multi-Agent {LLMs} via Removal-Based Attribution},
+  howpublished = {arXiv:2605.27621v1},
+  year         = {2026},
+  note         = {Later versions are titled ``Agents that Matter: How Subtle Choices Shape Agent Attribution in Multi-Agent Systems''}
+}
+
+@misc{zhang2026moca,
+  author       = {Zhang, Yichi and Lu, Kevin and Zhang, Yuang and Gao, Jie and Xia, Lirong and Yu, Fang-Yi},
+  title        = {Mixture of Complementary Agents for Robust {LLM} Ensemble},
+  howpublished = {arXiv:2605.24048},
+  year         = {2026}
+}
+
+@inproceedings{caruana2004ensemble,
+  author    = {Caruana, Rich and Niculescu-Mizil, Alexandru and Crew, Geoff and Ksikes, Alex},
+  title     = {Ensemble Selection from Libraries of Models},
+  booktitle = {Proceedings of the 21st International Conference on Machine Learning (ICML)},
+  year      = {2004}
 }
 
 @article{lehman2011abandoning,
@@ -376,6 +875,13 @@
   volume  = {24},
   year    = {2023},
   note    = {arXiv:2301.03962}
+}
+
+@misc{kim2026diversity,
+  author       = {Kim, Donghwan},
+  title        = {Are Diversity Metrics Measuring Diversity? {A} Capability-Controlled Audit of Majority-Vote Gain in {LLM} Ensembles},
+  howpublished = {arXiv:2607.20768},
+  year         = {2026}
 }
 
 @article{deb2002fast,
@@ -430,6 +936,61 @@
   year    = {1979}
 }
 
+@misc{wang2025noises,
+  author       = {Wang, Sida},
+  title        = {Measuring All the Noises of {LLM} Evals},
+  howpublished = {arXiv:2512.21326},
+  year         = {2025}
+}
+
+@misc{xu2026siren,
+  author       = {Xu, Yang and Zhang, Jiefu and Sun, Haixiang and Zhou, Zihan and Cao, Tianyu and Aggarwal, Vaneet},
+  title        = {Towards Reliable {LLM} Evaluation: Correcting the Winner's Curse in Adaptive Benchmarking},
+  howpublished = {arXiv:2605.05973},
+  year         = {2026}
+}
+
+@article{jin2005evolutionary,
+  author  = {Jin, Yaochu and Branke, J{\"u}rgen},
+  title   = {Evolutionary Optimization in Uncertain Environments---A Survey},
+  journal = {IEEE Transactions on Evolutionary Computation},
+  volume  = {9},
+  number  = {3},
+  pages   = {303--317},
+  year    = {2005}
+}
+
+@article{rakshit2017noisy,
+  author  = {Rakshit, Pratyusha and Konar, Amit and Das, Swagatam},
+  title   = {Noisy Evolutionary Optimization Algorithms -- A Comprehensive Survey},
+  journal = {Swarm and Evolutionary Computation},
+  volume  = {33},
+  pages   = {18--45},
+  year    = {2017}
+}
+
+@misc{cooper2026nondeterminism,
+  author       = {Cooper, Liam and Jeong, Shinnung and Jeon, Hyeran and Young, Jeffrey and Kim, Hyesoon},
+  title        = {Accelerating the Mitigation of {LLM} Inference Nondeterminism Across {GPU} Architectures},
+  howpublished = {arXiv:2609.25624},
+  year         = {2026}
+}
+
+@misc{zine2026attention,
+  author       = {Zine, Nada and Coignion, Tristan and Stoico, Vincenzo and Quinton, Cl{\'e}ment and Malavolta, Ivano and Rouvoy, Romain and Lago, Patricia},
+  title        = {Attention to Detail: Evaluating Energy, Performance, and Accuracy Trade-offs Across {vLLM} Configurations},
+  howpublished = {arXiv:2607.09172},
+  year         = {2026}
+}
+
+@misc{kydlicek2025mathverify,
+  author       = {Kydl{\'\i}{\v{c}}ek, Hynek},
+  title        = {{Math-Verify}: Math Verification Library},
+  howpublished = {\url{https://github.com/huggingface/Math-Verify}},
+  year         = {2025},
+  note         = {Version 0.8.0}
+}
+
 @inproceedings{wang2024mmlupro,
   author    = {Wang, Yubo and others},
   title     = {{MMLU-Pro}: A More Robust and Challenging Multi-Task Language Understanding Benchmark},
@@ -442,8 +1003,7 @@
   author       = {Lightman, Hunter and others},
   title        = {Let's Verify Step by Step},
   howpublished = {arXiv:2305.20050 (ICLR 2024)},
-  year         = {2023},
-  note         = {MATH-500 はこの評価分割に由来}
+  year         = {2023}
 }
 
 @inproceedings{hendrycks2021measuring,
@@ -472,8 +1032,7 @@
   author       = {Cobbe, Karl and others},
   title        = {Training Verifiers to Solve Math Word Problems},
   howpublished = {arXiv:2110.14168},
-  year         = {2021},
-  note         = {GSM8K の提案論文}
+  year         = {2021}
 }
 
 @inproceedings{wang2023selfconsistency,
@@ -506,6 +1065,5 @@
   author       = {{Qwen Team}},
   title        = {Qwen3 Technical Report},
   howpublished = {arXiv:2505.09388},
-  year         = {2025},
-  note         = {Qwen3-4B-Instruct-2507 モデルカード（Hugging Face）}
+  year         = {2025}
 }
