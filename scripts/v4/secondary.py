@@ -83,6 +83,8 @@ def team_dynamics(cond: dict, ids, scorer: Scorer, bench_of: dict) -> dict:
     c = collections.Counter()
     calls, out_tokens, n_items = [], [], 0
     disagree = []
+    solo = {a.agent_id: {} for a in agents}  # 構成員の round0 の単独正答（問題ごと、生成 seed 平均）
+    r0_vote = {}
     for seed in cond["gen_seeds"]:
         for item_id in ids:
             r0 = [scorer.correct_of(soc.r0_key(a, item_id, seed)) for a in agents]
@@ -98,6 +100,11 @@ def team_dynamics(cond: dict, ids, scorer: Scorer, bench_of: dict) -> dict:
             n_items += 1
             ans0 = [r[0] for r in r0]
             ok0 = [bool(r[2]) for r in r0]
+            for a, ok in zip(agents, ok0):
+                solo[a.agent_id].setdefault(item_id, []).append(float(ok))
+            item = scorer.items[item_id]
+            vote0 = aggregate([(r[0], r[1], a.role) for r, a in zip(r0, agents)])
+            r0_vote.setdefault(item_id, []).append(float(is_correct(vote0, item.gold, item.answer_type)))
             disagree.append(np.mean([ans0[a] != ans0[b] for a, b in itertools.combinations(range(3), 2)]))
             n_ok0 = sum(ok0)
             c["oracle3"] += n_ok0 > 0
@@ -129,8 +136,12 @@ def team_dynamics(cond: dict, ids, scorer: Scorer, bench_of: dict) -> dict:
         return {"n": 0}
     kept = c["trans_11"] + c["trans_10"]
     gained = c["trans_01"] + c["trans_00"]
+    solo_macro = {a: macro_of({i: float(np.mean(v)) for i, v in d.items()}, bench_of) for a, d in solo.items()}
     return {
         "n": n_items,
+        "member_solo_macro": solo_macro,
+        "member_solo_mean": float(np.mean(list(solo_macro.values()))),
+        "r0_majority_macro": macro_of({i: float(np.mean(v)) for i, v in r0_vote.items()}, bench_of),
         "calls_per_item": float(np.mean(calls)), "out_tokens_per_item": float(np.mean(out_tokens)),
         "gated_rate": c["gated"] / n_items, "oracle3": c["oracle3"] / n_items,
         "majority0_correct": c["majority0_correct"] / n_items, "final_correct": c["final_correct"] / n_items,
