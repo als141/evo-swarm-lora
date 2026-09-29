@@ -67,8 +67,9 @@ def main() -> None:
     for other in ["base_single", "base_sc3", "base_sc6", "base_sc9", *match, "rft_single", "rft_sc9", "c7_july"]:
         if other in conds:
             comparisons.append([s, other])
-    for other in ["base_single", "base_sc3", "base_sc9"]:
-        comparisons.append(["g0", other])
+    for other in ["base_single", "base_sc3", "base_sc9", "c7_july"]:
+        if other in conds:
+            comparisons.append(["g0", other])
     comparisons.append(["rft_single", "base_single"])
     comparisons.append(["rft_sc9", "base_sc9"])
     for x in ("N", "A1"):
