@@ -6,12 +6,21 @@
 \chapter{考察}
 \label{cha:6}
 
-% TODO(結果確定後): 次の節を書く．
+% TODO(結果確定後): 6.1・6.3・6.4 を書く．6.2 は骨子を先に置く（結果に合わせて調整する）．
 % 6.1 何が精度を上げたか（自己学習・社会学習・交叉・選抜の寄与の切り分け: S/N/A1/RFT の比較から）
-% 6.2 人間の社会との対応（社会学習と文化的進化，ラマルク的継承とダーウィン的選抜の二重の継承）
-% 6.3 Self-Consistency との関係（計算量をそろえた比較，議論の利得の源泉）
-% 6.4 ペルソナの選び方（理論に基づく候補とデータによる選定の妥当性）
-% 6.5 本研究の限界（単一のベースモデル・3役割・世代数・生成seed・dev の大きさ・評価の非決定性）
+%     解釈の枠組み: 同じベースモデルの範囲内での鋭敏化（yue2025rlvr, xu2026phantom, yuan2023scaling）．
+%     議論からの学習の先行例との比較（zhao2025sirius, srivastava2025dte, subramaniam2025multiagent）．
+% 6.3 Self-Consistency との関係（計算量をそろえた比較，議論の利得の源泉，choi2025debate）
+% 6.4 ペルソナの選び方（理論に基づく候補とデータによる選定の妥当性．plain×3 が同等だったこと）
+
+\section{人間の社会との対応}
+\label{sec:6.2}
+
+% 骨子（literature_cultural.md §4）:
+% (1) 二重の継承: 学習した重みを子が受け継ぐ（ラマルク型: whitley1994lamarckian, hinton1987learning と対比）＋チームへの貢献で代表を選ぶ（ダーウィン型）→ 文化的進化の二重継承（boyd1985culture）．
+% (2) 社会学習の戦略: 子bは「自分より良ければ模倣」＋「不確かなときに模倣」（laland2004social）．正解に限った模倣はふるいの効いた模倣（rendell2010copy）．自分の例を混ぜる構成は批判的社会学習（enquist2007critical）．議論の同調は「多数派を模倣」で誤りを広げる（okawa2026biased）．
+% (3) LLMの社会の先例: vallinder2025cultural（プロンプトで伝達），cook2024generational（重みの学習による世代，RL），ren2024iterated（反復学習による偏りの増幅と選別による制御）．
+% (4) 人間の社会との違い: 3体が同じベースモデルを共有し，独立に得た情報を持ち寄れない（rendell2010copy の前提との違い，yue2025rlvr）．互いの出力で学ぶと多様性が減りうる（shumailov2024collapse, wu2025reversal）．SFT ではペルソナの性質が増幅されにくい（roe2026idempotent，査読前）．
 
 \section{本研究の限界}
 \label{sec:6.5}

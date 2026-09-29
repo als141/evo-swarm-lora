@@ -102,6 +102,8 @@ SC@9 & 0.741 & 0.939 & 0.484 & 0.721 \\
 
 式(\ref{eq:maineffect})の加法モデルで推定した役割の主効果は，Teamworkerの$+2.4$ptからCompleter Finisherの$-1.6$ptまでだった．Belbinの中心的な主張である「役割のそろったチームほど成績が高い」については，3群から1体ずつのバランス型9チームの平均精度が，同じ群の3体からなる同質型3チームより1.0pt低く，チームのラベルの並べ替え検定で$p = 0.49$だった．この仮説は本研究のデータでは支持されなかった．
 
+探索的に，14チームの精度を構成員の単独精度の平均と，round0の2体間の回答の不一致率で説明できるかを調べた．チームの精度は構成員の単独精度の平均と弱い正の相関を示した（$r = 0.46$）が，不一致率とはほとんど相関しなかった（$r = -0.09$）．チーム数が14と少ないため，いずれも確かな関係とはいえない．一方，3体のうち少なくとも1体がround0で正解した問題の割合（oracle@3）は84〜89\%であり，チームの最終的な精度（74〜80\%）を約9pt上回った．チームの中に正解があっても，議論と多数決で最終回答にできなかった問題が相当数ある．
+
 \input{tab/persona_stage2}
 \begin{table}[htbp]
 \caption{段階2: チームの精度（dev-A，200問，ゲーティングなし）．PL: Plant，ME: Monitor Evaluator，SP: Specialist，SH: Shaper，IMP: Implementer，CF: Completer Finisher，CO: Co-ordinator，TW: Teamworker，RI: Resource Investigator}
