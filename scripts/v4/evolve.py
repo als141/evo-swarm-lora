@@ -93,7 +93,7 @@ class Runner:
 
     def society(self) -> Society:
         return Society(self.llm, self.store, self.items, self.config, protocol=self.args.protocol,
-                       workers=self.args.workers, log=self.log)
+                       workers=self.args.workers, log=self.log, gate=self.args.gate)
 
     def ensure_server(self) -> None:
         if self.args.external_base_url:  # 結合試験用: 外部（偽）サーバを使い、起動・LoRA 登録はしない
@@ -321,9 +321,13 @@ class Runner:
             self.save()
             self.log(f"g{t} selected: {[reps[r]['agent_id'] for r in ROLES]}")
 
-        # 6. dev / test of new reps
+        # 6. dev / test of new reps（対照系統は費用節約のため最終世代だけ評価できる）
         self.adapters = {}
         reps_agents = [self.register(g["reps"][r]) for r in ROLES]
+        final_gen = t == self.args.generations
+        if self.args.eval_final_only and not final_gen:
+            self.log(f"g{t} dev/test skipped (eval-final-only)")
+            return
         if not g["steps"].get("dev_team"):
             self.ensure_server()
             self.society().ensure_coalitions([reps_agents], self.dev_ids, 1, label=f"g{t}_devteam")
@@ -362,6 +366,9 @@ def main() -> None:
     parser.add_argument("--test", default=str(ROOT / "data/v4/items/test.jsonl"))
     parser.add_argument("--train-dir", default=str(ROOT / "data/v4/items"))
     parser.add_argument("--protocol", default="v4")
+    parser.add_argument("--eval-final-only", action="store_true",
+                        help="dev/test の代表チーム評価を最終世代だけ行う（対照系統の費用節約）")
+    parser.add_argument("--gate", action="store_true", help="round0 が全員一致なら議論を省く（v4 本実験の既定）")
     parser.add_argument("--personas", default=None, help="世代0のペルソナ集合 JSON（{\"personas\": {役割: プロンプト}, \"order\": [...]}）")
     parser.add_argument("--workers", type=int, default=192)
     parser.add_argument("--max-loras", type=int, default=12)

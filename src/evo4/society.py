@@ -48,11 +48,13 @@ class _Task:
     deps: Tuple[str, ...] = ()
     children: List["_Task"] = field(default_factory=list)
     pending: int = 0
+    skip_if: Optional[Callable[[], bool]] = None  # 依存が揃った時点で True なら生成しない（議論のゲーティング）
 
 
 class Society:
     def __init__(self, llm: LLMClient, store: CallStore, items: Dict[str, Item], config: GenConfig,
-                 protocol: str = "v4", workers: int = 128, log: Callable[[str], None] = print):
+                 protocol: str = "v4", workers: int = 128, log: Callable[[str], None] = print,
+                 gate: bool = False):
         self.llm = llm
         self.store = store
         self.items = items
@@ -60,6 +62,9 @@ class Society:
         self.protocol = protocol
         self.workers = workers
         self.log = log
+        # gate=True: round0 の回答が連合内で全員一致なら議論（round1）を行わず、その回答を最終回答にする。
+        # パイロット（dev-A）で精度を損なわず（+0.4pt）、round1 を約6割削減できると確認した（2026-09-30）
+        self.gate = gate
 
     # ------------------------------------------------------------------ keys
     @staticmethod
@@ -96,10 +101,14 @@ class Society:
             return r1_messages(protocol, agent.persona, item.question, item.answer_type, own,
                                other_texts, stable_seed(item.item_id, gen_seed, agent.role, "shuffle"))
 
+        def unanimous() -> bool:
+            return self._r0_unanimous([agent, *others], item.item_id, gen_seed)
+
         return _Task(
             key=self.r1_key(agent, others, item.item_id, gen_seed),
             model=agent.model,
             messages_fn=build,
+            skip_if=unanimous if self.gate else None,
             seed=stable_seed(item.item_id, gen_seed, agent.role, "r1"),
             meta={"kind": "r1", "agent": agent.agent_id, "role": agent.role, "model": agent.model,
                   "item": item.item_id, "gen_seed": gen_seed, "protocol": protocol,
@@ -149,6 +158,13 @@ class Society:
 
         def execute(task: _Task) -> None:
             ok = False
+            if task.skip_if is not None and task.skip_if():
+                with lock:
+                    state["remaining"] -= 1
+                    state["skipped"] = state.get("skipped", 0) + 1
+                    if state["remaining"] <= 0:
+                        done_event.set()
+                return
             try:
                 result = self.llm.generate(task.model, task.messages_fn(), self.config, task.seed)
                 record = {"key": task.key, **task.meta, "seed": task.seed,
@@ -194,7 +210,7 @@ class Society:
         elapsed = time.time() - started
         self.log(f"[society] {label} finished {state['done']} calls in {elapsed:.0f}s "
                  f"({state['tokens'] / max(elapsed, 1e-6):.0f} out_tok/s, loop_aborts={state['loops']}, "
-                 f"errors={state['errors']})")
+                 f"errors={state['errors']}, gated_skips={state.get('skipped', 0)})")
 
     @staticmethod
     def _descendant_keys(task: _Task) -> set:
@@ -237,6 +253,16 @@ class Society:
             return None, None
         return extract_answer(record["text"], answer_type), record.get("mean_logprob")
 
+    def _r0_unanimous(self, members: Sequence[Agent], item_id: str, gen_seed: int) -> bool:
+        item = self.items[item_id]
+        answers = []
+        for m in members:
+            rec = self.store.get(self.r0_key(m, item_id, gen_seed))
+            if rec is None:
+                return False
+            answers.append(extract_answer(rec["text"], item.answer_type))
+        return answers[0] is not None and all(a == answers[0] for a in answers)
+
     def coalition_result(self, coalition: Sequence[Agent], item_id: str, gen_seed: int) -> dict:
         """連合の最終回答。1体は round0、2体以上は round1 の回答の多数決。
         同数は logprob 確信度の高い方、それでも同じなら役割名順で決める（乱数は使わない）。"""
@@ -245,6 +271,10 @@ class Society:
         if len(coalition) == 1:
             ans, conf = self.answer_of(self.r0_key(coalition[0], item_id, gen_seed), item.answer_type)
             votes.append((ans, conf, coalition[0].role))
+        elif self.gate and self._r0_unanimous(coalition, item_id, gen_seed):
+            ans, _ = self.answer_of(self.r0_key(coalition[0], item_id, gen_seed), item.answer_type)
+            return {"answer": ans, "correct": is_correct(ans, item.gold, item.answer_type),
+                    "votes": [ans] * len(coalition), "gated": True}
         else:
             for agent in coalition:
                 others = [o for o in coalition if o.agent_id != agent.agent_id]

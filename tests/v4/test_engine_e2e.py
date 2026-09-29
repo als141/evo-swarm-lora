@@ -81,6 +81,18 @@ def main() -> None:
             # 別プロセス相当: ストアを読み直すと全件復元される
             store2 = CallStore(os.path.join(tmp, "local2"), os.path.join(tmp, "remote"))
             assert len(store2) == n_calls, (len(store2), n_calls)
+            # ゲーティング: 全員一致なら round1 を生成しない
+            soc_g = Society(llm, store, items, GenConfig(max_tokens=512), protocol="v4t", workers=16, gate=True)
+            s1 = Agent("s.critic", "critic", "same-model", "p1")
+            s2 = Agent("s.pragmatist", "pragmatist", "same-model", "p2")
+            s3 = Agent("s.explorer", "explorer", "same-model", "p3")
+            before = len(store)
+            soc_g.ensure_coalitions([[s1, s2, s3]], [i for i in ids if i != "qloop"], gen_seed=1, label="gated")
+            added = len(store) - before
+            assert added == 60, added  # round0 の 3体×20問だけ。全員一致なので round1 は生成されない
+            assert not any(k.startswith("r1|v4t|s.") for k in (r["key"] for r in store.records()))
+            res = soc_g.coalition_result([s1, s2, s3], "q0", 1)
+            assert res.get("gated") is True
             print("E2E OK:", n_calls, "calls; loop abort detected; accuracy", round(acc, 3))
     finally:
         server.terminate()

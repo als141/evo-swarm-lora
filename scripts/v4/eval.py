@@ -58,7 +58,8 @@ def main() -> None:
         for d in agents:
             if d.get("adapter"):
                 server.load_lora(d["model"], d["adapter"])
-        society = Society(llm, store, items, config, protocol=spec.get("protocol", "v4"), workers=args.workers)
+        society = Society(llm, store, items, config, protocol=spec.get("protocol", "v4"), workers=args.workers,
+                          gate=bool(spec.get("gate", False)))
         for gen_seed in spec["gen_seeds"]:
             if spec["kind"] == "sc":
                 society.run_tasks(society.sc_tasks(to_agent(spec["agent"]), ids, gen_seed, spec["k"]),

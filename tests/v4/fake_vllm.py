@@ -17,6 +17,9 @@ app = FastAPI()
 
 
 def _answer(model: str, question: str, seed: int) -> str:
+    if "same" in model:  # ゲーティング試験用: 全員が同じ答えを返す
+        h = int(hashlib.sha256(question.encode()).hexdigest(), 16)
+        return "ABCD"[h % 4]
     h = int(hashlib.sha256(f"{model}|{question}|{seed}".encode()).hexdigest(), 16)
     return "ABCD"[h % 4]
 

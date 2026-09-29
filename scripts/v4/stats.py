@@ -60,21 +60,18 @@ def per_item(cond: dict, ids: list, scorer: Scorer, soc_by_protocol: dict) -> di
         vals = []
         for seed in cond["gen_seeds"]:
             if cond["type"] == "team":
-                soc = soc_by_protocol[cond.get("protocol", "v4")]
+                soc = Society(None, scorer.store, scorer.items, None, protocol=cond.get("protocol", "v4"),
+                              gate=bool(cond.get("gate", False)))
                 agents = [Agent(a, a.split(".")[-2] if a.count(".") >= 2 else a.split(".")[-1], "", "")
                           for a in cond["agents"]]
-                votes, ok = [], True
-                for agent in agents:
-                    others = [o for o in agents if o.agent_id != agent.agent_id]
-                    ans, conf, _ = scorer.correct_of(soc.r1_key(agent, others, item_id, seed))
-                    if ans is None and scorer.store.get(soc.r1_key(agent, others, item_id, seed)) is None:
-                        ok = False
-                        break
-                    votes.append((ans, conf, agent.role))
-                if not ok:
+                if not all(scorer.store.get(soc.r0_key(a, item_id, seed)) for a in agents):
                     continue
-                final = aggregate(votes)
-                vals.append(float(is_correct(final, item.gold, item.answer_type)))
+                if not (soc.gate and soc._r0_unanimous(agents, item_id, seed)):
+                    keys = [soc.r1_key(a, [o for o in agents if o.agent_id != a.agent_id], item_id, seed)
+                            for a in agents]
+                    if not all(scorer.store.get(k) for k in keys):
+                        continue
+                vals.append(float(soc.coalition_result(agents, item_id, seed)["correct"]))
             elif cond["type"] in ("sc", "single"):
                 keys = [Society.sc_key(Agent(cond["agent"], "base", "", ""), item_id, seed, k)
                         for k in range(cond["k"])]
