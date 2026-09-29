@@ -80,6 +80,7 @@ SC@9 & 0.741 & 0.939 & 0.484 & 0.721 \\
 
 回答の多様性については，plainの複製同士の回答の不一致率が0.30だったのに対し，各役割とplainの不一致率はこれを$-3.0$〜$+3.5$ポイント上回るにとどまった．推論の手続きとして定義したペルソナも，同じモデルの再サンプリングを大きく超える回答の多様性は生まなかった．これは予備研究の性格ラベルのペルソナについての観察（\ref{sec:5.1.3}項）と同じ傾向である．
 
+\input{tab/persona_stage1}
 \begin{table}[htbp]
 \caption{段階1: 候補の単独の精度（dev-A，200問）．能力税は plain との差と，その90\%信頼区間．超過不一致率は，plain との回答の不一致率から plain の複製同士の不一致率（0.30）を引いたもの}
 \label{tab:5.2}
@@ -89,7 +90,7 @@ SC@9 & 0.741 & 0.939 & 0.484 & 0.721 \\
 \hline
 候補 & macro精度（\%） & plainとの差 [90\%CI]（pt） & 超過不一致率（pt） \\
 \hline
-\input{tab/persona_stage1}
+\TabPersonaA
 \hline
 \end{tabular}
 \end{table}
@@ -101,6 +102,7 @@ SC@9 & 0.741 & 0.939 & 0.484 & 0.721 \\
 
 式(\ref{eq:maineffect})の加法モデルで推定した役割の主効果は，Teamworkerの$+2.4$ptからCompleter Finisherの$-1.6$ptまでだった．Belbinの中心的な主張である「役割のそろったチームほど成績が高い」については，3群から1体ずつのバランス型9チームの平均精度が，同じ群の3体からなる同質型3チームより1.0pt低く，チームのラベルの並べ替え検定で$p = 0.49$だった．この仮説は本研究のデータでは支持されなかった．
 
+\input{tab/persona_stage2}
 \begin{table}[htbp]
 \caption{段階2: チームの精度（dev-A，200問，ゲーティングなし）．PL: Plant，ME: Monitor Evaluator，SP: Specialist，SH: Shaper，IMP: Implementer，CF: Completer Finisher，CO: Co-ordinator，TW: Teamworker，RI: Resource Investigator}
 \label{tab:5.3}
@@ -110,7 +112,7 @@ SC@9 & 0.741 & 0.939 & 0.484 & 0.721 \\
 \hline
 チーム & 型 & macro精度（\%） \\
 \hline
-\input{tab/persona_stage2}
+\TabPersonaB
 \hline
 \end{tabular}
 \end{table}

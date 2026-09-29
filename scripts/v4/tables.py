@@ -3,7 +3,8 @@
   python3 scripts/v4/tables.py --pilot results/v4/pilot2_summary.json --stats results/v4/stats_final.json \
       --out thesis/tab
 出力: persona_stage1.tex / persona_stage2.tex / persona_stage3.tex / main_results.tex / comparisons.tex
-（入力が無い表は作らない。Sec5.tex から \\input する）
+各ファイルは表の行をマクロ（\\TabPersonaA 等）として定義する。tabular の中で \\input すると
+直後の \\hline が壊れるため、表の前で \\input し、tabular の中ではマクロを置く。
 """
 
 from __future__ import annotations
@@ -110,24 +111,24 @@ def main() -> None:
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     made = []
+
+    def write(name: str, macro: str, rows: str) -> None:
+        (out / f"{name}.tex").write_text(f"\\gdef\\{macro}{{%\n{rows}}}\n")
+        made.append(name)
+
     if args.pilot and Path(args.pilot).exists():
         pilot = json.loads(Path(args.pilot).read_text())
         pool = json.loads(Path(args.pool).read_text())
         if "stage1" in pilot:
-            (out / "persona_stage1.tex").write_text(stage1(pilot))
-            made.append("persona_stage1")
+            write("persona_stage1", "TabPersonaA", stage1(pilot))
         if "stage2" in pilot:
-            (out / "persona_stage2.tex").write_text(stage2(pilot, pool))
-            made.append("persona_stage2")
+            write("persona_stage2", "TabPersonaB", stage2(pilot, pool))
         if "stage3" in pilot:
-            (out / "persona_stage3.tex").write_text(stage3(pilot))
-            made.append("persona_stage3")
+            write("persona_stage3", "TabPersonaC", stage3(pilot))
     if args.stats and Path(args.stats).exists():
         stats = json.loads(Path(args.stats).read_text())
-        (out / "main_results.tex").write_text(main_results(stats))
-        made.append("main_results")
-        (out / "comparisons.tex").write_text(comparisons(stats))
-        made.append("comparisons")
+        write("main_results", "TabMainResults", main_results(stats))
+        write("comparisons", "TabComparisons", comparisons(stats))
     print(made)
 
 
