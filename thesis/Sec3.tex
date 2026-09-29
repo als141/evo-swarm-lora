@@ -6,121 +6,226 @@
 \chapter{提案手法}
 \label{cha:3}
 
-本章では，マルチエージェント議論（Multi-Agent Debate; MAD）のチームレベル適応度を選択圧としてペルソナLoRA集団を進化させる提案手法を定式化する．まず\ref{sec:3.1}節で問題を形式的に定義し，\ref{sec:3.2}節で議論プロトコル，\ref{sec:3.3}節で適応度関数，\ref{sec:3.4}節で進化アルゴリズムを述べ，\ref{sec:3.5}節で計算量を分析する．本章の記述はすべて公開実装（\texttt{src/evalx/debate.py}，\texttt{src/evalx/shapley.py}，\texttt{src/evolve/loop.py}，\texttt{src/models/lora\_ops.py}）と一対一に対応する．
+本章では，役割の異なるペルソナを持つLoRAエージェントの社会が，議論を通じて問題を解き，その議論から学び，チームへの貢献度に基づく選抜を経て世代を重ねる\textbf{進化的社会学習}を定式化する．
 
-\section{問題定式化}
+手法は二つの空間で働く．世代0では，チーム役割理論から作った候補の中から，チームとしての成績に基づいて3体のペルソナを選ぶ（\textbf{プロンプト空間}での選抜）．世代1以降では，各ペルソナのLoRAを社会の議論の記録から学習して子を作り，厳密Shapley値によるチーム貢献度で次世代の代表を選ぶ（\textbf{重み空間}での選抜）．どちらの段階でも，選抜の基準は「チームの一員として役に立つか」である．
+
+\ref{sec:3.1}節で問題設定と記号を，\ref{sec:3.2}節で世代0のペルソナの選定を，\ref{sec:3.3}節で議論のプロトコルを，\ref{sec:3.4}節でチーム貢献度を，\ref{sec:3.5}節で進化的社会学習の1世代の手続きを述べ，\ref{sec:3.6}節で計算量を分析する．本章の記述は実装（\texttt{src/evo4/}と\texttt{scripts/v4/}）と一対一に対応する．
+
+\section{問題設定と記号}
 \label{sec:3.1}
 
 \subsection{ベースモデルとLoRA個体}
 \label{sec:3.1.1}
 
-凍結されたベースモデル$\mathcal{M}_{\theta_0}$（本研究ではQwen3-4B-Instruct-2507\cite{qwen2025qwen3}）を共有し，その上に付加するLoRA（Low-Rank Adaptation）\cite{hu2021lora}アダプタを進化の対象となる「個体」とする．LoRAは対象モジュール$m \in \mathcal{L}$（本実装では各Transformer層の$q, k, v, o$射影および$\mathrm{gate}, \mathrm{up}, \mathrm{down}$射影）の重み$W_0^{(m)} \in \mathbb{R}^{d_{\mathrm{out}} \times d_{\mathrm{in}}}$に対し，低ランク行列対$B^{(m)} \in \mathbb{R}^{d_{\mathrm{out}} \times r}$，$A^{(m)} \in \mathbb{R}^{r \times d_{\mathrm{in}}}$による更新
+凍結したベースモデル$\mathcal{M}_{\theta_0}$（本研究ではQwen3-4B-Instruct-2507\cite{qwen2025qwen3}）を全エージェントで共有し，その上に付加するLoRA\cite{hu2021lora}アダプタを個体とする．対象モジュール$m$（各Transformer層の$q$，$k$，$v$，$o$射影と，$\mathrm{gate}$，$\mathrm{up}$，$\mathrm{down}$射影）の重み$W_0^{(m)} \in \mathbb{R}^{d_{\mathrm{out}} \times d_{\mathrm{in}}}$に対し，LoRAは低ランクの行列の対$B^{(m)} \in \mathbb{R}^{d_{\mathrm{out}} \times r}$，$A^{(m)} \in \mathbb{R}^{r \times d_{\mathrm{in}}}$による更新
 \begin{equation}
-W^{(m)} = W_0^{(m)} + \gamma\, B^{(m)} A^{(m)}, \qquad \gamma = \frac{\alpha_{\mathrm{LoRA}}}{r}
+W^{(m)} = W_0^{(m)} + \gamma\, \Delta W^{(m)}, \qquad \Delta W^{(m)} = B^{(m)} A^{(m)}, \qquad \gamma = \frac{\alpha_{\mathrm{LoRA}}}{r}
 \label{eq:lora}
 \end{equation}
-を与える（$r = 32$，$\alpha_{\mathrm{LoRA}} = 2r$，したがって$\gamma = 2$で全個体共通・固定）．個体$x$は行列対の集合$x = \{(A^{(m)}, B^{(m)})\}_{m \in \mathcal{L}}$として定義され，その実効的な表現型は各モジュールの更新行列（タスクベクトル\cite{ilharco2022editing}）
-\begin{equation}
-\Delta W^{(m)}(x) = B^{(m)} A^{(m)}
-\label{eq:deltaw}
-\end{equation}
-の集合である．全個体は同一のベースモデル・同一のrank・同一の対象モジュール集合を共有するため，後述の交叉演算が層ごとにwell-definedになる．
+を与える（本研究では$r = 16$，$\alpha_{\mathrm{LoRA}} = 32$）．個体$x$の実効的な表現型は，全モジュールの更新行列$\{\Delta W^{(m)}(x)\}_m$である．LoRAを持たない個体（ベースモデルそのもの）も許し，これを$x = \varnothing$と書く．
 
-\subsection{役割・エージェント・チーム}
+\subsection{役割・エージェント・社会}
 \label{sec:3.1.2}
 
-役割集合を$\mathcal{R} = \{\mathrm{critic}, \mathrm{pragmatist}, \mathrm{explorer}\}$（批判的検証者・実務的意思決定者・発散的探索者）とし，各役割$r$に固有のペルソナプロンプト$\pi_r$（システムプロンプトとして与える短い役割記述）を割り当てる．エージェントは個体と役割プロンプトの組$a = (x, \pi_r)$である．役割ごとのペルソナは，初期化時に役割別SFTデータで重み空間にも焼き込まれる（第\ref{cha:4}章）．
+役割の集合を$\mathcal{R}$（$|\mathcal{R}| = 3$）とし，各役割$r$に固有のペルソナ文$\pi_r$を割り当てる．ペルソナ文はシステムプロンプトに入れる1〜2文の役割の記述である．エージェントは個体とペルソナ文の組$a = (x, \pi_r)$である．役割とペルソナ文は世代0で選び（\ref{sec:3.2}節），以後のすべての世代で固定する．
 
-世代$t$における役割$r$のサブ集団を$P_r^{(t)} = \{c_{r,1}^{(t)}, \dots, c_{r,K}^{(t)}\}$（本実装では$K = 2$），その代表個体を$\rho_r^{(t)} \in P_r^{(t)}$と書く．候補個体$c \in P_r^{(t)}$の評価は，他役割の代表と組んだ\textbf{代表チーム文脈}
-\begin{equation}
-T(c) = \{c\} \cup \{\rho_{r'}^{(t)} \mid r' \in \mathcal{R},\ r' \neq r\}
-\label{eq:team}
-\end{equation}
-で行う．これは協調的共進化（Cooperative Coevolution）\cite{potter1994cooperative}における「協力者（collaborator）を固定した部分解評価」に相当する．
+世代$t$における役割$r$の\textbf{代表}を$\rho_r^{(t)}$と書き，3役割の代表からなるチーム$\mathcal{T}^{(t)} = \{\rho_r^{(t)}\}_{r \in \mathcal{R}}$を世代$t$の\textbf{社会}と呼ぶ．世代0の代表はLoRAを持たない．世代$t \geq 1$では，役割ごとの候補の集合$\mathcal{C}_r^{(t)}$（\ref{sec:3.5}節）から次の代表を選ぶ．
 
-\subsection{議論プロトコルと特性関数}
+\subsection{連合と特性関数}
 \label{sec:3.1.3}
 
-質問$q$と正解$y^*$の組からなる固定の適応度セットを$D_{\mathrm{fit}} = \{(q_j, y_j^*)\}_{j=1}^{N_{\mathrm{fit}}}$（$N_{\mathrm{fit}} = 100$）とする．エージェント集合（連合）$S$に対し，\ref{sec:3.2}節の議論プロトコルを$R$ラウンド実行して多数決回答を返す演算子を$\mathcal{D}_R(S, q)$と書く（$|S| = 1$のときは単独のChain-of-Thought回答）．連合$S$の\textbf{特性関数}（characteristic function）を適応度セット上の精度
+エージェントの集合（連合）$S$が\ref{sec:3.3}節の議論のプロトコルで問題$q$を解いたときの最終回答を$\mathcal{D}(S, q)$と書く．$|S| = 1$のときは単独の回答である．選抜に用いる問題集合（dev）を$D$，そのうちベンチマーク$k$に属する問題の集合を$D_k$とする．連合$S$の\textbf{特性関数}を，ベンチマークを等しく重み付けしたdevの正答率（macro精度）
 \begin{equation}
-v(S) = \frac{1}{N_{\mathrm{fit}}} \sum_{j=1}^{N_{\mathrm{fit}}} \mathbf{1}\left[\mathcal{D}_R(S, q_j) = y_j^*\right], \qquad v(\emptyset) = 0
+v(S) = \frac{1}{K} \sum_{k=1}^{K} \frac{1}{|D_k|} \sum_{(q, y^*) \in D_k} \mathbf{1}\left[\mathcal{D}(S, q) \equiv y^*\right], \qquad v(\varnothing) = 0
 \label{eq:charfun}
 \end{equation}
-と定義する．定義より$v(\{i\})$は個体$i$のsolo精度に一致する．以上の記号を表\ref{tab:3.1}にまとめる．
+と定義する．ここで$K = 3$はベンチマークの数，$y^*$は正解，$\equiv$は第\ref{cha:4}章の採点規則による正誤判定である．macro精度を用いるのは，問題数の多いベンチマークに選抜が引きずられないようにするためである．以上の記号を表\ref{tab:3.1}にまとめる．
 
 \begin{table}[htbp]
 \caption{記号表}
 \label{tab:3.1}
 \centering
 \small
-\begin{tabular}{|l|p{8.2cm}|}
+\begin{tabular}{|l|p{9.0cm}|}
 \hline
 記号 & 意味 \\
 \hline
-$\mathcal{M}_{\theta_0}$ & 凍結ベースモデル（Qwen3-4B-Instruct-2507） \\
+$\mathcal{M}_{\theta_0}$ & 凍結したベースモデル（Qwen3-4B-Instruct-2507） \\
 \hline
-$x = \{(A^{(m)}, B^{(m)})\}$ & LoRA個体（rank $r=32$，$\gamma = 2$） \\
+$x$，$\Delta W^{(m)}(x)$ & LoRA個体（rank $r = 16$），モジュール$m$の更新行列．$x = \varnothing$はLoRAなし \\
 \hline
-$\Delta W^{(m)}(x) = B^{(m)}A^{(m)}$ & モジュール$m$の実効更新行列 \\
+$\mathcal{R}$，$\pi_r$ & 役割の集合（3役割），役割$r$のペルソナ文 \\
 \hline
-$\mathcal{R}$，$\pi_r$ & 役割集合（3役割），役割別ペルソナプロンプト \\
+$a = (x, \pi_r)$ & エージェント \\
 \hline
-$P_r^{(t)}$，$K$ & 世代$t$・役割$r$のサブ集団，その規模（$K=2$） \\
+$\rho_r^{(t)}$，$\mathcal{T}^{(t)}$ & 世代$t$の役割$r$の代表，世代$t$の社会（代表3体のチーム） \\
 \hline
-$\rho_r^{(t)}$ & 役割$r$の代表個体（前世代の役割内最良） \\
+$\mathcal{C}_r^{(t)}$ & 世代$t$の役割$r$の候補（親，子a，子b，子c） \\
 \hline
-$T(c)$ & 候補$c$の代表チーム文脈（3エージェント） \\
+$D$，$D_k$，$K$ & 選抜に用いる問題集合（dev），そのうちベンチマーク$k$の問題，ベンチマークの数 \\
 \hline
-$D_{\mathrm{fit}}$，$N_{\mathrm{fit}}$ & 適応度セット，その問題数（100） \\
+$\mathcal{D}(S, q)$ & 連合$S$の問題$q$に対する最終回答 \\
 \hline
-$\mathcal{D}_R(S, q)$ & 連合$S$による$R$ラウンド議論の多数決回答 \\
+$v(S)$ & 特性関数（連合$S$のdevでのmacro精度．$v(\varnothing) = 0$） \\
 \hline
-$v(S)$ & 特性関数（連合$S$の適応度セット精度，$v(\emptyset)=0$） \\
+$T(c)$ & 候補$c$の代表チーム文脈（$c$と，他の2役割の現在の代表） \\
 \hline
-$\phi_c$ & 候補$c$の厳密Shapley値 \\
+$\phi_c$，$\beta_c$ & 候補$c$の厳密Shapley値，Banzhaf値 \\
 \hline
-$d(c, c')$ & 行動距離（solo予測の不一致率） \\
-\hline
-$\sigma_{\mathrm{share}}$ & fitness sharingのniche半径（0.3） \\
-\hline
-$F(c)$ & 最終適応度$\phi_c \cdot s(c)$ \\
-\hline
-$G$，$R$ & 世代数（6），議論ラウンド数（1） \\
+$G$ & 世代数 \\
 \hline
 \end{tabular}
 \end{table}
 
-\section{議論プロトコル}
+\section{世代0: チーム役割理論に基づくペルソナの選定}
 \label{sec:3.2}
 
-議論プロトコルはDuらのMAD原型\cite{du2023improving}に準拠し，近年の系統的検証\cite{choi2025debate,kaesberg2025voting,demystifying2026mad}の知見に基づいて簡素化した以下の構造を採る．
+\subsection{候補の作り方}
+\label{sec:3.2.1}
 
-\textbf{ラウンド構造}．各問題$q$に対し:
+ペルソナの選び方はチームの成績を左右しうる設計変数だが，恣意的に決められがちである．\ref{sec:2.2}節で見たとおり，性格を表すラベルだけのペルソナは客観的な課題の精度をほとんど変えない\cite{zheng2024persona,kim2024persona}．一方，議論では，エージェントごとに異なる推論の手続きを割り当てると，同じ手続きのエージェント同士の議論より精度が上がる\cite{liu2025dmad}．そこで本研究は，候補を次の手順で系統的に作る．
+
+\begin{enumerate}
+\item \textbf{理論による網羅}: 人間の問題解決チームの役割を分類したBelbinのチーム役割\cite{belbin1981management,belbin1993team}の9役割を，取捨選択せずにすべて候補とする．9役割は思考系（Plant，Monitor Evaluator，Specialist），行動系（Shaper，Implementer，Completer Finisher），対人系（Co-ordinator，Teamworker，Resource Investigator）の3群に分かれる．Belbinの理論はチームの成果を予測する法則としては実証的な留保があるため（\ref{sec:2.2.2}項），ここでは役割を網羅的に列挙する分類としてだけ用いる．
+\item \textbf{推論の手続きとしての操作化}: 各役割がチームで果たす機能を，確立したプロンプト手法に対応する推論の手続きとして英語1〜2文で記述する（表\ref{tab:3.2}）．性格を表す語は最小限にとどめる．
+\item \textbf{対照}: ペルソナ文を持たないエージェント（plain）を加える．さらに，乱数seedの系列だけが異なるplainの複製を2体加え，ペルソナの効果を「同じモデルの再サンプリング」と比べられるようにする．
+\end{enumerate}
+
+\begin{table}[htbp]
+\caption{ペルソナの候補（Belbinの9役割の操作化．英語のペルソナ文の全文は付録\ref{app:prompts}）}
+\label{tab:3.2}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{|p{3.4cm}|p{0.8cm}|p{6.2cm}|p{2.6cm}|}
+\hline
+Belbinの役割 & 群 & 推論の手続き（ペルソナ文の要旨） & 対応する手法 \\
+\hline
+Plant（創造者） & 思考 & 問題の解釈か解き方を2通り以上考え，最も根拠のあるものを選ぶ & 解法の多様化\cite{liu2025dmad} \\
+\hline
+Monitor Evaluator（監視評価者） & 思考 & 選択肢や途中の主張を問題の条件と一つずつ照合し，合わないものを消去してから答える & 消去法・批判的評価 \\
+\hline
+Specialist（専門家） & 思考 & 問題を支配する原理・定義・公式を先に述べ，それを段階的に適用する & Step-Back\cite{zheng2024stepback} \\
+\hline
+Shaper（形づくる人） & 行動 & 最も有力な答えにいったん決め，その最も弱い前提を攻撃して反証を試み，反証に成功したときだけ答えを変える & 仮説と反証 \\
+\hline
+Implementer（実行者） & 行動 & 最も標準的で直接的な方法を体系的に適用し，結果を概算で検算する & 標準解法と検算 \\
+\hline
+Completer Finisher（完成者） & 行動 & 解いた後，答えを条件に代入し直すか別の方法で導き直して検証し，誤りを直す & 自己検証\cite{weng2023large} \\
+\hline
+Co-ordinator（調整者） & 対人 & 問題を短い小問の計画に分け，順に解いて結果をまとめる & 計画と分割\cite{wang2023plan,zhou2023least} \\
+\hline
+Teamworker（チームワーカー） & 対人 & 他者が追って検証できるよう推論を平易に説明し，問題の最もありそうな誤読を先に解消する & 説明と誤読の解消 \\
+\hline
+Resource Investigator（資源探索者） & 対人 & 確信のある類題・例・事実を想起し，その解き方を本問に合わせて適用する & 類推\cite{yasunaga2024analogical} \\
+\hline
+plain（対照） & -- & ペルソナ文なし（回答書式の指示のみ） & -- \\
+\hline
+\end{tabular}
+\end{table}
+
+先行研究で当初想定していた3役割（批判的検証者，実務的意思決定者，発散的探索者）は，それぞれMonitor Evaluator，Implementer，Plantに対応する．この3役割を\textbf{既定トリオ}と呼び，データに基づく選定で置き換えるかどうかの基準とする．既定トリオはBelbinの分類では思考系2体と行動系1体からなり，3群のそろった構成ではない．
+
+9役割は，de Bonoの6つの思考モード（Six Thinking Hats）\cite{debono1985six}のすべてにも対応する役割を含む（対応は付録\ref{app:prompts}）．二つの独立した分類から見て，候補の集合に偏りがないことを確認できる．
+
+\subsection{選定の手続き}
+\label{sec:3.2.2}
+
+devを，ベンチマークごとに層化して固定seedで半分ずつに分け，選抜に使うdev-Aと確認に使うdev-Bとする．選定は次の3段階で行い，devだけを用いる（testは用いない）．選定の議論には\ref{sec:3.3}節のプロトコルを，ゲーティング（\ref{sec:3.3.3}項）なしで用いる．
+
+\textbf{段階1（単独の評価，dev-A）}．Belbinの9役割，plain，plainの複製2体の計12体について，単独の精度（macro）を測る．plainに対する差が$-2$pt以下で，かつその90\%信頼区間（ベンチマーク内で問題を再抽出するブートストラップ）の上限が0未満の役割は，ペルソナが能力を損なう（\textbf{能力税}がある）とみなし，最終候補から除く．また，各役割とplainの回答の不一致率から，plainの複製同士の不一致率を引いた\textbf{超過不一致率}を記録する．これは，ペルソナが再サンプリング以上の回答の多様性を生むかどうかの指標である．
+
+\textbf{段階2（チームの評価，dev-A）}．三つ組は${9 \choose 3} = 84$通りあり，すべては評価できない．そこで，アフィン平面$\mathrm{AG}(2,3)$の12本の直線を三つ組とする釣り合い型不完備ブロック計画を用いる．9役割を$\mathbb{Z}_3^2$の点$(x, y)$に対応させ，$x$を群，$y$を群内の番号とする．この計画には次の性質がある．
 \begin{itemize}
-\item \textbf{round 0（独立回答）}: 各エージェント$a_i = (x_i, \pi_{r_i})$は，システムプロンプト（ペルソナ$\pi_{r_i}$＋回答形式指示）と質問のみを入力として独立に段階的推論と回答を生成する．初期回答の多様性がMAD成功の主要条件であるとの報告\cite{demystifying2026mad}に従い，独立生成を厳格に保つ．
-\item \textbf{round $1 \dots R$（批判的更新）}: 各エージェントに，\textbf{他エージェントの直前ラウンドの発話全文}を提示し，「他者の推論の誤りを指摘した上で，自身の解答を更新（または維持）せよ」と指示して回答を再生成する．自己の過去発話は再提示せず，各ラウンドは対話履歴を持たない独立の単一ターン呼び出しとして実装する．ラウンド数はラウンド追加が逆効果になるとの報告\cite{kaesberg2025voting}に基づき$R \in \{1, 2\}$，既定$R = 1$とする．
+\item 各役割はちょうど4チームに入り，どの2役割もちょうど1回だけ同じチームになる．
+\item $x$が一定の3本の直線は同じ群の3役割からなる\textbf{同質型}のチームになり，残りの9本は3群から1体ずつの\textbf{バランス型}のチームになる．
 \end{itemize}
+この12チームに既定トリオとplain 3体のチームを加えた14チームを議論させ，各チームの精度$\mathrm{acc}(T)$を得る．計画内の12チームに加法モデル
+\begin{equation}
+\mathrm{acc}(T) = \mu + \sum_{i \in T} \alpha_i + \varepsilon_T, \qquad \sum_{i} \alpha_i = 0
+\label{eq:maineffect}
+\end{equation}
+を最小二乗で当てはめ，役割$i$の\textbf{主効果}$\alpha_i$を推定する．この計画では推定値が
+\begin{equation}
+\hat{\alpha}_i = \frac{4}{3} \left( \bar{y}_i - \bar{y} \right)
+\label{eq:maineffect_est}
+\end{equation}
+と閉じた形になる．ここで$\bar{y}_i$は役割$i$を含む4チームの平均精度，$\bar{y}$は12チームの平均精度である．主効果は，役割$i$をチームに入れたときの平均的な上積みを表す．Belbinの中心的な主張である「役割のそろったチームほど成果が高い」は，バランス型9チームと同質型3チームの平均精度の差として，チームのラベルの並べ替え検定（20,000回）で探索的に検定する．
 
-各生成には温度$\tau = 0.7$・top-p $0.9$のサンプリングを用い，乱数シードはエージェント添字$i$とラウンド添字$\rho$に応じて$\mathrm{seed}' = \mathrm{seed} \cdot 10^4 + 100 i + \rho$と系統的にずらす．これにより同一重み・同一プロンプトの構成（第\ref{cha:4}章の温度サンプリング対照条件）でも初期回答の多様性が確保され，かつ全実行が再現可能になる．
+\textbf{段階3（確認と決定，dev-B）}．次の最終候補をdev-Bで議論させる．
+\begin{itemize}
+\item F0: 既定トリオ．
+\item F1: 段階2で観測した精度が最大のチーム．ただし段階1で除いた役割を含まず，plain 3体のチームは除く．
+\item F2: 段階1で除かれなかった役割のうち，主効果$\hat{\alpha}_i$の上位3役割からなるチーム．
+\item F3: 単独の精度の上位3役割からなるチーム（単独の成績で選ぶ場合の対照）．
+\item C: plain 3体のチーム（対照）．
+\end{itemize}
+F0〜F3のうちdev-Bのmacro精度が最大のもの（同点ならF0）をF$^*$とする．\textbf{F$^*$がF0を$+1.5$pt以上上回り，かつ対応のある差の90\%信頼区間の下限が0を超えるときだけF$^*$を採用し，それ以外はF0を採用する}．この決定規則は結果を見る前に定めた．この規則の下では，データが既定トリオより明確に良い組を示したときだけ置き換えが起こり，差を検出できない場合は理論上の既定に戻る．採用したチームについては，\ref{sec:3.4}節の厳密Shapley値とBanzhaf値をdev-Bで求めて報告する．選定の結果と採用したトリオは第\ref{cha:5}章で報告する．
 
-\textbf{回答抽出と集約}．各エージェントの最終ラウンド発話から，厳密な書式指示\texttt{ANSWER: <値>}に対する正規表現で最終回答を抽出する（抽出不能な発話は無効票とする）．集約は\textbf{最終ラウンド回答の多数決}であり，同数の場合は候補を辞書順に整列した上でシード付き乱数により一様に選ぶ．
-
-judge（審判）エージェントによる集約を採用しない根拠は二つある．第一に，MADの性能利得の大半は議論そのものではなく多数決集約で説明されるという分析\cite{choi2025debate}，および推論タスクでは合意形成プロトコルより投票が一貫して優れるという比較実験\cite{kaesberg2025voting}があり，集約規則としての多数決の優位が示されている．第二に，議論の最終決定を担うエージェントの判定能力がチーム性能を左右する（意思決定者がボトルネックとなる）ことが報告されており\cite{judge2025bottleneck}，本研究のように4B級の小型モデルのみでチームを構成する設定では特に深刻である．また，言語化された確信度（confidence）は過信バイアスを持つため主集約には用いない．
-
-なお$|S| = 2$の連合では多数決が常に同数となり得るため，実効的には「一致すればその回答，不一致ならシード付き乱数で一方を選択」という規則になる．これはShapley値算出（\ref{sec:3.3}節）に必要な中間連合の評価としてプロトコルの一貫性を優先した設計である．
-
-\section{適応度関数}
+\section{議論のプロトコル}
 \label{sec:3.3}
 
-\subsection{特性関数と厳密Shapley値}
+\subsection{ラウンドの構造}
 \label{sec:3.3.1}
 
-候補$c$（役割$r$）の適応度の中核は，代表チーム文脈$T(c) = \{c, \rho_1, \rho_2\}$（$\rho_1, \rho_2$は他2役割の代表）上の\textbf{厳密Shapley値}\cite{shapley1953value}である:
+議論はDuらのマルチエージェント議論\cite{du2023improving}の原型（\ref{sec:2.1.1}項）に従い，更新のラウンドを1回持つ．ラウンド数を1とするのは，推論課題ではラウンドを増やしても利得が小さいか逆効果になるという報告があるためである\cite{choi2025debate,kaesberg2025voting}．
+
+\begin{itemize}
+\item \textbf{round0（独立回答）}: 各エージェントは，システムプロンプト（ペルソナ文と回答書式の指示）と問題文だけを入力として，段階的な推論と最終回答を生成する．最終行は\texttt{ANSWER: <値>}の書式とする．
+\item \textbf{round1（更新）}: 各エージェントは，自分のround0の回答を会話履歴（assistantの発話）として保持したまま，次のuserの発話で他のエージェントのround0の回答を受け取り，推論を見直した解答を生成する．他者の回答は匿名化し（「Agent 1」「Agent 2」），提示順を問題ごとに固定したseedでシャッフルする．
+\end{itemize}
+
+round1の指示文には，中立版と条件付き版の二つを用意した．中立版は「他者の推論と自分の解答を比べ，要所を検算して，自分と他者のどちらの誤りも指摘し，更新した解答を示せ．答えは維持しても変えてもよい」と指示する．条件付き版は「自分の推論に具体的な誤りを見つけた場合にだけ答えを変え，その誤りを明示せよ．見つからなければ，他者と意見が違っても答えを維持せよ」と指示する．本研究は，dev-Aでの比較（第\ref{cha:4}章）に基づいて中立版を用いる．プロンプトの全文は付録\ref{app:prompts}に示す．
+
+自分の前回の回答を会話履歴として保持することは，原型の手続きでは当然の前提である．予備研究の実装（第\ref{cha:5}章）はこれを欠いており，エージェントは自分の元の答えを見ずに他者の回答だけを読んで「維持するか変えるか」を判断していた．本研究ではこの不整合を解消した．
+
+各生成は温度付きのサンプリングで行う（設定は第\ref{cha:4}章）．乱数seedは（問題，生成seed，役割，ラウンド）から決定的に定め，同じ役割の候補同士は同じseedの系列を用いる．ただし推論エンジンのseedの指定は出力を再現しない（第\ref{cha:4}章）ため，seedは監査のための記録であり，比較の分散を減らす手段としては期待しない．
+
+\subsection{回答の切り詰め}
+\label{sec:3.3.2}
+
+round1の入力は自分と他者2体の回答の全文を含むため長くなる．入力が長いと，推論エンジンのKVキャッシュに同時に載る系列の数が減り，議論の生成が計算量の支配項になる（第\ref{cha:4}章）．そこでround1では，自分の回答と他者の回答をそれぞれ\textbf{末尾3,000文字}に切り詰め，切り詰めた場合は先頭に前半を省いた旨の注記を付ける．結論と最後の計算は回答の末尾に現れるため，切り詰めても議論に必要な情報の多くは残ると考えられる．
+
+予算の制約から，round1の採用候補は切り詰め版の2種（中立版と条件付き版）に限り，dev-Aで精度の高い方を採用する（中立版との差が1pt未満なら中立版とする）と事前に定めた．切り詰めない全文版は，切り詰めによる精度の損失を測る参照とした．結果は第\ref{cha:4}章に示す．
+
+\subsection{議論のゲーティング}
+\label{sec:3.3.3}
+
+連合の全員のround0の回答が一致した問題では，round1を生成せず，一致した回答をその連合の最終回答とする．議論するのは一致しない問題だけである．回答の一致は，抽出した回答の文字列の一致で判定する（数学の問題では，表記の異なる同値な回答は一致とみなさない）．
+
+ゲーティングの根拠は，round0で多数派だったエージェントが議論の後も答えをほとんど変えないことにある（第\ref{cha:4}章）．全員が一致した問題で議論しても最終回答はほぼ変わらず，計算だけがかかる．dev-Aの予備比較では，ゲーティングによる精度の低下は見られず，round1の呼び出しは約6割減った（第\ref{cha:4}章）．ゲーティングは進化の各系統における議論，選抜，評価に適用し，世代0の選定と7月のチームの評価（第\ref{cha:4}章）には適用しない．
+
+\subsection{集約}
+\label{sec:3.3.4}
+
+連合$S$の最終回答$\mathcal{D}(S, q)$は次のように定める．
+\begin{itemize}
+\item $|S| = 1$なら，round0の回答とする．
+\item $|S| \geq 2$でゲーティングにより議論しなかった場合は，一致したround0の回答とする．
+\item 議論した場合は，全員のround1の回答の多数決とする．回答を抽出できない発話は無効票として除く．
+\end{itemize}
+同数の場合は，各回答に投票したエージェントの発話の平均トークン対数確率（確信度）の最大値が大きい回答を選ぶ．それも等しければ，投票したエージェントの役割名の辞書順，最後に回答の文字列の順で決める．乱数は使わず，同じ生成結果からは同じ最終回答が決まる．2体の連合で意見が割れた場合は，この規則により確信度の高い方の回答が選ばれる．
+
+判定者（judge）のエージェントによる集約は採らない．推論課題では合意形成より多数決が一貫して優れること\cite{kaesberg2025voting}，議論の利得の大半が多数決で説明されること\cite{choi2025debate}，議論の最終判断を担う者の能力が結果を左右すること\cite{judge2025bottleneck}が理由である．
+
+\section{チーム貢献度}
+\label{sec:3.4}
+
+\subsection{代表チーム文脈における厳密Shapley値}
+\label{sec:3.4.1}
+
+役割$r$の候補$c$の貢献は，他の2役割の現在の代表と組ませた\textbf{代表チーム文脈}
 \begin{equation}
-\phi_c = \sum_{S \subseteq T(c) \setminus \{c\}} \frac{|S|!\,(n - |S| - 1)!}{n!} \Big( v(S \cup \{c\}) - v(S) \Big), \qquad n = 3.
+T(c) = \{c\} \cup \{\rho_{r'}^{(t-1)} \mid r' \in \mathcal{R},\ r' \neq r\}
+\label{eq:team}
+\end{equation}
+で測る．これは協調的共進化\cite{potter1994cooperative}における，協力者を固定した部分解の評価に当たる．$T(c)$上の厳密Shapley値\cite{shapley1953value}は
+\begin{equation}
+\phi_c = \sum_{S \subseteq T(c) \setminus \{c\}} \frac{|S|!\,(n - |S| - 1)!}{n!} \Big( v(S \cup \{c\}) - v(S) \Big), \qquad n = 3
 \label{eq:shapley}
 \end{equation}
-$n = 3$を展開すると，係数は$|S| = 0, 1, 2$に対しそれぞれ$\frac{1}{3}, \frac{1}{6}, \frac{1}{3}$であり，
+である．他の2役割の代表を$\rho_1$，$\rho_2$と書いて展開すると
 \begin{eqnarray}
 \phi_c &=& \frac{1}{3} v(\{c\})
 + \frac{1}{6} \Big[ v(\{c,\rho_1\}) - v(\{\rho_1\}) \Big]
@@ -128,169 +233,158 @@ $n = 3$を展開すると，係数は$|S| = 0, 1, 2$に対しそれぞれ$\frac{
 && {}+ \frac{1}{3} \Big[ v(T(c)) - v(\{\rho_1,\rho_2\}) \Big]
 \label{eq:shapley3}
 \end{eqnarray}
-となる．必要な特性関数値は3エージェントの全非空連合$2^3 - 1 = 7$個であり，本研究ではこれを\textbf{すべて実測}する．すなわちMonte Carlo近似やLeave-One-Out（LOO）近似\cite{rozemberczki2022shapley}を一切用いず，公理的に一意な貢献配分を厳密に得る．エージェント数を3に限定した設計判断は，（i）Duらの標準構成であり奇数のため多数決が機能しやすいこと，（ii）$2^n$に指数増加する連合評価が$n = 3$でのみ実測可能な規模に収まること，の二点による．
+となる．2体の連合$\{c, \rho_1\}$の値は，$c$と$\rho_1$の2体だけで\ref{sec:3.3}節の議論を行ったときの精度である．必要な特性関数の値は3体の全非空連合の$2^3 - 1 = 7$個であり，本研究はこれを\textbf{すべて実測}する．したがって連合の列挙に近似はない．ただし各$v(S)$はdevという有限の標本での推定値であり，推定の誤差を含む．
 
-Shapley値を採る理論的根拠は，効率性（$\sum_i \phi_i = v(N) - v(\emptyset)$）・対称性・null player・線形性の4公理を同時に満たす唯一の配分規則である点にある\cite{shapley1953value,ghorbani2019data}．特にLOO型の寄与度$v(N) - v(N \setminus \{c\})$は，行動が同型な個体（複製）が連合に共存すると双方に寄与0を割り当てるという既知の欠陥を持つ\cite{ghorbani2019data}．進化計算では集団内に類似個体が発生しやすいため，この欠陥は選択圧を系統的に歪める．Shapley値はすべての部分連合にわたる限界貢献の加重平均であるため複製に対しても頑健である．
+Shapley値を採るのは，効率性・対称性・ナルプレイヤー・線形性の公理を同時に満たす唯一の配分であるためである\cite{shapley1953value,ghorbani2019data}．Leave-One-Out型の寄与$v(T) - v(T \setminus \{c\})$は，同じ振る舞いの個体が連合に共存すると双方の寄与を0とする欠陥を持つ\cite{ghorbani2019data}．同じ親から学習した子は振る舞いが近くなりやすいので，この欠陥は選抜を歪めうる．
 
-また，式(\ref{eq:shapley3})の第1項が示すとおり$\phi_c$は$v(\{c\})$（solo精度）を重み$\frac{1}{3}$で内包する．したがって個体タスク性能を別項として適応度に加算する必要はなく，「個体性能＋協調寄与」が単一のスカラーに公理的に統合される．これが個体性能のみを適応度とする先行研究（GENOME\cite{zhang2025genome}）との本質的な差分であり，この差分はアブレーションA1（適応度を$v(\{c\})$に置換）として直接検証可能な設計とした（実施状況は\S\ref{sec:4.3}）．
+代表との組合せだけで評価すると，最適ではないがどの協力者とも無難に機能する個体が選ばれやすくなる（相対的過汎化，\ref{sec:2.5}節）．本研究は，協力者を前世代の代表に固定する単純な方式を採り，この偏りは限界として扱う．
 
-\subsection{Fitness sharingと行動距離}
-\label{sec:3.3.2}
-
-Shapley値のみを選択圧とすると，役割内の個体が同一の行動様式に収束し，進化の探索が早期に停滞する恐れがある．そこでGoldbergとRichardsonのfitness sharing\cite{goldberg1987genetic}による乗法ペナルティを導入する．同役割サブ集団内の個体間の\textbf{行動距離}を，適応度セット上のsolo予測の不一致率
-\begin{equation}
-d(c, c') = \frac{1}{|D_{\mathrm{fit}}|} \sum_{j} \mathbf{1}\left[ \hat{y}_j(c) \neq \hat{y}_j(c') \right]
-\label{eq:distance}
-\end{equation}
-（$\hat{y}_j(\cdot)$は問題$j$に対するsolo抽出回答）と定義し，sharing係数を
-\begin{equation}
-s(c) = \frac{1}{\displaystyle 1 + \sum_{c' \in P_r^{(t)} \setminus \{c\}} \max\!\left(0,\ 1 - \frac{d(c, c')}{\sigma_{\mathrm{share}}}\right)}, \qquad \sigma_{\mathrm{share}} = 0.3
-\label{eq:sharing}
-\end{equation}
-とする．分母は$c$の属するnicheの実効個体数（niche count）であり，行動距離が$\sigma_{\mathrm{share}}$未満の同役割個体が近くに多いほど適応度が割り引かれる．最終的な適応度は
-\begin{equation}
-F(c) = \phi_c \cdot s(c)
-\label{eq:fitness}
-\end{equation}
-である．行動距離の計算に必要なsolo予測はShapley値算出時の単独連合評価（$v(\{c\})$の実測）の副産物として得られるため，追加の推論コストは発生しない．重み空間のパラメータ距離ではなく行動空間の距離を用いるのは，LoRAの再パラメータ化不変性（\ref{sec:3.4.3}項）によりパラメータ距離が表現型の差を反映しないためである．
-
-\textbf{重要な注意（実装構成による選抜中立性）}: 本実験の役割内サブ集団は$K=2$である（\S\ref{sec:3.4}）．このとき式(\ref{eq:sharing})の和は相手1個体との距離のみからなり，$d(a,b)=d(b,a)$の対称性から\textbf{2個体のsharing係数は常に同値}になる．乗法ペナルティは正の定数倍として順位を保存するため，役割内選抜（$\arg\max_c F(c)$）はShapley値のみの選抜と完全に一致する．すなわち\textbf{fitness sharingは$K=2$の本構成では選抜に作用しない}．この帰結は執筆後の検証で判明したものであり，実際の進化ログにおける事後検証（全18ケースで係数が役割内同値・選抜順位不変）を\S\ref{sec:4.6.6}に示す．sharingを設計意図どおり機能させるには$K \geq 3$が必要であり，本章の記述は「導入した設計」として残すが，実験結果の解釈においてsharingの効果を主張することはできない．
-
-\subsection{多様性を加算しない設計判断}
-\label{sec:3.3.3}
-
-多様性の扱いとして「適応度$=$性能$+ \lambda \cdot$多様性」という加重和がしばしば用いられるが，本研究はこれを採らない．根拠は二系統ある．第一に，Quality-Diversity文献の中核であるMAP-Elites\cite{mouret2015illuminating}は，多様性を目的関数に加算するのではなく行動記述子によるniche分離（アーカイブ）として性能最適化から構造的に分離すべきであると論じており，Novelty Search\cite{lehman2011abandoning}以来の知見として，加重和は探索の欺瞞性（deception）を単に係数$\lambda$の調整問題にすり替えるに過ぎない．第二に，アンサンブル学習の統一理論\cite{wood2023unified}は，多様性がbias・varianceと並ぶ第三の項として汎化誤差分解に現れる\textbf{トレードオフの管理対象}であり，無条件に最大化・加算すべき量ではないことを数学的に示した．加重和はさらに，目的間のスケール不整合と係数の恣意性，非凸Pareto前線を表現できないという多目的最適化上の既知の限界\cite{deb2002fast}も抱える．
-
-そこで本研究は，（i）選択圧そのものはチーム貢献$\phi_c$に一元化し，（ii）多様性はfitness sharingの\textbf{乗法ペナルティ}として「同一nicheへの密集」を抑制する形でのみ作用させる，という分離設計を採る．乗法形式は性能と多様性の単位の混合を避け，$\phi_c$の順位構造をniche内でのみ再調整する．ただし前項末尾に述べたとおり，この設計は$K=2$の本実験構成では選抜中立であり（アブレーションA2のsharing無効化も同構成では自明に無差になる），多様性維持機構としての実効性の検証は$K \geq 3$での再実験に委ねられる．
-
-\section{進化アルゴリズム}
-\label{sec:3.4}
-
-\subsection{協調的共進化の構造}
-\label{sec:3.4.1}
-
-全体構造はPotterとDe Jongの協調的共進化\cite{potter1994cooperative}に従い，3役割それぞれに独立のサブ集団$P_r^{(t)}$（各$K = 2$個体，計6 LoRA）を保持する．各候補の評価は\ref{sec:3.1.2}項の代表チーム文脈で行う．すなわち候補$c$は「他役割の現代表$\rho_{r'}$と組んだときにチームへどれだけ貢献するか」で測られ，役割間の相互適応がチームレベルの選択圧として実現される．代表を固定する評価方式は，Population Based Training\cite{jaderberg2017population}のexploit（良い個体の活用）に対応し，評価対象の組合せ爆発を防ぐ．
-
-\textbf{初期化（世代0）}．役割別SFTデータ（各60例）でQLoRA学習した3個体を各役割の初期代表とし，さらに各個体に全テンソル対象のガウス突然変異（変異率$\rho_{\mathrm{mut}} = 1.0$，\ref{sec:3.4.4}項と同一の相対ノイズ幅）を施した変異体を1個体ずつ加え，各役割$K = 2$の初期サブ集団を構成する．
-
-\subsection{選抜とエリート保存}
+\subsection{Shapley値が統合するもの}
 \label{sec:3.4.2}
 
-世代$t$において，役割$r$の全候補の適応度$F(c)$を計算した後，役割内で最良の個体を次期代表に選ぶ:
+同じ役割の候補同士では，文脈だけからなる3つの連合の値，すなわち$v(\{\rho_1\})$，$v(\{\rho_2\})$，$v(\{\rho_1,\rho_2\})$が共通である．したがって
 \begin{equation}
-\rho_r^{(t+1)} = \mathop{\mathrm{arg\,max}}_{c \in P_r^{(t)}} F(c).
-\label{eq:selection}
+\phi_c = \frac{1}{3} v(\{c\}) + \frac{1}{6} \Big[ v(\{c,\rho_1\}) + v(\{c,\rho_2\}) \Big] + \frac{1}{3} v(T(c)) - \kappa_r
+\label{eq:shapleyrank}
 \end{equation}
-選ばれた代表は\textbf{エリート保存}により無変更のまま次世代サブ集団に残る．これは突然変異による劣化がチーム全体へ伝播することを防ぐための設計である．ただし候補の適応度は「他役割の\textbf{現}代表と組んだ文脈」で測られ，この評価文脈（他役割の代表とsharingの対象個体）は世代ごとに変わるため，エリート保存があっても代表系列の適応度の単調非減少は保証されない点に注意する（実測でも同一個体の測定チーム精度は世代間で$\pm 4$〜$7$pt変動した; \S\ref{sec:4.6.2}）．
+と書け，候補の順位は第1〜3項で決まる．ここで$\kappa_r$は候補に依存しない定数である．重みの和は$1/3 + 1/6 + 1/6 + 1/3 = 1$であり，Shapley値は，候補を含む4つの連合の精度の加重平均から定数を引いたものに等しい．つまりShapley値による選抜は，単独の精度（第1項），2体での協調（第2項），3体のチームとしての精度（第3項）を，公理から導かれる重みで一つの値に統合している．単独の精度だけで選ぶ対照（\ref{sec:3.5.5}項の系統A1）は第1項だけを見ることに当たり，両者の比較が「チームへの貢献で選ぶこと」の効果の検証になる．
 
-\subsection{交叉: $\Delta W$空間ブレンドとランダム化SVD再分解}
+\subsection{Banzhaf値}
 \label{sec:3.4.3}
 
-\textbf{交差項問題}．LoRA個体の交叉として最も素朴なのは，行列$A$，$B$を別々に線形補間する方式（naive方式）である:
+同じ7連合からは，Banzhaf値\cite{banzhaf1965weighted}
 \begin{equation}
-A' = (1-\alpha) A_1 + \alpha A_2, \qquad B' = (1-\alpha) B_1 + \alpha B_2.
-\label{eq:naive}
+\beta_c = \frac{1}{2^{n-1}} \sum_{S \subseteq T(c) \setminus \{c\}} \Big( v(S \cup \{c\}) - v(S) \Big)
+\label{eq:banzhaf}
 \end{equation}
-しかしこのとき実効更新は
-\begin{equation}
-\Delta W_{\mathrm{naive}} = B'A' = (1-\alpha)^2 B_1 A_1 + \alpha^2 B_2 A_2 + \alpha(1-\alpha)\big(B_1 A_2 + B_2 A_1\big)
-\label{eq:crossterm}
-\end{equation}
-となり，意図した補間$(1-\alpha)\Delta W_1 + \alpha \Delta W_2$とは一致しない．両親の寄与が二乗係数で縮み（$\alpha = 0.5$で各$0.25$），さらに意味を持たない交差項$B_1 A_2$，$B_2 A_1$が混入する．加えてLoRA分解には再パラメータ化の自由度があり，任意の正則行列$R$に対して$BA = (BR)(R^{-1}A)$が同一の$\Delta W$を与えるため，$A$，$B$を別々に扱う演算は同一個体の等価な表現の間でも結果が変わってしまう．KnOTS\cite{stoica2024knots}は，独立に学習されたLoRA由来の$\Delta W$は互いの整合（alignment）が低く，この種の素朴なパラメータ空間マージが性能劣化の主因になることを示している．
+も追加の推論なしに計算できる．Banzhaf値は，特性関数に雑音があるときに順位が安定しやすい\cite{wang2023databanzhaf}．選抜にはShapley値を用い，Banzhaf値は順位の頑健性を確かめるために記録する．
 
-\textbf{提案する交叉（$\Delta W$空間ブレンド＋SVD再分解）}．本研究の主方式は，補間を再パラメータ化不変な$\Delta W$空間で行う．各モジュール$m$について:
-\begin{enumerate}
-\item 実効更新行列を補間する:
+\section{進化的社会学習}
+\label{sec:3.5}
+
+世代$t$（$t \geq 1$）の手続きは，親である世代$t-1$の社会$\mathcal{T}^{(t-1)}$の議論から学習データを作り，役割ごとに子を学習・交叉し，チーム貢献度で次の代表を選ぶ，という流れである（Algorithm~\ref{alg:evosocial}）．個体は議論で得た経験を学習して重みに取り込み，それが子に引き継がれる．これは獲得形質の継承であり，ラマルク的な進化\cite{whitley1994lamarckian}に当たる．学習（個体が他者から学ぶこと）と選抜（集団が代表を選ぶこと）の二重の継承を持つ点で，文化的進化\cite{boyd1985culture}の構図とも対応する．
+
+\subsection{社会の議論}
+\label{sec:3.5.1}
+
+世代$t$では，学習用の問題集合（世代ごとに新しい1,200問，第\ref{cha:4}章）で親の社会$\mathcal{T}^{(t-1)}$が議論する．プロトコルは\ref{sec:3.3}節と同じで，全員の答えが一致した問題ではround1を生成しない．
+
+\subsection{学習データ}
+\label{sec:3.5.2}
+
+学習データは，正解が分かる学習用の問題で，正解に至った発話だけから作る．用いるのは生成が完了した（長さの上限で打ち切られていない）発話に限る．役割$r$の代表$\rho_r$について，二つのデータを作る．
+
+\begin{itemize}
+\item \textbf{a（自己学習）}: $\rho_r$自身の，正解したround0の発話と，正解したround1の発話．round1の例は，round1の入力（自分の前回の回答と，切り詰めた他者の回答）をそのまま含む．ゲーティングの下では，round1の例は意見が割れた問題からだけ得られる．
+\item \textbf{b（社会学習）}: $\rho_r$のround0が正解でなく，他者のround0が正解した問題について，正解した他者の発話を，$\rho_r$自身のシステムプロンプト（自分のペルソナ文）の下での回答として学ぶ例．正解した他者が2体いる場合は，役割の固定順で先の1体の発話を用い，1問につき1例とする．他者から学ぶ例はすべて含め，上限に満たない分をaの例から無作為に補う．
+\end{itemize}
+
+どちらも上限は1,000例とし，aは上限を超えれば無作為に抽出する．aは「自分の成功体験から学ぶ」ことに，bは「他者の成功から学ぶ」ことに当たり，人間社会における個人学習と社会学習の区別に対応する．
+
+\subsection{LoRAの学習}
+\label{sec:3.5.3}
+
+子は親のLoRAから継続して学習する．世代1の親はLoRAを持たないので，新しいLoRAを初期化する．ベースモデルはbf16のまま量子化せずに用いる．学習と推論で同じ精度のベースモデルを使うためである．
+
+損失は，各例の最後のassistantの発話（とその終端トークン）のトークンだけに掛ける．プロンプトの部分（ペルソナ文，問題，他者の回答）には掛けない．例$e$のトークン列を$u_{1:L_e}$，損失を掛ける位置の集合を$\Lambda_e$とする．ラベルのトークンの累計が$N_{\mathrm{tok}}$に達するまで例を積み上げたものを1回の更新の単位$\mathcal{B}$とし，その損失を
 \begin{equation}
-\Delta W'^{(m)} = (1-\alpha)\, B_1^{(m)} A_1^{(m)} + \alpha\, B_2^{(m)} A_2^{(m)}, \qquad \alpha \sim \mathcal{U}(0.3,\, 0.7).
+\mathcal{L}_{\mathcal{B}} = - \frac{1}{N_{\mathrm{tok}}} \sum_{e \in \mathcal{B}} \sum_{\ell \in \Lambda_e} \log p_\theta(u_\ell \mid u_{<\ell}), \qquad N_{\mathrm{tok}} = 32{,}768
+\label{eq:loss}
+\end{equation}
+とする．出力層の計算は$\Lambda_e$の位置だけで行い，長いプロンプトでもメモリを節約する．学習率は新しいLoRAで$1 \times 10^{-4}$，継続学習で$5 \times 10^{-5}$とし，1エポック学習する（他の設定は第\ref{cha:4}章）．
+
+\subsection{兄弟交叉}
+\label{sec:3.5.4}
+
+同じ親から学習した二つの子aとbを$\Delta W$の空間で交叉して，第三の子cを作る．LoRAの因子$A$，$B$を別々に補間すると，意図した補間と一致せず，意味を持たない交差項が混入する（\ref{sec:2.4.2}項，\cite{stoica2024knots}）．そこで補間を$\Delta W$の空間で行う．各モジュール$m$について
+\begin{equation}
+\Delta W_c^{(m)} = (1-\alpha)\, B_a^{(m)} A_a^{(m)} + \alpha\, B_b^{(m)} A_b^{(m)}, \qquad \alpha = 0.5
 \label{eq:blend}
 \end{equation}
-\item $\Delta W'^{(m)}$をランダム化SVD\cite{halko2011finding}（oversampling $q = \min(r + 8, \min(d_{\mathrm{out}}, d_{\mathrm{in}}))$，power iteration 4回）で分解し，上位$r$成分$U_r \Sigma_r V_r^\top$に切り詰めて子のLoRA行列対を再構成する:
+を作り，ランダム化SVD\cite{halko2011finding}で上位$r$成分$U_r \Sigma_r V_r^\top$を求めて
 \begin{equation}
-B'^{(m)} = U_r \Sigma_r^{1/2}, \qquad A'^{(m)} = \Sigma_r^{1/2} V_r^\top.
+B_c^{(m)} = U_r \Sigma_r^{1/2}, \qquad A_c^{(m)} = \Sigma_r^{1/2} V_r^\top
 \label{eq:svd}
 \end{equation}
-\end{enumerate}
+とする．子cの更新$B_c A_c$は，補間した$\Delta W_c$のrank-$r$での最良近似（ランダム化SVDの精度の範囲で）である．aとbは同じ$\gamma$を持つので，$\Delta W$の補間は実効的な更新$\gamma\,\Delta W$の補間と等しい．
 
-これにより子の実効更新$B'A' = U_r \Sigma_r V_r^\top$は，補間された$\Delta W'$のFrobeniusノルム最良rank-$r$近似（Eckart--Youngの意味で，ランダム化SVDによる近似精度の範囲内）となり，交差項の混入と再パラメータ化依存性の両方が排除される．特異値の平方根を$A$，$B$に均等配分するのは，両行列のスケールを揃え後続の突然変異ノイズ（テンソルの標準偏差に対する相対スケール）が偏らないようにするためである．親同士のrankと対象モジュール集合の一致は実行時に検証する．naive方式は実装内に保持し，アブレーションA3として比較可能な形にした．
+交叉の相手を兄弟に限るのは，独立に学習したLoRA同士の平均は性能を損ないやすいからである\cite{zhuang2025coto}．共通の種となるアダプタから分岐したLoRAは同じ部分空間に留まり，合成できるようになる\cite{salamanca2024seeded}．同じ事前学習モデルから微調整した重みの平均が精度を上げるModel Soups\cite{wortsman2022model}と同じく，兄弟の平均は，両者の学習内容を併せ持つ中間の個体を与えると期待できる．
 
-\textbf{交叉の親選択}．役割$r$の子は，次期代表$\rho_r^{(t+1)}$を第一親，同役割サブ集団の残余個体のうち適応度最良のものを第二親として生成する（$K = 2$では残余は1個体）．混合比$\alpha$は世代・役割ごとに$\mathcal{U}(0.3, 0.7)$から再抽出する．
+\subsection{選抜}
+\label{sec:3.5.5}
 
-\subsection{ガウス突然変異}
-\label{sec:3.4.4}
-
-交叉で得た子アダプタの各テンソル$W_k$に対し，独立に確率$\rho_{\mathrm{mut}} = 0.3$で加法的ガウスノイズを付加する:
+役割$r$の候補を
 \begin{equation}
-W_k \leftarrow W_k + \varepsilon_k, \qquad \varepsilon_k \sim \mathcal{N}\!\big(0,\ (\sigma_{\mathrm{mut}} \cdot \mathrm{std}(W_k))^2 I\big), \qquad \sigma_{\mathrm{mut}} = 0.02.
-\label{eq:mutation}
+\mathcal{C}_r^{(t)} = \{\rho_r^{(t-1)},\ a_r^{(t)},\ b_r^{(t)},\ c_r^{(t)}\}
+\label{eq:candidates}
 \end{equation}
-ノイズ幅を各テンソルの経験標準偏差$\mathrm{std}(W_k)$に対する相対値とすることで，層・モジュールごとに大きく異なるパラメータスケールに自動適応する．突然変異はシード指定により完全に再現可能である．
+とする．親$\rho_r^{(t-1)}$を候補に残すのは，子がすべて親より悪い場合に親を残せるようにするため（エリート保存）である．
 
-\subsection{世代ループ全体}
-\label{sec:3.4.5}
+提案手法（系統S）は，親の社会の文脈（式(\ref{eq:team})）で各候補の厳密Shapley値をdevで計算し，役割ごとに値が最大の候補を次の代表とする．
+\begin{equation}
+\rho_r^{(t)} = \mathop{\mathrm{arg\,max}}_{c \in \mathcal{C}_r^{(t)}} \phi_c
+\label{eq:selection}
+\end{equation}
+3役割の代表は，同じ文脈（親の社会）の下で同時に選ぶ．同値の場合は，個体名の辞書順で後のものを選ぶ（決定的な規則）．
 
-以上を統合した手続きをAlgorithm~\ref{alg:coevolution}に示す．世代数は$G = 6$とする．次世代サブ集団は各役割とも「エリート代表1＋交叉・突然変異による子1」の$K = 2$構成である．
+比較のため，同じ候補から単独の精度$v(\{c\})$が最大のものを選ぶ系統A1と，選抜を行わず常に社会学習の子$b_r^{(t)}$を代表とする系統Nを定義する（第\ref{cha:4}章）．
+
+\subsection{アルゴリズム}
+\label{sec:3.5.6}
+
+以上をAlgorithm~\ref{alg:evosocial}にまとめる．
 
 \begin{algorithm}[htbp]
-\caption{チームレベルShapley適応度による協調的共進化}
-\label{alg:coevolution}
+\caption{進化的社会学習（系統S）}
+\label{alg:evosocial}
+\renewcommand{\algorithmicrequire}{\textbf{入力:}}
+\renewcommand{\algorithmicensure}{\textbf{出力:}}
+\renewcommand{\algorithmiccomment}[1]{\hfill $\triangleright$ #1}
 \small
 \begin{algorithmic}[1]
-\REQUIRE 役割別SFT済みLoRA $\{x_r\}_{r \in \mathcal{R}}$，適応度セット$D_{\mathrm{fit}}$，世代数$G$，ラウンド数$R$，$\sigma_{\mathrm{share}}$，$\rho_{\mathrm{mut}}$，$\sigma_{\mathrm{mut}}$
-\ENSURE 最終世代の代表チーム$\{\rho_r^{(G)}\}_{r \in \mathcal{R}}$
-\FOR{$r \in \mathcal{R}$}
-    \STATE $P_r \leftarrow \{\, x_r,\ \mathrm{Mutate}(x_r;\ \rho{=}1.0,\ \sigma_{\mathrm{mut}}) \,\}$；\quad $\rho_r \leftarrow x_r$ \COMMENT{世代0の初期化}
-\ENDFOR
-\FOR{$t = 0, \dots, G-1$}
-    \STATE 連合評価キャッシュ $C \leftarrow \emptyset$
-    \FOR{$r \in \mathcal{R}$，$c \in P_r$}
-        \STATE $T(c) \leftarrow \{c\} \cup \{\rho_{r'} \mid r' \neq r\}$ \COMMENT{適応度評価}
-        \FORALL{$S \subseteq T(c)$，$S \neq \emptyset$}
-            \IF{$S \notin C$}
-                \STATE $C[S] \leftarrow v(S)$ \COMMENT{debate/soloを実測}
-            \ENDIF
-        \ENDFOR
-        \STATE $\phi_c \leftarrow \mathrm{Shapley}(c, \{C[S]\})$ \COMMENT{式(\ref{eq:shapley})}
+\REQUIRE 世代0の社会$\mathcal{T}^{(0)} = \{(\varnothing, \pi_r)\}_{r \in \mathcal{R}}$，dev $D$，学習用の問題集合$Q_0, \dots, Q_{G-1}$，世代数$G$
+\ENSURE 最終世代の社会$\mathcal{T}^{(G)}$
+\FOR{$t = 1, \dots, G$}
+    \STATE $\mathcal{T}^{(t-1)}$が$Q_{t-1}$で議論する（ゲーティングあり） \COMMENT{\ref{sec:3.5.1}項}
+    \FOR{$r \in \mathcal{R}$}
+        \STATE 正解に至った発話から$\mathrm{Data}_a$（自己学習）と$\mathrm{Data}_b$（社会学習）を作る \COMMENT{\ref{sec:3.5.2}項}
+        \STATE $a_r^{(t)} \leftarrow \mathrm{Train}(\rho_r^{(t-1)}, \mathrm{Data}_a)$，\ $b_r^{(t)} \leftarrow \mathrm{Train}(\rho_r^{(t-1)}, \mathrm{Data}_b)$ \COMMENT{継続学習}
+        \STATE $c_r^{(t)} \leftarrow \mathrm{DeltaBlendSVD}(a_r^{(t)}, b_r^{(t)}; \alpha = 0.5)$ \COMMENT{兄弟交叉}
+        \STATE $\mathcal{C}_r^{(t)} \leftarrow \{\rho_r^{(t-1)}, a_r^{(t)}, b_r^{(t)}, c_r^{(t)}\}$
     \ENDFOR
-    \FOR{$r \in \mathcal{R}$，$c \in P_r$}
-        \STATE $d(c,c') \leftarrow$ solo予測不一致率（$C$の副産物） \COMMENT{fitness sharing}
-        \STATE $F(c) \leftarrow \phi_c \cdot s(c)$ \COMMENT{式(\ref{eq:sharing})，式(\ref{eq:fitness})}
+    \FOR{$r \in \mathcal{R}$，$c \in \mathcal{C}_r^{(t)}$}
+        \STATE $T(c) \leftarrow \{c\} \cup \{\rho_{r'}^{(t-1)} \mid r' \neq r\}$
+        \STATE $T(c)$の全7連合を$D$で議論させ，$v(S)$を得る（round0は個体ごとに共有，ゲーティングあり）
+        \STATE $\phi_c \leftarrow \mathrm{Shapley}(c; v)$，\ $\beta_c \leftarrow \mathrm{Banzhaf}(c; v)$ \COMMENT{式(\ref{eq:shapley})，(\ref{eq:banzhaf})}
     \ENDFOR
     \FOR{$r \in \mathcal{R}$}
-        \STATE $\rho_r \leftarrow \mathop{\mathrm{arg\,max}}_{c \in P_r} F(c)$ \COMMENT{選抜（エリート保存）}
+        \STATE $\rho_r^{(t)} \leftarrow \mathop{\mathrm{arg\,max}}_{c \in \mathcal{C}_r^{(t)}} \phi_c$ \COMMENT{選抜}
     \ENDFOR
-    \IF{$t < G-1$}
-        \FOR{$r \in \mathcal{R}$}
-            \STATE $p \leftarrow \mathop{\mathrm{arg\,max}}_{c \in P_r \setminus \{\rho_r\}} F(c)$ \COMMENT{次世代生成}
-            \STATE $\alpha \sim \mathcal{U}(0.3, 0.7)$
-            \STATE $\mathit{child} \leftarrow \mathrm{Mutate}(\mathrm{DeltaBlendSVD}(\rho_r, p, \alpha);\ \rho_{\mathrm{mut}}, \sigma_{\mathrm{mut}})$
-            \STATE $P_r \leftarrow \{\, \rho_r,\ \mathit{child} \,\}$
-        \ENDFOR
-    \ENDIF
+    \STATE $\mathcal{T}^{(t)} \leftarrow \{\rho_r^{(t)}\}_{r \in \mathcal{R}}$をtestで評価する \COMMENT{推移の記録．選抜には使わない}
 \ENDFOR
-\RETURN $\{\rho_r\}_{r \in \mathcal{R}}$
+\RETURN $\mathcal{T}^{(G)}$
 \end{algorithmic}
 \end{algorithm}
 
-全個体はvLLMの動的LoRAロードAPIにより同一サーバへ世代ごとに登録され，進化は勾配計算を一切伴わない（重み操作は交叉・突然変異のみ）．世代ごとの評価ログ（各候補の$\phi_c$，solo精度，チーム精度，全連合精度，sharing距離，選抜結果）はJSONとして逐次永続化され，Spotインスタンスのプリエンプション後も再開可能である．
-
 \section{計算量の分析}
-\label{sec:3.5}
+\label{sec:3.6}
 
-\textbf{連合評価数}．本手法の支配的コストはLLM推論による連合評価である．候補1個体あたり必要な連合は$2^3 - 1 = 7$だが，代表チーム文脈の構造上，多くの連合が候補間で共有される．世代内の連合評価キャッシュを用いると，代表のみからなる連合（solo 3＋対3＋3体1の計7個）は全候補で共有され，代表でない候補（各役割の子，計$m$個体）だけが固有の連合（自身のsolo 1，代表との対2，3体1の計4個）を追加する．したがって世代あたりの実評価数は
+本手法の費用の大部分はLLMの生成が占め，なかでも他者の回答を入力に含むround1の生成が重い．
+
+\textbf{生成の共有}．round0の出力は，エージェントと問題の組ごとに一度だけ生成して保存し，そのエージェントを含むすべての連合で共有する．round1の出力は（エージェント，相手の集合，問題）の組ごとに保存する．同じ呼び出しを二度生成することはない．
+
+\textbf{選抜の費用}．代表チーム文脈の7連合のうち，文脈だけからなる3連合（$\{\rho_1\}$，$\{\rho_2\}$，$\{\rho_1, \rho_2\}$）は，同じ役割の全候補で共有される．新しい候補1体に固有の呼び出しは，devの1問あたり，round0が1回，2体の連合$\{c, \rho_1\}$と$\{c, \rho_2\}$のround1が各2回，3体の連合$T(c)$のround1が3回である．新しい候補の数を$m$（3役割で子が3体ずつなら$m = 9$），devの問題数を$|D|$とすると，新しい候補に固有のround1は
 \begin{equation}
-N_{\mathrm{coal}} = 7 + 4m
-\label{eq:ncoal}
+N_{\mathrm{r1}} \le m \, (2 + 2 + 3)\, |D| = 7 m |D|
+\label{eq:ncalls}
 \end{equation}
-であり，$K = 2$（役割あたり非代表候補1）では$m = 3$，$N_{\mathrm{coal}} = 19$となる．キャッシュがなければ$6 \times 7 = 42$評価が必要であり，共有キャッシュにより約55\%が削減される．なおエリート代表自身も候補として評価されるが，その代表チーム文脈は代表のみの7連合と完全に一致するため追加コストを生まない．
+回以下である．これに，親の社会の2体の連合と3体の連合のround1（最大$9|D|$回）が加わるが，前世代で計算済みのものは再利用する．
 
-\textbf{LLM呼び出し数}．連合$S$の1問題あたりの生成回数は$|S| \cdot (R+1)$（round 0＋$R$ラウンド，各ラウンドで全員が1生成）である．$R = 1$，$N_{\mathrm{fit}} = 100$のとき，世代あたりの呼び出し数は
+\textbf{ゲーティングの効果}．ゲーティングの下では，連合$S$のround1は，その連合のround0が一致しない問題でだけ必要になる．連合$S$で全員の回答が一致する問題の割合を$u_S$とすると，
 \begin{equation}
-\underbrace{100 \times (3 \cdot 1 + 3 \cdot 4 + 1 \cdot 6)}_{\mbox{\scriptsize 代表のみの7連合}}
-+ \underbrace{3 \times 100 \times (1 \cdot 1 + 2 \cdot 4 + 1 \cdot 6)}_{\mbox{\scriptsize 子3個体の固有12連合}}
-= 2{,}100 + 4{,}500 = 6{,}600
-\label{eq:calls}
+\mathbb{E}[N_{\mathrm{r1}}] = \sum_{S} |S| \, (1 - u_S) \, |D|
+\label{eq:ncalls_gated}
 \end{equation}
-であり，$G = 6$世代の進化全体で約$4.0 \times 10^4$回（各生成は最大512トークン）となる．問題間は独立なため，クライアント側で問題単位に並列化（既定16並列）し，vLLMサーバの連続バッチングで吸収する．
+となる（和は新しい候補に固有の2体と3体の連合について取る）．3体のチームでround0が全員一致する問題の割合は，dev-Aの既定トリオで約6割だった（第\ref{cha:4}章）．2体の連合の一致率は，その2体を含む3体のチームの一致率以上であるため，round1の呼び出しは少なくともその分だけ減る．
 
-\textbf{その他のコスト}．厳密Shapley値の計算自体は$n = 3$の全部分集合和で$O(2^n)$だが$n = 3$では無視できる．fitness sharingの行動距離はsolo評価のper-item予測を再利用するため追加推論はゼロである．交叉のランダム化SVDは各モジュールの$d_{\mathrm{out}} \times d_{\mathrm{in}}$行列に対するrank-$(r+8)$分解であり，全体でCPU数十秒程度と，推論コストに対して無視できる．進化全体で学習（勾配更新）は世代0のQLoRA学習のみに限られる点が，RLによる議論最適化（MAPoRL\cite{park2025maporl}）と対照的な本手法の計算的特徴である．
+\textbf{学習と交叉の費用}．1世代で学習する子は，3役割についてaとbの計6体であり，それぞれ1,000例以下を1エポック学習する．交叉の子cは学習を伴わず，ランダム化SVDによる重みの操作だけで作れる．

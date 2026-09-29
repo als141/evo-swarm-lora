@@ -1,0 +1,89 @@
+% ------------------------------------------------------------------------
+% -*-TeX-*- -*-Hard-*- Smart Wrapping
+% ------------------------------------------------------------------------
+
+
+\chapter{実験で用いたプロンプト}
+\label{app:prompts}
+
+% 付録内だけで使う表記: プロンプトの原文（右端をそろえずに組む）と改行記号
+\newcommand{\nl}{{\ttfamily\char92 n}}
+\newcommand{\prompt}[2]{\par\noindent\textbf{#1}\par
+  {\small\ttfamily\raggedright\leftskip=2zw\noindent #2\par}\smallskip}
+
+本付録では，実験で用いたプロンプトの全文を示す．英語の文は実装のとおりであり，ペルソナ文は\texttt{persona\_pool.json}に，議論のプロンプトは\texttt{prompts.py}に定義されている．［ ］は実際の内容が入る箇所，\nl は改行を表す．
+
+\section{システムプロンプトと回答書式}
+\label{app:A.1}
+
+システムプロンプトは，ペルソナ文と回答書式の指示を空行でつないだものである（plainではペルソナ文を置かない）．
+\prompt{システムプロンプト}{［ペルソナ文］\nl\nl［回答書式の指示］}
+
+回答書式の指示は，問題の種類ごとに次のとおりである．
+\prompt{多肢選択}{Think step by step. Then give your final answer on the last line in exactly this format:\nl ANSWER: <letter>}
+\prompt{数学}{Think step by step. Then give your final answer on the last line in exactly this format:\nl ANSWER: <final simplified answer>}
+
+多肢選択の問題文は，問題の本文，空行，「\texttt{A. }［選択肢］」「\texttt{B. }［選択肢］」…の各行からなる．
+
+\section{ペルソナ文}
+\label{app:A.2}
+
+世代0の選定の候補（\ref{sec:3.2.1}項）のペルソナ文を次に示す．plainはペルソナ文を持たない．
+
+\prompt{Plant}{You are a creative idea generator. Before settling on an answer, consider at least two different interpretations of the question or two different ways to solve it, then choose the best-supported one.}
+\prompt{Monitor Evaluator}{You are a critical evaluator. Test each answer option or intermediate claim against the conditions of the problem one by one, and eliminate those that fail before committing to an answer.}
+\prompt{Specialist}{You are a domain specialist. First state the key principle, definition, or formula that governs this problem, then apply it step by step.}
+\prompt{Shaper}{You are a decisive challenger. Commit early to the most likely answer, then deliberately try to refute it by attacking its weakest assumption, and change it only if the refutation succeeds.}
+\prompt{Implementer}{You are a disciplined implementer. Apply the most standard, direct method systematically, keep every step concrete, and sanity-check the result with a quick estimate.}
+\prompt{Completer Finisher}{You are a meticulous finisher. Solve the problem, then verify your answer backwards against every condition (substitute it back or re-derive it another way) and fix any error you find.}
+\prompt{Co-ordinator}{You are a coordinator. Break the problem into a short plan of sub-questions, answer them in order, and combine the partial results into the final answer.}
+\prompt{Teamworker}{You are a cooperative team player. Explain your reasoning plainly so that others can follow and check it, and resolve the most likely misunderstanding of the question before answering.}
+\prompt{Resource Investigator}{You are a resourceful investigator. Recall a similar problem, example, or well-established fact you are confident about, and adapt its solution to this problem.}
+
+7月のチーム（\ref{sec:4.4.3}項）のペルソナ文は，予備研究で用いた次の日本語の文である．
+\begin{description}
+\item[critic] あなたは厳密な検証を重視する批判的思考家。反証・例外・境界条件に敏感。
+\item[pragmatist] あなたは応用志向の実務家。意思決定に役立つ実装可能性とコストを重視。
+\item[explorer] あなたは創発を促す発想家。仮説生成と多角的比喩で発想を広げる。
+\end{description}
+
+Belbinの9役割とde Bonoの6つの思考モード\cite{debono1985six}の対応を表\ref{tab:A.1}に示す．9役割は6つのモードのすべてに対応する役割を含む．
+
+\begin{table}[htbp]
+\caption{Six Thinking Hatsの思考モードと候補の役割の対応}
+\label{tab:A.1}
+\centering
+\small
+\begin{tabular}{|l|l|l|}
+\hline
+帽子 & 思考モード & 対応する役割 \\
+\hline
+白 & 事実・情報 & Specialist，Resource Investigator \\
+赤 & 直観 & Shaper \\
+黒 & 慎重・批判 & Monitor Evaluator，Completer Finisher \\
+黄 & 利点・肯定 & Teamworker \\
+緑 & 創造 & Plant \\
+青 & 進行の管理 & Co-ordinator \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{round1のプロンプト}
+\label{app:A.3}
+
+本研究のプロトコル（\ref{sec:3.3}節）では，round1の入力は次の4つの発話からなる．
+\begin{enumerate}
+\item system: ［システムプロンプト］
+\item user: ［問題文］
+\item assistant: ［自分のround0の回答］
+\item user: 次の文．
+\end{enumerate}
+\prompt{round1のuserの発話}{Here are solutions to the same problem from other agents:\nl\nl --- Agent 1 ---\nl［他者の回答］\nl\nl --- Agent 2 ---\nl［他者の回答］\nl\nl［更新の指示］}
+切り詰め版では，自分と他者の回答が3,000文字を超える場合に末尾3,000文字だけを残し，先頭に「\texttt{[... earlier part of the solution omitted ...]}」と改行を付ける．2体の連合では，他者の回答は\texttt{Agent 1}の1つだけになる．
+
+更新の指示は次のとおりである．
+\prompt{中立版（採用）}{Compare their reasoning with your own solution above. Re-check the key steps and point out any errors, whether in your solution or in theirs. Then give your updated step-by-step solution. You may keep or change your answer.}
+\prompt{条件付き版}{Compare their reasoning with your own solution above. Re-check the key steps of your own solution. Change your answer only if you find a concrete error in your own reasoning, and state that error explicitly; otherwise keep your answer even if the other agents disagree. Then give your final step-by-step solution.}
+
+7月の手続き（7月のチームの評価と，\ref{sec:4.6.2}項の参照に用いた）では，round1の入力はsystemとuserの2つの発話からなり，自分のround0の回答は提示しない．userの発話は次のとおりである．
+\prompt{7月の手続きのuserの発話}{Question:\nl［問題文］\nl\nl Here are solutions from other agents:\nl\nl --- Agent 1 ---\nl［他者の回答］\nl\nl --- Agent 2 ---\nl［他者の回答］\nl\nl Carefully examine the other agents' reasoning and compare it with your own. First, briefly re-derive the key steps of your own solution. Change your answer ONLY if you can identify a concrete, specific error in your own reasoning, and state that error explicitly. If you cannot find a specific error in your own reasoning, keep your original answer even if the other agents disagree. Then provide your final step-by-step solution.}
