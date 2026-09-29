@@ -68,6 +68,7 @@ class Runner:
         self.state_path = self.out / "state.json"
         self.state = json.loads(self.state_path.read_text()) if self.state_path.exists() else {
             "lineage": args.lineage, "select": args.select, "generations": {}}
+        self.test_seeds = [int(x) for x in str(args.test_seeds).split(",") if x.strip()]
         self.dev_ids = [i.item_id for i in load_items(args.dev)]
         self.test_ids = [i.item_id for i in load_items(args.test)]
         paths = [args.dev, args.test] + [str(Path(args.train_dir) / f"train_g{k}.jsonl")
@@ -111,16 +112,26 @@ class Runner:
             self.adapters[d["model"]] = d["adapter"]
         return dict_to_agent(d)
 
-    def macro_acc(self, coalition: List[Agent], ids: List[str]) -> Dict[str, float]:
+    def macro_acc(self, coalition: List[Agent], ids: List[str], seed: int = 1) -> Dict[str, float]:
         soc = self.society()
         per = {b: [] for b in BENCHES}
         for item_id in ids:
-            per[self.items[item_id].bench].append(soc.coalition_result(coalition, item_id, 1)["correct"])
+            per[self.items[item_id].bench].append(soc.coalition_result(coalition, item_id, seed)["correct"])
         out = {b: (sum(v) / len(v) if v else None) for b, v in per.items()}
         vals = [v for v in out.values() if v is not None]
         out["macro"] = sum(vals) / len(vals)
         out["micro"] = sum(sum(v) for v in per.values()) / sum(len(v) for v in per.values())
         return out
+
+    def eval_test(self, g: dict, reps: List[Agent], label: str, seeds: List[int]) -> None:
+        """代表チームを test で評価する。主要比較（世代0・最終世代）は生成 seed を複数使う（事前登録 §5）。"""
+        self.ensure_server()
+        for seed in seeds:
+            self.society().ensure_coalitions([reps], self.test_ids, seed, label=f"{label}_test_s{seed}")
+        g["test_team"] = self.macro_acc(reps, self.test_ids, 1)
+        g["test_team_by_seed"] = {str(s): self.macro_acc(reps, self.test_ids, s) for s in seeds}
+        g["steps"]["test"] = True
+        self.save()
 
     # ------------------------------------------------------------------ generation 0
     def generation0(self) -> None:
@@ -138,11 +149,7 @@ class Runner:
             g["steps"]["dev"] = True
             self.save()
         if not self.args.skip_test and not g["steps"].get("test"):
-            self.ensure_server()
-            self.society().ensure_coalitions([reps], self.test_ids, 1, label="g0_test")
-            g["test_team"] = self.macro_acc(reps, self.test_ids)
-            g["steps"]["test"] = True
-            self.save()
+            self.eval_test(g, reps, "g0", self.test_seeds)
         self.log(f"g0 dev={g.get('dev_team')} test={g.get('test_team')}")
 
     # ------------------------------------------------------------------ generation t
@@ -339,11 +346,7 @@ class Runner:
             g["steps"]["dev_team"] = True
             self.save()
         if not self.args.skip_test and not g["steps"].get("test"):
-            self.ensure_server()
-            self.society().ensure_coalitions([reps_agents], self.test_ids, 1, label=f"g{t}_test")
-            g["test_team"] = self.macro_acc(reps_agents, self.test_ids)
-            g["steps"]["test"] = True
-            self.save()
+            self.eval_test(g, reps_agents, f"g{t}", self.test_seeds if final_gen else [1])
         self.log(f"g{t} dev={g.get('dev_team')} test={g.get('test_team')}")
 
     def run(self) -> None:
@@ -381,6 +384,8 @@ def main() -> None:
     parser.add_argument("--lr-next", type=float, default=5e-5)
     parser.add_argument("--share-until", type=int, default=1)
     parser.add_argument("--skip-test", action="store_true")
+    parser.add_argument("--test-seeds", default="1,2",
+                        help="世代0と最終世代の test で使う生成 seed（途中世代は seed 1 のみ）")
     parser.add_argument("--external-base-url", default=None, help="結合試験用: 既存サーバを使う")
     parser.add_argument("--fake-train", action="store_true", help="結合試験用: 学習をダミーに置換")
     args = parser.parse_args()
