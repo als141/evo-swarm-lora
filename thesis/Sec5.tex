@@ -129,7 +129,58 @@ SC@9 & 0.741 & 0.939 & 0.484 & 0.721 \\
 \subsection{段階3: 確認と決定}
 \label{sec:5.2.3}
 
-% TODO(第2パイロット完了後): F0〜F3とCのdev-B精度（表），決定規則の適用結果，採用チームの厳密Shapley値とBanzhaf値を書く．
+段階1と段階2の結果から，最終候補は，F0（既定トリオ），F1（段階2で観測した精度が最大のShaper，Specialist，Teamworker），F2（主効果の上位3役割のMonitor Evaluator，Specialist，Teamworker），F3（単独の精度の上位3役割のMonitor Evaluator，Implementer，Teamworker）となった．これにplain 3体のチーム（C）を加え，dev-Bで議論させた（表\ref{tab:5.4}）．
+
+\input{tab/persona_stage3}
+\begin{table}[htbp]
+\caption{段階3: 最終候補のdev-Bでのmacro精度（200問，ゲーティングなし）}
+\label{tab:5.4}
+\centering
+\small
+\begin{tabular}{|l|l|r|}
+\hline
+候補 & チーム & macro精度（\%） \\
+\hline
+\TabPersonaC
+\hline
+\end{tabular}
+\end{table}
+
+F0〜F3のうちdev-Bの精度が最大だったのはF2（79.6\%）で，F0（78.9\%）との差は$+0.7$pt，90\%信頼区間は$[-3.6, +4.9]$だった．事前に定めた規則（$+1.5$pt以上，かつ90\%信頼区間の下限が0を超える）を満たさないため，既定トリオ（Implementer，Monitor Evaluator，Plant）を世代0の社会として採用した．単独の精度の上位3役割で作ったF3は74.0\%で最も低かった．単独で強い役割を集めても，チームとして強いとは限らないことを示す一例である．plain 3体のチームは79.1\%であり，dev-Aと同じく，ペルソナを持つチームとの差は小さかった．
+
+採用したチームについて，dev-Bで全7連合の精度を実測し，厳密Shapley値とBanzhaf値を求めた（表\ref{tab:5.5}）．Shapley値はPlant（0.290），Monitor Evaluator（0.258），Implementer（0.241）の順だった．Plantは単独の精度ではMonitor Evaluatorに及ばないが，Implementerとの2体の連合が80.7\%と3体のチーム（78.9\%）を上回るなど，他者と組んだときの上積みが大きく，チームへの貢献は最も大きかった．Banzhaf値の順位もShapley値と同じだった．
+
+\begin{table}[htbp]
+\caption{採用したチーム（既定トリオ）の連合の精度と，厳密Shapley値・Banzhaf値（dev-B，200問）}
+\label{tab:5.5}
+\centering
+\small
+\begin{tabular}{|l|r|}
+\hline
+連合 & macro精度（\%） \\
+\hline
+Implementer & 68.0 \\
+Monitor Evaluator & 73.1 \\
+Plant & 72.4 \\
+Implementer＋Monitor Evaluator & 73.6 \\
+Implementer＋Plant & 80.7 \\
+Monitor Evaluator＋Plant & 78.9 \\
+Implementer＋Monitor Evaluator＋Plant & 78.9 \\
+\hline
+\end{tabular}
+\quad
+\begin{tabular}{|l|r|r|}
+\hline
+役割 & Shapley値 & Banzhaf値 \\
+\hline
+Implementer & 0.241 & 0.192 \\
+Monitor Evaluator & 0.258 & 0.208 \\
+Plant & 0.290 & 0.241 \\
+\hline
+\end{tabular}
+\end{table}
+
+以上から，世代0のペルソナは，チーム役割理論から網羅的に作った候補の中で，事前に定めた規則のもとで既定トリオを置き換える根拠が得られなかったため，既定トリオとした．同時に，本研究のパイロットは，推論の手続きとして定義したペルソナの違いが，議論チームの精度をplainの再サンプリング以上には変えないことも示した．世代0でのペルソナの選び方は精度をほとんど左右せず，社会の精度を上げるには，ペルソナの選択とは別の仕組みが必要である．本研究ではそれを，議論からの学習とチームへの貢献による選抜に求める（\ref{sec:5.3}節）．
 
 \section{進化的社会学習}
 \label{sec:5.3}

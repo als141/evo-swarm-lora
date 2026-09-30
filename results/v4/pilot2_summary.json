@@ -543,5 +543,51 @@
   },
   "balance_minus_homogeneous": -0.0101,
   "balance_perm_p": 0.4909
+ },
+ "stage3": {
+  "finalists": {
+   "F0_default": "implementer+monitor_evaluator+plant",
+   "F1_best_observed": "shaper+specialist+teamworker",
+   "F2_main_effect_top3": "monitor_evaluator+specialist+teamworker",
+   "F3_solo_top3": "implementer+monitor_evaluator+teamworker",
+   "C_plain": "plain+plain_b+plain_c"
+  },
+  "acc_devB": {
+   "implementer+monitor_evaluator+plant": 0.7889,
+   "implementer+monitor_evaluator+teamworker": 0.74,
+   "monitor_evaluator+specialist+teamworker": 0.7956,
+   "plain+plain_b+plain_c": 0.7911,
+   "shaper+specialist+teamworker": 0.7889
+  },
+  "best": "F2_main_effect_top3",
+  "best_vs_default": {
+   "diff_macro": 0.0067,
+   "ci90": [
+    -0.0356,
+    0.0489
+   ],
+   "p": 0.8622068896555172
+  },
+  "adopted": "implementer+monitor_evaluator+plant",
+  "rule": "F* が既定トリオを +1.5pt 以上かつ 90%CI 下限 > 0 で上回るときだけ採用（それ以外は既定トリオ）",
+  "shapley_devB": {
+   "p.implementer": 0.2411,
+   "p.monitor_evaluator": 0.2578,
+   "p.plant": 0.29
+  },
+  "banzhaf_devB": {
+   "p.implementer": 0.1917,
+   "p.monitor_evaluator": 0.2083,
+   "p.plant": 0.2406
+  },
+  "coalition_values_devB": {
+   "p.implementer": 0.68,
+   "p.monitor_evaluator": 0.7311,
+   "p.plant": 0.7244,
+   "p.implementer+p.monitor_evaluator": 0.7356,
+   "p.implementer+p.plant": 0.8067,
+   "p.monitor_evaluator+p.plant": 0.7889,
+   "p.implementer+p.monitor_evaluator+p.plant": 0.7889
+  }
  }
 }
