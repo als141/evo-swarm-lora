@@ -26,7 +26,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--personas", required=True, help="personas_selected.json（order が役割の並び）")
     parser.add_argument("--state", action="append", default=[], help="系統名=state.json のパス（複数可）")
-    parser.add_argument("--test-seeds", default="1,2")
+    parser.add_argument("--test-seeds", default="1,2", help="H2・H3 と系統の最終世代に使う生成 seed")
+    parser.add_argument("--h1-seeds", default="1,2,3,4",
+                        help="H1（S 最終 vs 世代0）に使う生成 seed（2026-09-30 の事前登録の改訂）")
     parser.add_argument("--rft-agent", default="rft.base")
     parser.add_argument("--no-c7", action="store_true")
     parser.add_argument("--match-k", default="",
@@ -35,8 +37,9 @@ def main() -> None:
     args = parser.parse_args()
 
     seeds = [int(s) for s in args.test_seeds.split(",")]
+    h1_seeds = [int(s) for s in args.h1_seeds.split(",")]
     order = json.loads(Path(args.personas).read_text())["order"]
-    conds = {"g0": team([f"p.{r}" for r in order], seeds)}
+    conds = {"g0": team([f"p.{r}" for r in order], h1_seeds)}
     finals = {}
     for spec in args.state:
         name, path = spec.split("=", 1)
@@ -49,7 +52,11 @@ def main() -> None:
                 continue
             agents = [g["reps"][r]["agent_id"] for r in order]
             label = f"{name}_final" if t == last else f"{name}_g{t}"
-            conds[label] = team(agents, seeds if t == last else [1])
+            if t == last and name == "S":
+                conds["S_final"] = team(agents, h1_seeds)        # H1 と RQ4 の比較
+                conds["S_final_s12"] = team(agents, seeds)       # H2・H3（N・A1 と seed をそろえる）
+            else:
+                conds[label] = team(agents, seeds if t == last else [1])
         finals[name] = f"{name}_final"
 
     conds["base_single"] = {"type": "single", "agent": "base", "k": 9, "gen_seeds": [1]}
@@ -61,7 +68,7 @@ def main() -> None:
         conds["c7_july"] = team(["c7.critic", "c7.pragmatist", "c7.explorer"], [1], protocol="july", gate=False)
 
     s = finals.get("S", "S_final")
-    holm = [[s, "g0"]] + [[s, finals[x]] for x in ("N", "A1") if x in finals]
+    holm = [[s, "g0"]] + [["S_final_s12", finals[x]] for x in ("N", "A1") if x in finals]
     comparisons = list(holm)
     match = [f"base_sc{int(k)}" for k in args.match_k.split(",") if k.strip()]
     for other in ["base_single", "base_sc3", "base_sc6", "base_sc9", *match, "rft_single", "rft_sc9", "c7_july"]:
