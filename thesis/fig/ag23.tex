@@ -1,0 +1,45 @@
+% 図: AG(2,3) の釣り合い型不完備ブロック計画（第3章）．9役割を Z_3^2 の点に置き，12本の直線をチームとする
+\begin{tikzpicture}[
+  font=\scriptsize,
+  pt/.style={circle, fill=black, inner sep=1.3pt},
+  lab/.style={font=\tiny, inner sep=1pt},
+  tm/.style={line width=1.6pt, opacity=0.55, line cap=round, line join=round},
+]
+\def\sp{0.95}
+% 役割の座標: x=群（0 思考, 1 行動, 2 対人），y=群内の番号
+\newcommand{\roles}[1]{%
+  \foreach \x/\y/\n in {0/0/PL,0/1/ME,0/2/SP,1/0/SH,1/1/IMP,1/2/CF,2/0/CO,2/1/TW,2/2/RI}{%
+    \node[pt] at ($(#1)+(\x*\sp,\y*\sp)$) {};
+    \node[lab, below right=0.2pt] at ($(#1)+(\x*\sp,\y*\sp)$) {\n};
+  }}
+\newcommand{\team}[5]{% 原点, 色, 点1, 点2, 点3（x,y）
+  \draw[tm, #2] ($(#1)+#3$) -- ($(#1)+#4$) -- ($(#1)+#5$);}
+% パネル1: x = 一定（同質型）
+\coordinate (A) at (0,0);
+\team{A}{red}{(0,0)}{(0,\sp)}{(0,2*\sp)}
+\team{A}{blue}{(\sp,0)}{(\sp,\sp)}{(\sp,2*\sp)}
+\team{A}{green!60!black}{(2*\sp,0)}{(2*\sp,\sp)}{(2*\sp,2*\sp)}
+\roles{A}
+\node[align=center] at ($(A)+(\sp,-0.75)$) {$x=$一定\\（同質型）};
+% パネル2: y = 一定
+\coordinate (B) at (3.3,0);
+\team{B}{red}{(0,0)}{(\sp,0)}{(2*\sp,0)}
+\team{B}{blue}{(0,\sp)}{(\sp,\sp)}{(2*\sp,\sp)}
+\team{B}{green!60!black}{(0,2*\sp)}{(\sp,2*\sp)}{(2*\sp,2*\sp)}
+\roles{B}
+\node[align=center] at ($(B)+(\sp,-0.75)$) {$y=$一定\\（バランス型）};
+% パネル3: y = x + c
+\coordinate (C) at (6.6,0);
+\team{C}{red}{(0,0)}{(\sp,\sp)}{(2*\sp,2*\sp)}
+\team{C}{blue}{(0,\sp)}{(\sp,2*\sp)}{(2*\sp,0)}
+\team{C}{green!60!black}{(0,2*\sp)}{(\sp,0)}{(2*\sp,\sp)}
+\roles{C}
+\node[align=center] at ($(C)+(\sp,-0.75)$) {$y=x+c$\\（バランス型）};
+% パネル4: y = 2x + c
+\coordinate (D) at (9.9,0);
+\team{D}{red}{(0,0)}{(\sp,2*\sp)}{(2*\sp,\sp)}
+\team{D}{blue}{(0,\sp)}{(\sp,0)}{(2*\sp,2*\sp)}
+\team{D}{green!60!black}{(0,2*\sp)}{(\sp,\sp)}{(2*\sp,0)}
+\roles{D}
+\node[align=center] at ($(D)+(\sp,-0.75)$) {$y=2x+c$\\（バランス型）};
+\end{tikzpicture}
