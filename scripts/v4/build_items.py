@@ -27,7 +27,7 @@ sys.path.insert(0, str(ROOT))
 from datasets import load_dataset  # noqa: E402
 
 from src.evo4.items import Item, format_mc_question, save_items  # noqa: E402
-from src.evo4.scoring import extract_answer, is_correct, last_boxed  # noqa: E402
+from src.evo4.scoring import extract_answer, is_correct, last_boxed, require_math_verify  # noqa: E402
 
 POOLS = ROOT / "results/reanalysis_2026-09/pools"
 INDEX = ROOT / "results/reanalysis_2026-09/cache/calls_index.jsonl.gz"
@@ -96,6 +96,7 @@ def stratified_dev(ids, p_base, n, rng):
 
 
 def main() -> None:
+    require_math_verify()  # 手元で採点するとき math-verify が無いと MATH を過小評価する
     rng = random.Random(SEED)
     mmlu, sgpqa, math500, math_test, math_train = load_sources()
     fresh = json.loads((POOLS / "test_pool_fresh.json").read_text())

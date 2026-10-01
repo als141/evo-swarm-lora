@@ -27,7 +27,7 @@ sys.path.insert(1, str(ROOT / "vendor"))
 
 from scripts.v4.stats import BENCHES, Scorer  # noqa: E402
 from src.evo4.items import index_items, load_items  # noqa: E402
-from src.evo4.scoring import is_correct  # noqa: E402
+from src.evo4.scoring import is_correct, require_math_verify  # noqa: E402
 from src.evo4.society import Agent, Society, aggregate  # noqa: E402
 from src.evo4.store import CallStore  # noqa: E402
 
@@ -213,6 +213,7 @@ def lineage_summary(state: dict) -> dict:
 
 
 def main() -> None:
+    require_math_verify()  # 手元で採点するとき math-verify が無いと MATH を過小評価する
     parser = argparse.ArgumentParser()
     parser.add_argument("--spec", required=True)
     parser.add_argument("--store", required=True)

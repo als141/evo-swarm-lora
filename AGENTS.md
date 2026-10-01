@@ -121,8 +121,8 @@ uv run python scripts/ping_vllm_persona.py --persona persona_a
 | GPUクォータ | Compute Engine は `GPUS_ALL_REGIONS=0`（GPU VM 不可）。Vertex AI は **Spot A100×8（us-central1 / asia-southeast1 / europe-west4）**、Spot T4×1 等。H100/A100-80GB/L4 の Spot は 2026-09-29 に増枠申請済み（結果待ち） |
 | IAM（手動付与） | Cloud Build 用に Compute 既定SAへ storage.objectAdmin・artifactregistry.writer・logging.logWriter。Vertex カスタムコード SA（service-487551565018@gcp-sa-aiplatform-cc）へ AR reader とバケット objectAdmin（新規プロジェクトでは自動付与されない） |
 
-- **認証の寿命**: 組織ポリシーで `iam.disableServiceAccountKeyCreation` が強制（SA鍵=無期限認証は不可）、`iam.allowedPolicyMemberDomains` で Nexi ドメインのみ許可（個人gmailの追加も不可）。よってユーザーの refresh token が唯一の手段で、寿命は Nexi Workspace の「Google Cloud セッション管理」の設定次第（未設定なら実質無期限、設定があればその時間で再認証。STARUP では約16時間だった）
-- **再ログイン**: このディレクトリで `gcloud auth login gaku.masuda@nexi-inc.jp --update-adc`（`.envrc` の `WSL_BROWSER_PROFILE="Profile 19"` により Windows Chrome の Nexi プロファイルで同意画面が開く）→ `gcloud auth application-default set-quota-project pro-plasma-510112-m7`
+- **認証の寿命**: 組織ポリシーで `iam.disableServiceAccountKeyCreation` が強制（SA鍵=無期限認証は不可）、`iam.allowedPolicyMemberDomains` で Nexi ドメインのみ許可（個人gmailの追加も不可）。よってユーザーの refresh token が唯一の手段で、**実測で寿命は16時間**（2026-09-29 21:51 ログイン → 09-30 13:52 に `Reauthentication failed`。Nexi Workspace の「Google Cloud セッション管理」が16時間に設定されている）。Vertex ジョブ自体はサーバ側で継続するが、ローカルからの監視・投入は16時間ごとに再ログインが必要。延ばすには Nexi の Workspace 管理者に、再認証を「不要」にする／gcloud CLI（client_id 32555940559）を信頼済みアプリにして「信頼できるアプリを除外」を有効にする、のどちらかを依頼する
+- **再ログイン（1行）**: このディレクトリで `gcloud auth login gaku.masuda@nexi-inc.jp --update-adc`（`.envrc` の `WSL_BROWSER_PROFILE="Profile 19"` により Windows Chrome の Nexi プロファイルで同意画面が開く）。再ログインで ADC ファイルの quota project は消えるが、`GOOGLE_CLOUD_QUOTA_PROJECT` を `.envrc`/settings.local.json で設定済みなので google-auth 側は自動で補われる（2026-10-01 に動作確認）
 
 ### 2026-07-03〜09: STARUP プロジェクト（旧・実験完了済み。無料クレジット残¥4,071）
 
@@ -156,15 +156,25 @@ uv run python scripts/ping_vllm_persona.py --persona persona_a
 
 ## 研究ログ（随時追記・新しいものを上に）
 
+### 2026-10-01: 【訂正】手元の採点で math-verify が読み込まれていなかった → 全基準を採点し直し。世代0の社会は SC@3 に有意勝ち・SC@9 と同等
+- **何が起きたか**: `scripts/v4/stats.py` などオフラインの採点スクリプトは `vendor/`（math-verify）を sys.path に入れておらず、手元の環境にも math-verify が無かった。`src/evo4/scoring.py` は math-verify が無いと**黙って正規化だけで比べる**ため、MATH の正答を誤答と数えていた（9/30 に報告した test の基準値・RFT・7月チームの値が MATH の分だけ過小）。ジョブ内（進化の選抜・state.json の値）はスナップショットの vendor/ を使っていたので**影響なし**。7月の再採点（`rescore_july.json`）と dev の難易度（MANIFEST）も math-verify ありで作られていたことを再計算で確認した（差 0）。
+- **対処**: `scoring.py` が自分で `<repo>/vendor` を sys.path に入れるようにし、オフライン採点の入口（stats / secondary / rescore_july / audit_extractor / analyze_pilot / build_items）で `require_math_verify()` を呼んで、無ければ止まるようにした。手元の `vendor/` は push_code.sh と同じ版（math-verify 0.8.0、latex2sympy2-extended 1.10.2、antlr4 4.13.2）に sympy 1.13.1 を加えて作る（git 対象外）。**教訓: 依存が無いときに黙ってフォールバックする採点は、オフライン解析で必ず失敗を表に出す。**
+- **正しい test の値（1,300問、macro）**: ベース単体（9本の平均）**0.690**（MMLU-Pro 0.709 / SGPQA 0.441 / MATH 0.921）、SC@3 0.705、SC@6 0.719、**SC@9 0.724**、RFT 単体 0.697（対ベース単体 **+0.64pt [+0.04, +1.24]、p=0.032**）、RFT SC@9 0.727（+0.29pt ns）、7月チーム 0.716（対ベース単体 +2.57pt p<1e-4、対 SC@9 −0.78pt ns）。**MATH（L4-5、MATH-500 以外）はこのモデルでほぼ天井（0.92〜0.96）**で、差はほぼ MMLU-Pro と SuperGPQA で決まる。
+- **世代0の社会（既定トリオ、v4t、ゲーティング、生成 seed 1〜4 の平均）: macro 0.728**（MMLU-Pro 0.741 / SGPQA 0.487 / MATH 0.956）。対ベース単体 **+3.75pt [+2.95, +4.56]**、対 SC@3 **+2.27pt [+1.13, +3.46]**（いずれも p<1e-4）、対 SC@6 +0.84pt（p=0.10）、対 SC@9 +0.40pt（p=0.42、ns）、対 RFT SC@9 +0.11pt（ns）、対 7月チーム +1.18pt（p=0.074）。1問あたりの生成は約3.8回（ゲーティングで round1 の約6割を省略）で、9回の SC@9 と同等の精度。
+- **系統 S の世代1**: 選抜は implementer=子b（社会学習）、monitor_evaluator=親（据え置き）、plant=子c（交叉）。dev のチーム精度 0.790→0.808（選抜に使った dev なので楽観的）。**test（seed 1）は 0.7227→0.7236（+0.09pt、ns）**。世代1では test の改善は見えない。学習データは各役割 a 約970〜990例・b 1,000例（他者の例を全部入れて自分の例で補う）。
+- **対照 N・A1 の投入**: 認証切れで保留になっていたため、10/01 16:44 の再ログイン後に自動投入された（N: 6626933473129005056 ほか、A1: 7336461520672391168 ほか、レースで1本に絞る）。
+
+### 2026-10-01: Nexi の gcloud 認証は16時間で失効すると実測確定、再ログインを1行化
+- gcloud ログ（`~/.config/gcloud-evo-swarm-lora/logs`）で、09-29 21:51 のログインから16時間後の 09-30 13:52 に最初の `Reauthentication failed` を確認。10-01 02:06 / 05:17 にも `gcloud logging read` や `gcloud ai custom-jobs describe` が失効で失敗していた（夜間監視は16時間を超えると止まる）。
+- `gcloud auth login --update-adc` は ADC ファイルの `quota_project_id` を消すため、`GOOGLE_CLOUD_QUOTA_PROJECT=pro-plasma-510112-m7` を `.envrc` と `.claude/settings.local.json` に追加（google-auth が環境変数から補うことを確認済み）。以後の再ログインは1行で済む。
+
 ### 2026-09-30: 第2パイロット進行、test の基準値、本実験（系統S）の準備、修論の改訂
 - **第2パイロット（ペルソナ選定、ジョブ 2381629468088205312）**:
   - プロトコル（dev-A macro、既定トリオ、非ゲーティング）: v4t 0.784、v4ct 0.780、全文 v4 0.764、全文 v4c 0.791、july 0.782。規則（v4t との差 1pt 未満なら v4t）どおり **v4t を採用**。切り詰めによる損失は見られない。
   - 段階1: 能力税で除外される役割なし（単独 0.669〜0.756、plain 3系列 0.707〜0.749 のぶれの範囲内）。
   - 段階2（14チーム）の後、段階3（dev-B）で採否を決める。`personas_selected.json` が出たら系統 S を自動で投入するスクリプトを scratchpad で待機させた。
 - **test の基準値（生成 seed 1、1,300問、v4 採点器）**:
-  - ベース単体（9本の平均）: macro **0.6625**（MMLU-Pro 0.709 / SuperGPQA 0.441 / MATH 0.837）
-  - SC@3: 0.678、SC@9: **0.697**（SC@9 vs 単体 +3.5pt, p<1e-4）
-  - SC@k の期待値曲線（9本から k 本の全組合せ平均）: k=1 0.663 → k=3 0.683 → k=6 0.693 → k=9 0.697。1呼び出しの平均出力 1,864 トークン。同じプロンプトの再標本の2体間不一致率 0.179。
+  - **【訂正 10/01】以下の旧値は手元で math-verify が読み込まれていない状態で採点しており、MATH を過小評価していた（正しい値は 10/01 の項）**。旧値: ベース単体 0.6625 / SC@3 0.678 / SC@9 0.697。1呼び出しの平均出力 1,864 トークン、同じプロンプトの再標本の2体間不一致率 0.179（この2つは採点に依らないので有効）。
   - 7月チーム（july プロトコル）の途中集計（294問）: round0 で1体だけ正解だった34問で、その1体が round1 で正解を維持した例は **0件**（自己回答を見せない手続きの同調を test でも再確認）。
 - **evolve.py の変更（系統の結果が出る前）**:
   - 社会学習の子 b のデータは、他者の正解例を全部入れ（上限超過時は乱択）、残りを自己学習の例で補う（設計文書 §2・§8 に記録）。
@@ -175,11 +185,12 @@ uv run python scripts/ping_vllm_persona.py --persona persona_a
 - **費用**: 稼働時間からの推定で約 $37（¥5,900）。BigQuery の課金エクスポートはまだ空。
 - **第2パイロット 段階2（dev-A、14チーム、非ゲーティング v4t）**: チームの macro は 0.742〜0.796。最高は SH+SP+TW と **plain×3 が同率 0.796**、既定トリオ 0.784。役割の主効果は TW +2.4pt 〜 CF −1.6pt。**Belbin のバランス仮説は不支持**（バランス型−同質型 = −1.0pt、並べ替え p=0.49）。探索的に、チームの精度は構成員の単独精度の平均と r=0.46、2体間不一致率と r=−0.09。**oracle@3（誰か1体が round0 で正解）は 0.84〜0.89 で、最終精度より約9pt高い**（議論＋多数決での取りこぼし）。
 - **段階3**: 候補 F0（既定トリオ）/ F1（SH+SP+TW）/ F2（TW+SP+ME）/ F3（ME+IMP+TW）/ C（plain×3）を dev-B で確認した。Shapley 用の2体連合が既定トリオ（IMP・ME・PL）で生成されていることから、**規則どおり F0（既定トリオ）の維持**が決まった（最終の集計は personas_selected.json で確認する）。
-- **7月チーム（c7、july プロトコル）の test 再測定（1,300問、seed 1）**: macro 0.658（MMLU-Pro 0.722 / SGPQA 0.466 / MATH 0.787）。ベース単体に −0.43pt（p=0.62, ns）、**SC@9 に −3.89pt [−5.76, −2.00]（p<1e-4）**。MATH で −5.1pt（対ベース）と能力の毀損が残る。
-- **RFT 対照（ベース自身の正解 2,616 例で LoRA を1エポック、lr 1e-4、113 ステップ）の test（seed 1、9本）**: 単体 0.671（**対ベース単体 +0.88pt [+0.25, +1.49]、p=0.004**。3ベンチとも +0.7〜+1.0pt）、SC@3 0.692（+1.31pt、p=0.065）、SC@9 0.702（+0.51pt、p=0.35）。自己学習の効果は小さいが実在する。学習の損失は 0.155→約0.10（自分の出力なので元から低い）。
+- **7月チーム（c7、july プロトコル）の test 再測定（1,300問、seed 1）**: 【訂正 10/01: 旧値 macro 0.658・対 SC@9 −3.89pt は math-verify なしの採点による誤り。正しくは 10/01 の項】
+- **RFT 対照（ベース自身の正解 2,616 例で LoRA を1エポック、lr 1e-4、113 ステップ）**: 【訂正 10/01: 旧値 +0.88pt は math-verify なしの採点による。正しくは 10/01 の項】学習の損失は 0.155→約0.10（自分の出力なので元から低い）。
 - **費用（11:00 時点）**: 稼働時間からの推定で約 $57（¥9,100）。課金エクスポートはまだ0行。
 - **段階3の確定（11:16）**: dev-B の macro は F0 既定トリオ 0.789 / F1 0.789 / **F2 0.796（最大）** / F3 0.740 / C plain×3 0.791。F2 と F0 の差は +0.67pt、90%CI [−3.56, +4.89] で規則を満たさず、**既定トリオ（implementer, monitor_evaluator, plant）を採用**（`results/v4/personas_selected.json`）。単独上位3の F3 が最下位（単独で強い役割を集めてもチームは強くない一例）。既定トリオの dev-B 連合値: IMP 0.680 / ME 0.731 / PL 0.724 / IMP+ME 0.736 / IMP+PL 0.807 / ME+PL 0.789 / 3体 0.789。**厳密 Shapley: PL 0.290 > ME 0.258 > IMP 0.241**（Banzhaf も同順）。
 - **事前登録の改訂（11:40、どの系統の test 結果も見る前）**: H1 は世代0と S 最終世代の test を生成 seed 1〜4 の平均で検定する（検出力のため。H2・H3 は seed 1,2 のまま）。世代0の seed 3,4 評価を先行投入（コード版 `20260930-114353-aa6f580e21`、計画 `configs/v4/eval_g0_seeds34.json`、us-central1 Spot の **6726338120372977664** が起動）。S 最終世代の seed 3,4 は S の完了後に `scripts/v4/make_eval_plan.py` で計画を作って投入する。
+- **【重要】Nexi でも gcloud の認証が約16時間で失効した**（2026-09-30 14時ごろ、9/29 夜のログインから約16時間。"Reauthentication failed. cannot prompt during non-interactive execution"）。Vertex のジョブはサーバ側で動き続けるが、監視・ログ・GCS の読み取り・新しいジョブの投入（対照 N・A1 の自動投入を含む）がすべて止まる。**長いジョブの間は約16時間ごとにユーザーの再ログインが必要**（`gcloud auth login gaku.masuda@nexi-inc.jp --update-adc`。Claude Code では `!` を付けて実行すればこのディレクトリ専用の設定で動く）。次の失効時刻を見越して、依存するジョブ投入は失効前に済ませる。
 - **レースの取り消しの確認**: 取り消し直後の describe は数十秒のあいだ RUNNING を返すことがある（実際は取り消し済み）。二重実行を疑ったら 20 秒ほど置いて再確認する。
 - **系統 S の世代0（dev、ゲーティングあり）**: macro 0.790（MMLU-Pro 0.693 / SGPQA 0.747 / MATH 0.930）。新規生成は 366 件で、議論の省略は 834 件だった。
 - **系統 S を投入（11:18）**: コード版 `20260930-070824-b05394b47c`、4経路レースで **us-central1 Flex-start の 7217934167198138368 が起動**（他3本は自動取り消し）。引数: `--lineage=S --select=shapley --generations=3 --personas=…/pilot2/personas_selected.json --protocol=v4t --gate --test-seeds=1,2 --workers=192 --max-loras=12`。対照 N（S の世代1交叉の後）と A1（S の世代1選抜の後）は scratchpad の `auto_launch_NA1.sh` が自動投入し、レースの取り消し監視も自動で起動する。

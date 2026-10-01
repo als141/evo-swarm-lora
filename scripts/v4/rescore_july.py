@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(1, str(ROOT / "scripts/v4"))
 
-from src.evo4.scoring import extract_answer, is_correct  # noqa: E402
+from src.evo4.scoring import extract_answer, is_correct, require_math_verify  # noqa: E402
 from stats import paired_test  # noqa: E402
 
 INDEX = ROOT / "results/reanalysis_2026-09/cache/calls_index.jsonl.gz"
@@ -37,6 +37,7 @@ def raw_math_gold() -> dict:
 
 
 def main() -> None:
+    require_math_verify()  # 手元で採点するとき math-verify が無いと MATH を過小評価する
     gold_math = raw_math_gold()
     by_file = collections.defaultdict(list)
     for line in gzip.open(INDEX, "rt"):

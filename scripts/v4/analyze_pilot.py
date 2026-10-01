@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from src.evo4.items import index_items  # noqa: E402
-from src.evo4.scoring import extract_answer, is_correct  # noqa: E402
+from src.evo4.scoring import extract_answer, is_correct, require_math_verify  # noqa: E402
 from src.evo4.store import CallStore  # noqa: E402
 
 
@@ -46,6 +46,7 @@ def steady_throughput(records: list) -> float:
 
 
 def main() -> None:
+    require_math_verify()  # 手元で採点するとき math-verify が無いと MATH を過小評価する
     parser = argparse.ArgumentParser()
     parser.add_argument("--store", required=True)
     parser.add_argument("--summary", required=True)

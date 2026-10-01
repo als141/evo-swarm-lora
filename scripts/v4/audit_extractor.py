@@ -18,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from src.evo4.scoring import extract_answer, is_correct, scorer_info  # noqa: E402
+from src.evo4.scoring import extract_answer, is_correct, scorer_info, require_math_verify  # noqa: E402
 
 INDEX = ROOT / "results/reanalysis_2026-09/cache/calls_index.jsonl.gz"
 RAW_ROOT = ROOT / "results/gcs/run002"
@@ -35,6 +35,7 @@ def _raw_math_gold() -> dict:
 
 
 def main() -> None:
+    require_math_verify()  # 手元で採点するとき math-verify が無いと MATH を過小評価する
     rows = [json.loads(line) for line in gzip.open(INDEX, "rt")]
     raw_gold = _raw_math_gold()
     by_file = collections.defaultdict(list)

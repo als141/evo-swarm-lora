@@ -15,7 +15,9 @@ from __future__ import annotations
 
 import logging
 import re
+import sys
 import threading
+from pathlib import Path
 from typing import Optional
 
 CHOICE_LETTERS = "ABCDEFGHIJ"
@@ -172,7 +174,13 @@ def _normalize_math(text: str) -> str:
         return s.lower()
 
 
-try:  # math-verify（HF）: 記号的な同値判定。コードスナップショットの vendor/ から読む
+# math-verify（HF）と固定版の sympy はリポジトリ直下の vendor/ に置く（ジョブではコードスナップショットに同梱、
+# 手元では `uv pip install --target vendor ...`、scripts/v4/push_code.sh と同じ版）。どの入口から読み込んでも同じ版を使う。
+_VENDOR = Path(__file__).resolve().parents[2] / "vendor"
+if _VENDOR.is_dir() and str(_VENDOR) not in sys.path:
+    sys.path.insert(1, str(_VENDOR))
+
+try:  # math-verify（HF）: 記号的な同値判定
     from math_verify import parse as _mv_parse
     from math_verify import verify as _mv_verify
 
@@ -221,3 +229,9 @@ def is_correct(predicted: Optional[str], gold: str, answer_type: str) -> bool:
 
 def scorer_info() -> dict:
     return {"scorer": "evo4.scoring", "math_verify": _HAS_MATH_VERIFY}
+
+
+def require_math_verify() -> None:
+    """オフライン採点の入口で呼ぶ。math-verify が無いと MATH の正答を誤答と数えるため、黙って続けない。"""
+    if not _HAS_MATH_VERIFY:
+        raise RuntimeError("math-verify が読み込めない。vendor/ を用意すること（scripts/v4/push_code.sh と同じ版）")
