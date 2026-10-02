@@ -1,0 +1,37 @@
+{
+ "items": "data/v4/items/test.jsonl",
+ "evals": [
+  {
+   "kind": "team",
+   "protocol": "v4t",
+   "gate": true,
+   "gen_seeds": [
+    3,
+    4
+   ],
+   "agents": [
+    {
+     "agent_id": "shared.g1.implementer.b",
+     "role": "implementer",
+     "model": "shared_g1_implementer_b",
+     "persona": "You are a disciplined implementer. Apply the most standard, direct method systematically, keep every step concrete, and sanity-check the result with a quick estimate.",
+     "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.implementer.b"
+    },
+    {
+     "agent_id": "p.monitor_evaluator",
+     "role": "monitor_evaluator",
+     "model": "Qwen/Qwen3-4B-Instruct-2507",
+     "persona": "You are a critical evaluator. Test each answer option or intermediate claim against the conditions of the problem one by one, and eliminate those that fail before committing to an answer.",
+     "adapter": null
+    },
+    {
+     "agent_id": "shared.g1.plant.c",
+     "role": "plant",
+     "model": "shared_g1_plant_c",
+     "persona": "You are a creative idea generator. Before settling on an answer, consider at least two different interpretations of the question or two different ways to solve it, then choose the best-supported one.",
+     "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.plant.c"
+    }
+   ]
+  }
+ ]
+}
