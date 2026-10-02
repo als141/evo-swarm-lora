@@ -16,12 +16,12 @@
    "protocol": "v4t",
    "gate": true
   },
-  "S_g1": {
+  "g0_s1": {
    "type": "team",
    "agents": [
-    "shared.g1.implementer.b",
+    "p.implementer",
     "p.monitor_evaluator",
-    "shared.g1.plant.c"
+    "p.plant"
    ],
    "gen_seeds": [
     1
@@ -29,7 +29,7 @@
    "protocol": "v4t",
    "gate": true
   },
-  "S_g2": {
+  "S_g1": {
    "type": "team",
    "agents": [
     "shared.g1.implementer.b",
@@ -227,105 +227,135 @@
  "comparisons": [
   [
    "S_final",
-   "g0"
+   "g0",
+   "主要"
   ],
   [
    "S_final_s12",
-   "N_final"
-  ],
-  [
-   "S_final",
-   "base_single"
-  ],
-  [
-   "S_final",
-   "base_sc3"
-  ],
-  [
-   "S_final",
-   "base_sc6"
-  ],
-  [
-   "S_final",
-   "base_sc9"
-  ],
-  [
-   "S_final",
-   "base_sc4"
-  ],
-  [
-   "S_final",
-   "rft_single"
-  ],
-  [
-   "S_final",
-   "rft_sc9"
-  ],
-  [
-   "S_final",
-   "c7_july"
-  ],
-  [
-   "g0",
-   "base_single"
-  ],
-  [
-   "g0",
-   "base_sc3"
-  ],
-  [
-   "g0",
-   "base_sc6"
-  ],
-  [
-   "g0",
-   "base_sc9"
-  ],
-  [
-   "g0",
-   "base_sc4"
-  ],
-  [
-   "g0",
-   "c7_july"
-  ],
-  [
-   "g0",
-   "g0_r0vote"
-  ],
-  [
-   "S_final",
-   "S_final_r0vote"
-  ],
-  [
-   "rft_single",
-   "base_single"
-  ],
-  [
-   "rft_sc9",
-   "base_sc9"
-  ],
-  [
    "N_final",
-   "g0"
+   "主要"
+  ],
+  [
+   "S_final",
+   "base_single",
+   "副次"
+  ],
+  [
+   "S_final",
+   "base_sc3",
+   "副次"
+  ],
+  [
+   "S_final",
+   "base_sc6",
+   "副次"
+  ],
+  [
+   "S_final",
+   "base_sc9",
+   "副次"
+  ],
+  [
+   "S_final",
+   "base_sc4",
+   "副次"
+  ],
+  [
+   "S_final",
+   "rft_single",
+   "副次"
+  ],
+  [
+   "S_final",
+   "rft_sc9",
+   "副次"
+  ],
+  [
+   "S_final",
+   "c7_july",
+   "副次"
+  ],
+  [
+   "S_final",
+   "S_final_r0vote",
+   "副次"
   ],
   [
    "S_g1",
-   "g0"
+   "g0_s1",
+   "副次"
   ],
   [
-   "S_g2",
-   "g0"
+   "g0",
+   "base_single",
+   "探索"
+  ],
+  [
+   "g0",
+   "base_sc3",
+   "探索"
+  ],
+  [
+   "g0",
+   "base_sc6",
+   "探索"
+  ],
+  [
+   "g0",
+   "base_sc9",
+   "探索"
+  ],
+  [
+   "g0",
+   "base_sc4",
+   "探索"
+  ],
+  [
+   "g0",
+   "rft_sc9",
+   "探索"
+  ],
+  [
+   "g0",
+   "c7_july",
+   "探索"
+  ],
+  [
+   "g0",
+   "g0_r0vote",
+   "探索"
+  ],
+  [
+   "N_final",
+   "g0",
+   "探索"
+  ],
+  [
+   "rft_single",
+   "base_single",
+   "探索"
+  ],
+  [
+   "rft_sc9",
+   "base_sc9",
+   "探索"
+  ],
+  [
+   "c7_july",
+   "base_sc9",
+   "探索"
   ]
  ],
  "holm": [
   [
    "S_final",
-   "g0"
+   "g0",
+   "主要"
   ],
   [
    "S_final_s12",
-   "N_final"
+   "N_final",
+   "主要"
   ]
  ]
 }

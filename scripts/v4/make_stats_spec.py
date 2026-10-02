@@ -39,18 +39,24 @@ def main() -> None:
     seeds = [int(s) for s in args.test_seeds.split(",")]
     h1_seeds = [int(s) for s in args.h1_seeds.split(",")]
     order = json.loads(Path(args.personas).read_text())["order"]
-    conds = {"g0": team([f"p.{r}" for r in order], h1_seeds)}
+    conds = {"g0": team([f"p.{r}" for r in order], h1_seeds),
+             "g0_s1": team([f"p.{r}" for r in order], [1])}  # 世代の推移は seed 1 どうしで比べる
     finals = {}
     for spec in args.state:
         name, path = spec.split("=", 1)
         state = json.loads(Path(path).read_text())
         gens = state["generations"]
         last = max(int(t) for t, g in gens.items() if g.get("steps", {}).get("test"))
+        prev_agents = None
         for t, g in sorted(gens.items(), key=lambda kv: int(kv[0])):
             t = int(t)
             if t == 0 or not g.get("steps", {}).get("test"):
                 continue
             agents = [g["reps"][r]["agent_id"] for r in order]
+            same_as_prev = agents == prev_agents  # 親が据え置かれて前世代と同じチームなら推移の行を重複させない
+            prev_agents = agents
+            if same_as_prev and t != last:
+                continue
             label = f"{name}_final" if t == last else f"{name}_g{t}"
             if t == last and name == "S":
                 conds["S_final"] = team(agents, h1_seeds)        # H1 と RQ4 の比較
@@ -72,26 +78,28 @@ def main() -> None:
         conds["c7_july"] = team(["c7.critic", "c7.pragmatist", "c7.explorer"], [1], protocol="july", gate=False)
 
     s = finals.get("S", "S_final")
-    holm = [[s, "g0"]] + [["S_final_s12", finals[x]] for x in ("N", "A1") if x in finals]
+    # 区分: 主要＝H1〜H3（事前登録）、副次＝事前登録の副次（RQ4 の位置づけ・世代推移・議論の上積み）、探索＝事前登録にない比較
+    holm = [[s, "g0", "主要"]] + [["S_final_s12", finals[x], "主要"] for x in ("N", "A1") if x in finals]
     comparisons = list(holm)
     match = [f"base_sc{int(k)}" for k in args.match_k.split(",") if k.strip()]
     for other in ["base_single", "base_sc3", "base_sc6", "base_sc9", *match, "rft_single", "rft_sc9", "c7_july"]:
         if other in conds:
-            comparisons.append([s, other])
-    for other in ["base_single", "base_sc3", "base_sc6", "base_sc9", *match, "c7_july"]:
-        if other in conds:
-            comparisons.append(["g0", other])
-    comparisons.append(["g0", "g0_r0vote"])
+            comparisons.append([s, other, "副次"])
     if "S_final_r0vote" in conds:
-        comparisons.append([s, "S_final_r0vote"])
-    comparisons.append(["rft_single", "base_single"])
-    comparisons.append(["rft_sc9", "base_sc9"])
-    for x in ("N", "A1"):
-        if x in finals:
-            comparisons.append([finals[x], "g0"])
+        comparisons.append([s, "S_final_r0vote", "副次"])
     for label in conds:
         if label.startswith("S_g"):
-            comparisons.append([label, "g0"])
+            comparisons.append([label, "g0_s1", "副次"])  # 途中世代は seed 1 だけなので世代0も seed 1 で比べる
+    for other in ["base_single", "base_sc3", "base_sc6", "base_sc9", *match, "rft_sc9", "c7_july", "g0_r0vote"]:
+        if other in conds:
+            comparisons.append(["g0", other, "探索"])
+    for x in ("N", "A1"):
+        if x in finals:
+            comparisons.append([finals[x], "g0", "探索"])
+    comparisons.append(["rft_single", "base_single", "探索"])
+    comparisons.append(["rft_sc9", "base_sc9", "探索"])
+    if "c7_july" in conds:
+        comparisons.append(["c7_july", "base_sc9", "探索"])
     out = {"conditions": conds, "comparisons": comparisons, "holm": holm}
     Path(args.out).write_text(json.dumps(out, ensure_ascii=False, indent=1))
     print(json.dumps(out, ensure_ascii=False, indent=1))

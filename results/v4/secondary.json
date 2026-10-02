@@ -71,40 +71,40 @@
    "majority_team_correct_rate": 0.8397129186602871,
    "missing_r1": 0
   },
-  "S_g1": {
+  "g0_s1": {
    "n": 1300,
    "member_solo_macro": {
-    "shared.g1.implementer.b": 0.6984444444444445,
+    "p.implementer": 0.6937777777777777,
     "p.monitor_evaluator": 0.6937777777777777,
-    "shared.g1.plant.c": 0.6913333333333332
+    "p.plant": 0.6933333333333334
    },
-   "member_solo_mean": 0.6945185185185184,
-   "r0_majority_macro": 0.713111111111111,
-   "oracle3_macro": 0.7653333333333334,
-   "final_macro": 0.7235555555555555,
-   "calls_per_item": 3.793846153846154,
-   "out_tokens_per_item": 7587.921538461538,
-   "in_tokens_per_item": 3281.5653846153846,
-   "gated_rate": 0.7353846153846154,
-   "oracle3": 0.7353846153846154,
-   "majority0_correct": 0.6638461538461539,
-   "final_correct": 0.6876923076923077,
-   "r0_pair_disagreement": 0.18205128205128204,
+   "member_solo_mean": 0.6936296296296295,
+   "r0_majority_macro": 0.7188888888888889,
+   "oracle3_macro": 0.7608888888888888,
+   "final_macro": 0.7226666666666667,
+   "calls_per_item": 3.78,
+   "out_tokens_per_item": 7563.1461538461535,
+   "in_tokens_per_item": 3229.013076923077,
+   "gated_rate": 0.74,
+   "oracle3": 0.7307692307692307,
+   "majority0_correct": 0.6692307692307692,
+   "final_correct": 0.6892307692307692,
+   "r0_pair_disagreement": 0.18128205128205124,
    "r0_n_correct_dist": {
-    "0": 0.26461538461538464,
-    "1": 0.07153846153846154,
-    "2": 0.08461538461538462,
-    "3": 0.5792307692307692
+    "0": 0.2692307692307692,
+    "1": 0.06153846153846154,
+    "2": 0.0876923076923077,
+    "3": 0.5815384615384616
    },
-   "correct_to_wrong_rate": 0.3236994219653179,
-   "wrong_to_correct_rate": 0.3323615160349854,
-   "minority_correct_items": 93,
-   "minority_kept_rate": 0.2903225806451613,
-   "minority_team_correct_rate": 0.4946236559139785,
-   "majority_team_correct_rate": 0.8272727272727273,
+   "correct_to_wrong_rate": 0.2857142857142857,
+   "wrong_to_correct_rate": 0.3042168674698795,
+   "minority_correct_items": 80,
+   "minority_kept_rate": 0.35,
+   "minority_team_correct_rate": 0.45,
+   "majority_team_correct_rate": 0.868421052631579,
    "missing_r1": 0
   },
-  "S_g2": {
+  "S_g1": {
    "n": 1300,
    "member_solo_macro": {
     "shared.g1.implementer.b": 0.6984444444444445,

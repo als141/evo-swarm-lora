@@ -75,42 +75,54 @@ def fig_sc_curve(sec: dict, stats: dict | None, out: Path) -> None:
     plt.close(fig)
 
 
-def fig_generations(sec: dict, stats: dict | None, out: Path) -> None:
-    """系統ごとの世代推移（test macro）と基準の帯（RQ1〜RQ3）。"""
-    lin = sec.get("lineages", {})
-    if "S" not in lin:
+def fig_generations(sec: dict, stats: dict | None, out: Path, states: dict | None = None) -> None:
+    """系統ごとの世代推移（test macro、生成 seed 1 どうし）と基準の帯（RQ1〜RQ3）。
+
+    途中世代は seed 1 だけで評価しているので、推移は全世代 seed 1 の値で描く（seed の数を混ぜない）。
+    右端の白抜きの印は、主要比較に使った複数 seed の平均（世代0と系統の最終世代）。
+    """
+    states = states or {}
+    st = states.get("S")
+    if not st:
         return
-    fig, ax = plt.subplots(figsize=(5.2, 3.4))
     acc = (stats or {}).get("accuracy", {})
-
-    def val(label, fallback):
-        return 100 * acc[label]["macro"] if label in acc else (100 * fallback if fallback is not None else None)
-
-    gens = lin["S"]["generations"]
-    ts = sorted(int(t) for t in gens if gens[t].get("test_team") is not None)
+    fig, ax = plt.subplots(figsize=(5.4, 3.4))
+    gens = st["generations"]
+    ts = sorted(int(t) for t in gens if (gens[t].get("test_team_by_seed") or {}).get("1") is not None)
+    ys = [100 * gens[str(t)]["test_team_by_seed"]["1"]["macro"] for t in ts]
+    ax.plot(ts, ys, marker="o", color=RED, label="系統S（Shapley選抜，seed 1）")
+    reps = [tuple(sorted(d["agent_id"] for d in gens[str(t)]["reps"].values())) for t in ts]
+    same = [t for t, r in zip(ts[1:], reps[1:]) if r == reps[ts.index(1)]] if 1 in ts else []
+    if len(same) >= 2:
+        ax.annotate("世代1〜3は同じチーム", (ts[-1], ys[-1]), textcoords="offset points", xytext=(-70, 12),
+                    fontsize=7, color=RED)
     last = max(ts)
-    ys = [val("g0" if t == 0 else ("S_final" if t == last else f"S_g{t}"), gens[str(t)]["test_team"]) for t in ts]
-    ax.plot(ts, ys, marker="o", color=RED, label="系統S（Shapley選抜）")
-    for name, color, marker in (("N", PURPLE, "^"), ("A1", GRAY, "v")):
-        if name in lin:
-            g = lin[name]["generations"]
-            tl = max(int(t) for t in g if g[t].get("test_team") is not None)
-            y = val(f"{name}_final", g[str(tl)]["test_team"])
-            ax.plot([0, tl], [ys[0], y], ls="--", lw=0.8, color=color)
-            ax.scatter([tl], [y], color=color, marker=marker, zorder=5,
-                       label="系統N（選抜なし）" if name == "N" else "系統A1（単独精度で選抜）")
-    for label, name, color in (("ベース単体", "base_single", BLUE), ("SC@3", "base_sc3", BLUE),
-                               ("SC@9", "base_sc9", BLUE)):
-        if name in acc:
-            y = 100 * acc[name]["macro"]
-            ax.axhline(y, color=color, lw=0.7, ls=":")
-            ax.text(last + 0.05, y, label, fontsize=7, color=color, va="center")
+    for name, color, marker, label in (("N", PURPLE, "^", "系統N（選抜なし，seed 1）"),
+                                       ("A1", GRAY, "v", "系統A1（単独精度で選抜，seed 1）")):
+        g = (states.get(name) or {}).get("generations", {})
+        tl = [int(t) for t in g if (g[t].get("test_team_by_seed") or {}).get("1") is not None and int(t) > 0]
+        if tl:
+            t = max(tl)
+            y = 100 * g[str(t)]["test_team_by_seed"]["1"]["macro"]
+            ax.plot([0, t], [ys[0], y], ls="--", lw=0.8, color=color)
+            ax.scatter([t], [y], color=color, marker=marker, zorder=5, label=label)
+    for key, x, color in (("g0", 0, RED), ("S_final", last, RED)):
+        if key in acc:
+            ax.scatter([x + 0.12], [100 * acc[key]["macro"]], facecolors="white", edgecolors=color, s=36, zorder=6)
+    if "g0" in acc:
+        ax.scatter([], [], facecolors="white", edgecolors=GRAY, s=36, label="主要比較の値（複数seedの平均）")
+    curve = (sec or {}).get("sc_curves", {}).get("base", {}).get("macro_by_k", {})
+    for label, val in (("ベース単体", acc.get("base_single", {}).get("macro")),
+                       ("SC@3（期待値）", curve.get("3")), ("SC@9", curve.get("9"))):
+        if val is not None:
+            ax.axhline(100 * val, color=BLUE, lw=0.7, ls=":")
+            ax.text(last + 0.25, 100 * val, label, fontsize=7, color=BLUE, va="center")
     ax.set_xticks(ts)
     ax.set_xlabel("世代")
     ax.set_ylabel("test の macro 精度（%）")
-    ax.set_xlim(-0.2, last + 0.9)
+    ax.set_xlim(-0.2, last + 1.1)
     ax.grid(alpha=0.3, lw=0.5)
-    ax.legend(loc="center left", bbox_to_anchor=(0.0, 0.42), frameon=False)
+    ax.legend(loc="center left", bbox_to_anchor=(0.0, 0.42), frameon=False, fontsize=7)
     fig.tight_layout()
     fig.savefig(out / "generations.pdf")
     plt.close(fig)
@@ -212,10 +224,10 @@ def main() -> None:
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     stats, sec, pilot = load(args.stats), load(args.secondary), load(args.pilot)
-    states = {s.split("=", 1)[0]: load(s.split("=", 1)[1]) for s in args.state}
+    states = {x.split("=", 1)[0]: load(x.split("=", 1)[1]) for x in args.state}
     if sec:
         fig_sc_curve(sec, stats, out)
-        fig_generations(sec, stats, out)
+        fig_generations(sec, stats, out, states)
         fig_transitions(sec, out)
     if states:
         fig_shapley_solo(states, out)

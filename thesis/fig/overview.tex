@@ -2,13 +2,13 @@
 \begin{tikzpicture}[
   font=\footnotesize,
   stage/.style={draw, rounded corners=2pt, align=left, text width=#1, inner sep=4pt, fill=white},
-  stage/.default=3.3cm,
-  loop/.style={stage=3.3cm, minimum height=3.1cm},
+  stage/.default=3.15cm,
+  loop/.style={stage=3.15cm, minimum height=3.1cm},
   arr/.style={-{Stealth[length=2.2mm]}, thick},
   lab/.style={font=\scriptsize, align=center},
 ]
 % 世代0
-\node[stage=14.4cm, fill=gray!8] (g0) {%
+\node[stage=13.6cm, fill=gray!8] (g0) {%
   {\bfseries 世代0: ペルソナの選定（プロンプト空間，devだけを使用）}\\[1pt]
   Belbinの9役割を推論の手続きとして操作化＋plain \,$\rightarrow$\, 段階1: 単独の精度と能力税 \,$\rightarrow$\, 段階2: 釣り合い型の12チーム＋既定トリオ＋plain×3（役割の主効果）\,$\rightarrow$\, 段階3: devの別の半分で確認し，事前の決定規則で3体を採用};
 
@@ -24,7 +24,7 @@
   {\bfseries (3) 子の生成}\\
   親のLoRAから子aと子bを継続学習する\\[2pt]
   兄弟交叉: aとbの$\Delta W$を平均し，rank 16に再分解して子cを作る};
-\node[loop, right=3mm of tra, text width=3.6cm] (sel) {%
+\node[loop, right=3mm of tra, text width=3.4cm] (sel) {%
   {\bfseries (4) 選抜（重み空間）}\\
   候補\{親, a, b, c\}ごとに，親の社会の文脈で全7連合の精度をdevで実測し，厳密Shapley値が最大の候補を次の代表にする};
 

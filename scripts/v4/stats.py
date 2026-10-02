@@ -165,10 +165,18 @@ def main() -> None:
     socs = {p: Society(None, store, items, None, protocol=p) for p in ("v4", "v4c", "july", "v4t", "v4ct")}
     values = {name: per_item(cond, ids, scorer, socs) for name, cond in spec["conditions"].items()}
     result = {"accuracy": {name: macro(v, bench_of) for name, v in values.items()}, "comparisons": {}}
-    for a, b in spec.get("comparisons", []):
+    for name, cond in spec["conditions"].items():  # 表に生成 seed と標本数を出すため
+        result["accuracy"][name]["gen_seeds"] = cond.get("gen_seeds")
+        result["accuracy"][name]["type"] = cond["type"]
+        if "k" in cond:
+            result["accuracy"][name]["k"] = cond["k"]
+    for comp in spec.get("comparisons", []):
+        a, b = comp[0], comp[1]
         result["comparisons"][f"{a} vs {b}"] = paired_test(values[a], values[b], bench_of)
+        if len(comp) > 2:  # 区分（主要・副次・探索）
+            result["comparisons"][f"{a} vs {b}"]["category"] = comp[2]
     if spec.get("holm"):
-        pv = {f"{a} vs {b}": result["comparisons"][f"{a} vs {b}"]["p"] for a, b in spec["holm"]}
+        pv = {f"{c[0]} vs {c[1]}": result["comparisons"][f"{c[0]} vs {c[1]}"]["p"] for c in spec["holm"]}
         result["holm_adjusted"] = holm(pv)
     Path(args.out).write_text(json.dumps(result, ensure_ascii=False, indent=1))
     print(json.dumps(result, ensure_ascii=False, indent=1))
