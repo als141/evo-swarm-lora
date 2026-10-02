@@ -54,7 +54,7 @@ def main() -> None:
     args = parser.parse_args()
     items = index_items([args.items])
     summary = json.loads(Path(args.summary).read_text())
-    store = CallStore(tempfile.mkdtemp(prefix="evo4_analyze_"), args.store)
+    store = CallStore(tempfile.mkdtemp(prefix="evo4_analyze_"), args.store, resolve="earliest")
     recs = [r for r in store.records() if r.get("item") in items]
     out = {"n_records": len(recs)}
 

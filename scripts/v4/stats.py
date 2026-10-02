@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import collections
 import json
+import tempfile
 import sys
 from pathlib import Path
 
@@ -149,7 +150,8 @@ def main() -> None:
     items = index_items([args.items])
     ids = [i.item_id for i in load_items(args.items)]
     bench_of = {i: items[i].bench for i in ids}
-    store = CallStore("/tmp/evo4_stats_local", args.store)
+    store = CallStore(tempfile.mkdtemp(prefix="evo4_stats_local_"), args.store, resolve="earliest")
+    print(f"[stats] records={len(store)} duplicated_keys={store.duplicates} (earliest t_start wins)", file=sys.stderr)
     scorer = Scorer(store, items)
     socs = {p: Society(None, store, items, None, protocol=p) for p in ("v4", "v4c", "july", "v4t", "v4ct")}
     values = {name: per_item(cond, ids, scorer, socs) for name, cond in spec["conditions"].items()}

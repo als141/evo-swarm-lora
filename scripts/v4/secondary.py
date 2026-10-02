@@ -16,6 +16,7 @@ import argparse
 import collections
 import itertools
 import json
+import tempfile
 import sys
 from pathlib import Path
 
@@ -226,7 +227,8 @@ def main() -> None:
     items = index_items([args.items])
     ids = [i.item_id for i in load_items(args.items)]
     bench_of = {i: items[i].bench for i in ids}
-    store = CallStore("/tmp/evo4_secondary_local", args.store)
+    store = CallStore(tempfile.mkdtemp(prefix="evo4_secondary_local_"), args.store, resolve="earliest")
+    print(f"[secondary] records={len(store)} duplicated_keys={store.duplicates} (earliest t_start wins)", file=sys.stderr)
     scorer = Scorer(store, items)
     result = {"sc_curves": {}, "sc_pair_disagreement": {}, "teams": {}, "lineages": {}}
     for agent in [a for a in args.sc_agents.split(",") if a]:

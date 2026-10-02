@@ -3,7 +3,10 @@
 - 同じ呼び出し（キー）は二度生成しない。Spot のプリエンプト後も保存済みの呼び出しから再開できる。
 - 書き込みはローカルの JSONL シャードに追記し、一定間隔でリモート（GCS FUSE マウント）へ複製する。
   GCS FUSE 上のファイルへの追記は毎回オブジェクト全体を書き直すため、直接は追記しない。
-- 起動時はリモートとローカルの全シャードを読み込む（キー重複は先勝ち）。
+- 起動時はリモートとローカルの全シャードを読み込む。キー重複は既定で先勝ち（シャード名の順）、
+  オフライン解析では resolve="earliest"（生成開始時刻 t_start が最も早い記録）を使う。
+- 読み込み中に他のジョブがシャードを置き換えると読み込みが失敗しうる（2026-10 に系統 N・A1 が
+  系統 S のシャードを黙って読み飛ばし、同じ呼び出しを生成し直した）。失敗は再試行し、最後は警告を出す。
 """
 
 from __future__ import annotations
@@ -20,12 +23,17 @@ from typing import Dict, Iterable, Optional
 
 
 class CallStore:
-    def __init__(self, local_dir: str, remote_dir: Optional[str] = None, sync_every: float = 120.0):
+    def __init__(self, local_dir: str, remote_dir: Optional[str] = None, sync_every: float = 120.0,
+                 resolve: str = "first"):
         self._local_dir = Path(local_dir)
         self._local_dir.mkdir(parents=True, exist_ok=True)
         self._remote_dir = Path(remote_dir) if remote_dir else None
         if self._remote_dir is not None:
             self._remote_dir.mkdir(parents=True, exist_ok=True)
+        if resolve not in ("first", "earliest"):
+            raise ValueError(resolve)
+        self._resolve = resolve
+        self.duplicates = 0  # 同じキーの記録が複数あった数（解析で報告する）
         self._records: Dict[str, dict] = {}
         self._lock = threading.Lock()
         self._sync_every = sync_every
@@ -49,19 +57,36 @@ class CallStore:
     def _load(self) -> None:
         for path in self._shards():
             opener = gzip.open if path.suffix == ".gz" else open
-            try:
-                with opener(path, "rt", encoding="utf-8") as handle:
-                    for line in handle:
-                        line = line.strip()
-                        if not line:
-                            continue
-                        try:
-                            record = json.loads(line)
-                        except json.JSONDecodeError:
-                            continue  # 書き込み途中で切れた末尾行
-                        self._records.setdefault(record["key"], record)
-            except OSError:
-                continue
+            for attempt in range(4):
+                try:
+                    with opener(path, "rt", encoding="utf-8") as handle:
+                        for line in handle:
+                            line = line.strip()
+                            if not line:
+                                continue
+                            try:
+                                record = json.loads(line)
+                            except json.JSONDecodeError:
+                                continue  # 書き込み途中で切れた末尾行
+                            self._add_loaded(record)
+                    break
+                except OSError as exc:  # 他のジョブがシャードを置き換えた途中など
+                    if attempt == 3:
+                        print(f"[store] WARNING: shard skipped after retries: {path.name}: {exc}", flush=True)
+                    else:
+                        time.sleep(5 * (attempt + 1))
+
+    def _add_loaded(self, record: dict) -> None:
+        key = record["key"]
+        current = self._records.get(key)
+        if current is None:
+            self._records[key] = record
+            return
+        if current.get("t_start") == record.get("t_start") and current.get("text") == record.get("text"):
+            return  # 同じ記録の再読み込み（再試行時など）
+        self.duplicates += 1
+        if self._resolve == "earliest" and (record.get("t_start") or float("inf")) < (current.get("t_start") or float("inf")):
+            self._records[key] = record
 
     def __len__(self) -> int:
         return len(self._records)
