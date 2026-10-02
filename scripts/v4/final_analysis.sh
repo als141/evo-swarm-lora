@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 # v4 の最終解析を一括で行う: GCS からストア・系統の state.json・パイロットの集計を取得し、
 # 事前登録の検定（stats.py）、副次解析（secondary.py）、第5章の図（figures.py）と表（tables.py）を作る。
-# 使い方: scripts/v4/final_analysis.sh [--match-k 4,7]
+# 使い方: scripts/v4/final_analysis.sh
+#   MATCH_K（既定 4）: 生成回数と出力トークン数を揃えた SC の k（事前登録の副次）
+#   EXTRA_K（既定 5）: 入出力の合計トークンを揃えた SC の k（探索）
 # 出力: results/v4/{stats_final,secondary}.json、configs/v4/stats_final.json、thesis/fig/*.pdf、thesis/tab/*.tex
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 export CLOUDSDK_CONFIG="${CLOUDSDK_CONFIG:-$HOME/.config/gcloud-evo-swarm-lora}"
 G=gs://evo-swarm-lora-v4-pro-plasma-510112-m7
-MATCH_K=""
-if [ "${1:-}" = "--match-k" ]; then MATCH_K="$2"; fi
+MATCH_K="${MATCH_K:-4}"
+EXTRA_K="${EXTRA_K:-5}"
 
 mkdir -p results/v4/store_mirror results/v4/lineages
 # ストア: 書き込み中のファイルは cp だと世代の不一致で止まるため、1ファイルずつ cat で取る
@@ -28,7 +30,7 @@ gcloud storage cat "$G/v4/pilot2/pilot_summary.json" > results/v4/pilot2_summary
 gcloud storage cat "$G/v4/pilot2/personas_selected.json" > results/v4/personas_selected.json
 
 python3 scripts/v4/make_stats_spec.py --personas results/v4/personas_selected.json "${STATES[@]}" \
-  ${MATCH_K:+--match-k "$MATCH_K"} --out configs/v4/stats_final.json > /dev/null
+  ${MATCH_K:+--match-k "$MATCH_K"} ${EXTRA_K:+--extra-k "$EXTRA_K"} --out configs/v4/stats_final.json > /dev/null
 uv run python scripts/v4/stats.py --spec configs/v4/stats_final.json --store results/v4/store_mirror \
   --out results/v4/stats_final.json > /dev/null
 uv run python scripts/v4/secondary.py --spec configs/v4/stats_final.json --store results/v4/store_mirror \

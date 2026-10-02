@@ -79,7 +79,7 @@ def fig_generations(sec: dict, stats: dict | None, out: Path, states: dict | Non
     """系統ごとの世代推移（test macro、生成 seed 1 どうし）と基準の帯（RQ1〜RQ3）。
 
     途中世代は seed 1 だけで評価しているので、推移は全世代 seed 1 の値で描く（seed の数を混ぜない）。
-    右端の白抜きの印は、主要比較に使った複数 seed の平均（世代0と系統の最終世代）。
+    白抜きの印は、主要比較に使った複数 seed の平均（世代0と系統 S は seed 1〜4、系統 N・A1 は seed 1,2）。
     """
     states = states or {}
     st = states.get("S")
@@ -106,9 +106,11 @@ def fig_generations(sec: dict, stats: dict | None, out: Path, states: dict | Non
             y = 100 * g[str(t)]["test_team_by_seed"]["1"]["macro"]
             ax.plot([0, t], [ys[0], y], ls="--", lw=0.8, color=color)
             ax.scatter([t], [y], color=color, marker=marker, zorder=5, label=label)
-    for key, x, color in (("g0", 0, RED), ("S_final", last, RED)):
+    for key, x, color, marker in (("g0", 0, RED, "o"), ("S_final", last, RED, "o"),
+                                  ("N_final", last, PURPLE, "^"), ("A1_final", last, GRAY, "v")):
         if key in acc:
-            ax.scatter([x + 0.12], [100 * acc[key]["macro"]], facecolors="white", edgecolors=color, s=36, zorder=6)
+            ax.scatter([x + 0.12], [100 * acc[key]["macro"]], facecolors="white", edgecolors=color, marker=marker,
+                       s=36, zorder=6)
     if "g0" in acc:
         ax.scatter([], [], facecolors="white", edgecolors=GRAY, s=36, label="主要比較の値（複数seedの平均）")
     curve = (sec or {}).get("sc_curves", {}).get("base", {}).get("macro_by_k", {})

@@ -29,6 +29,20 @@
    "protocol": "v4t",
    "gate": true
   },
+  "g0_s12": {
+   "type": "team",
+   "agents": [
+    "p.implementer",
+    "p.monitor_evaluator",
+    "p.plant"
+   ],
+   "gen_seeds": [
+    1,
+    2
+   ],
+   "protocol": "v4t",
+   "gate": true
+  },
   "S_g1": {
    "type": "team",
    "agents": [
@@ -78,6 +92,20 @@
     "N.g3.implementer.b",
     "N.g3.monitor_evaluator.b",
     "N.g3.plant.b"
+   ],
+   "gen_seeds": [
+    1,
+    2
+   ],
+   "protocol": "v4t",
+   "gate": true
+  },
+  "A1_final": {
+   "type": "team",
+   "agents": [
+    "shared.g1.implementer.b",
+    "A1.g2.monitor_evaluator.c",
+    "A1.g2.plant.c"
    ],
    "gen_seeds": [
     1,
@@ -222,6 +250,24 @@
    ],
    "protocol": "july",
    "gate": false
+  },
+  "base_sc4_exp": {
+   "type": "sc_expect",
+   "agent": "base",
+   "k": 4,
+   "n": 9,
+   "gen_seeds": [
+    1
+   ]
+  },
+  "base_sc5_exp": {
+   "type": "sc_expect",
+   "agent": "base",
+   "k": 5,
+   "n": 9,
+   "gen_seeds": [
+    1
+   ]
   }
  },
  "comparisons": [
@@ -233,6 +279,11 @@
   [
    "S_final_s12",
    "N_final",
+   "主要"
+  ],
+  [
+   "S_final_s12",
+   "A1_final",
    "主要"
   ],
   [
@@ -274,6 +325,21 @@
    "S_final",
    "c7_july",
    "副次"
+  ],
+  [
+   "S_final",
+   "base_sc4_exp",
+   "探索"
+  ],
+  [
+   "S_final",
+   "base_sc5",
+   "探索"
+  ],
+  [
+   "S_final",
+   "base_sc5_exp",
+   "探索"
   ],
   [
    "S_final",
@@ -312,6 +378,21 @@
   ],
   [
    "g0",
+   "base_sc4_exp",
+   "探索"
+  ],
+  [
+   "g0",
+   "base_sc5",
+   "探索"
+  ],
+  [
+   "g0",
+   "base_sc5_exp",
+   "探索"
+  ],
+  [
+   "g0",
    "rft_sc9",
    "探索"
   ],
@@ -327,7 +408,12 @@
   ],
   [
    "N_final",
-   "g0",
+   "g0_s12",
+   "探索"
+  ],
+  [
+   "A1_final",
+   "g0_s12",
    "探索"
   ],
   [
@@ -355,6 +441,11 @@
   [
    "S_final_s12",
    "N_final",
+   "主要"
+  ],
+  [
+   "S_final_s12",
+   "A1_final",
    "主要"
   ]
  ]

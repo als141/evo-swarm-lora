@@ -5,10 +5,12 @@
      "S_final": {"type": "team", "agents": ["S.g3.critic.b", ...], "gen_seeds": [1, 2], "protocol": "v4"},
      "base_single": {"type": "single", "agent": "base", "k": 9, "gen_seeds": [1, 2]},
      "sc9": {"type": "sc", "agent": "base", "k": 9, "gen_seeds": [1, 2]},
+     "sc4_exp": {"type": "sc_expect", "agent": "base", "k": 4, "n": 9, "gen_seeds": [1]},
      "g0_r0vote": {"type": "team_r0vote", "agents": [...], "gen_seeds": [1, 2]}},
    "comparisons": [["S_final", "g0"], ...],
    "holm": [["S_final", "g0"], ["S_final", "N_final"], ["S_final", "A1_final"]]}
 
+sc_expect は n 本の標本から k 本を選ぶ全組合せの多数決の正答率の平均（SC@k の期待値。最初の k 本の定義に対する頑健性の確認用）。
 主要指標: ベンチ等重み（macro）精度。問題ごとに生成 seed 平均を取ってから比較する。
 検定: 問題 ID をクラスタとする符号反転置換（ベンチ内で反転、20,000 回）。区間: ベンチ内で問題を再抽出するブートストラップ（10,000 回）。
 """
@@ -17,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import itertools
 import json
 import tempfile
 import sys
@@ -93,6 +96,16 @@ def per_item(cond: dict, ids: list, scorer: Scorer, soc_by_protocol: dict) -> di
                 else:
                     final = aggregate([(s[0], s[1], "x") for s in scored])
                     vals.append(float(is_correct(final, item.gold, item.answer_type)))
+            elif cond["type"] == "sc_expect":
+                keys = [Society.sc_key(Agent(cond["agent"], "base", "", ""), item_id, seed, k)
+                        for k in range(cond["n"])]
+                if any(scorer.store.get(k) is None for k in keys):
+                    continue
+                scored = [scorer.correct_of(k) for k in keys]
+                accs = [float(is_correct(aggregate([(scored[j][0], scored[j][1], "x") for j in combo]),
+                                         item.gold, item.answer_type))
+                        for combo in itertools.combinations(range(cond["n"]), cond["k"])]
+                vals.append(float(np.mean(accs)))
             elif cond["type"] == "solo":
                 ans, conf, ok_ = scorer.correct_of(Society.r0_key(Agent(cond["agent"], "", "", ""), item_id, seed))
                 if ans is None and scorer.store.get(Society.r0_key(Agent(cond["agent"], "", "", ""), item_id, seed)) is None:
@@ -154,13 +167,15 @@ def main() -> None:
     parser.add_argument("--store", required=True)
     parser.add_argument("--items", default=str(ROOT / "data/v4/items/test.jsonl"))
     parser.add_argument("--out", required=True)
+    parser.add_argument("--resolve", default="earliest", choices=["earliest", "latest"],
+                        help="同じキーの記録が複数あるときに使う記録（latest は感度分析用）")
     args = parser.parse_args()
     spec = json.loads(Path(args.spec).read_text())
     items = index_items([args.items])
     ids = [i.item_id for i in load_items(args.items)]
     bench_of = {i: items[i].bench for i in ids}
-    store = CallStore(tempfile.mkdtemp(prefix="evo4_stats_local_"), args.store, resolve="earliest")
-    print(f"[stats] records={len(store)} duplicated_keys={store.duplicates} (earliest t_start wins)", file=sys.stderr)
+    store = CallStore(tempfile.mkdtemp(prefix="evo4_stats_local_"), args.store, resolve=args.resolve)
+    print(f"[stats] records={len(store)} duplicate_records={store.duplicates} ({args.resolve} t_start wins)", file=sys.stderr)
     scorer = Scorer(store, items)
     socs = {p: Society(None, store, items, None, protocol=p) for p in ("v4", "v4c", "july", "v4t", "v4ct")}
     values = {name: per_item(cond, ids, scorer, socs) for name, cond in spec["conditions"].items()}

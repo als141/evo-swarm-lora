@@ -21,11 +21,11 @@ NAMES = {"plant": "Plant", "monitor_evaluator": "Monitor Evaluator", "specialist
 SHORT = {"plant": "PL", "monitor_evaluator": "ME", "specialist": "SP", "shaper": "SH", "implementer": "IMP",
          "completer_finisher": "CF", "coordinator": "CO", "teamworker": "TW", "resource_investigator": "RI",
          "plain": "plain", "plain_b": "plain", "plain_c": "plain"}
-COND = {"g0": "世代0の社会", "g0_s1": "世代0の社会（seed 1）", "S_final": "系統S（最終世代）", "S_final_s12": "系統S（最終世代，seed 1・2）",
-        "N_final": "系統N（最終世代）", "S_g1": "系統S（世代1）", "S_g2": "系統S（世代2）",
+COND = {"g0": "世代0の社会", "g0_s1": "世代0の社会（seed 1）", "g0_s12": "世代0の社会（seed 1・2）", "S_final": "系統S（最終世代）", "S_final_s12": "系統S（最終世代，seed 1・2）",
+        "N_final": "系統N（最終世代）", "A1_final": "系統A1（最終世代）", "S_g1": "系統S（世代1）", "S_g2": "系統S（世代2）",
         "g0_r0vote": "世代0（議論なしの多数決）", "S_final_r0vote": "系統S最終（議論なしの多数決）",
-        "A1_final": "系統A1（最終世代）", "base_single": "ベースモデル単体", "base_sc3": "SC@3",
-        "base_sc4": "SC@4", "base_sc5": "SC@5", "base_sc6": "SC@6", "base_sc9": "SC@9",
+        "base_single": "ベースモデル単体", "base_sc3": "SC@3",
+        "base_sc4": "SC@4", "base_sc4_exp": "SC@4（期待値）", "base_sc5": "SC@5", "base_sc5_exp": "SC@5（期待値）", "base_sc6": "SC@6", "base_sc9": "SC@9",
         "rft_single": "RFT単体", "rft_sc9": "RFTのSC@9", "c7_july": "7月のチーム"}
 
 
@@ -85,7 +85,9 @@ def main_results(stats: dict) -> str:
         if not a or name.endswith("_s12") or name.startswith("S_g") or name == "g0_s1":
             continue
         seeds = a.get("gen_seeds") or []
-        if a.get("type") in ("sc", "single"):
+        if a.get("type") == "sc_expect":
+            note = "全組合せの平均"
+        elif a.get("type") in ("sc", "single"):
             note = f"{a.get('k', 9)}本（seed {','.join(map(str, seeds))}）" if a.get("type") == "single" else f"最初の{a.get('k')}本"
         else:
             note = "seed " + ",".join(map(str, seeds))
@@ -102,7 +104,7 @@ def comparisons(stats: dict) -> str:
     for key, c in items:
         a, b = key.split(" vs ")
         p = c["p"]
-        p_s = "$<10^{-4}$" if p < 1e-4 else f"{p:.3f}"
+        p_s = "$<10^{-4}$" if p < 1e-4 else (f"{p:.4f}" if p < 1e-3 else f"{p:.3f}")
         h = holm.get(key)
         h_s = ("$<10^{-4}$" if h is not None and h < 1e-4 else (f"{h:.3f}" if h is not None else "--"))
         eq = "○" if (c.get("ci90") and -0.02 <= c["ci90"][0] and c["ci90"][1] <= 0.02) else ""

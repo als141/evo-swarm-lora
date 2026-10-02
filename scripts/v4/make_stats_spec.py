@@ -33,6 +33,8 @@ def main() -> None:
     parser.add_argument("--no-c7", action="store_true")
     parser.add_argument("--match-k", default="",
                         help="計算量を揃えた SC の k（生成回数一致,出力トークン一致。事前登録 §5 の副次）")
+    parser.add_argument("--extra-k", default="",
+                        help="事前登録にない計算量の揃え方の SC の k（入出力の合計トークン一致など。探索）")
     parser.add_argument("--out", required=True)
     args = parser.parse_args()
 
@@ -40,7 +42,8 @@ def main() -> None:
     h1_seeds = [int(s) for s in args.h1_seeds.split(",")]
     order = json.loads(Path(args.personas).read_text())["order"]
     conds = {"g0": team([f"p.{r}" for r in order], h1_seeds),
-             "g0_s1": team([f"p.{r}" for r in order], [1])}  # 世代の推移は seed 1 どうしで比べる
+             "g0_s1": team([f"p.{r}" for r in order], [1]),  # 世代の推移は seed 1 どうしで比べる
+             "g0_s12": team([f"p.{r}" for r in order], seeds)}  # 系統 N・A1 の最終世代と seed をそろえる
     finals = {}
     for spec in args.state:
         name, path = spec.split("=", 1)
@@ -82,20 +85,34 @@ def main() -> None:
     holm = [[s, "g0", "主要"]] + [["S_final_s12", finals[x], "主要"] for x in ("N", "A1") if x in finals]
     comparisons = list(holm)
     match = [f"base_sc{int(k)}" for k in args.match_k.split(",") if k.strip()]
+    # SC@k の定義への頑健性: 計算量を揃えた k を「9本から k 本の全組合せの平均」でも比べる（探索）
+    match_exp = []
+    for k in args.match_k.split(","):
+        if k.strip():
+            conds[f"base_sc{int(k)}_exp"] = {"type": "sc_expect", "agent": "base", "k": int(k), "n": 9, "gen_seeds": [1]}
+            match_exp.append(f"base_sc{int(k)}_exp")
+    extra = []
+    for k in args.extra_k.split(","):
+        if k.strip():
+            conds[f"base_sc{int(k)}_exp"] = {"type": "sc_expect", "agent": "base", "k": int(k), "n": 9, "gen_seeds": [1]}
+            extra += [f"base_sc{int(k)}", f"base_sc{int(k)}_exp"]
     for other in ["base_single", "base_sc3", "base_sc6", "base_sc9", *match, "rft_single", "rft_sc9", "c7_july"]:
         if other in conds:
             comparisons.append([s, other, "副次"])
+    for other in [*match_exp, *extra]:
+        comparisons.append([s, other, "探索"])
     if "S_final_r0vote" in conds:
         comparisons.append([s, "S_final_r0vote", "副次"])
     for label in conds:
         if label.startswith("S_g"):
             comparisons.append([label, "g0_s1", "副次"])  # 途中世代は seed 1 だけなので世代0も seed 1 で比べる
-    for other in ["base_single", "base_sc3", "base_sc6", "base_sc9", *match, "rft_sc9", "c7_july", "g0_r0vote"]:
+    for other in ["base_single", "base_sc3", "base_sc6", "base_sc9", *match, *match_exp, *extra, "rft_sc9", "c7_july",
+                  "g0_r0vote"]:
         if other in conds:
             comparisons.append(["g0", other, "探索"])
     for x in ("N", "A1"):
         if x in finals:
-            comparisons.append([finals[x], "g0", "探索"])
+            comparisons.append([finals[x], "g0_s12", "探索"])  # seed 1,2 どうしで比べる
     comparisons.append(["rft_single", "base_single", "探索"])
     comparisons.append(["rft_sc9", "base_sc9", "探索"])
     if "c7_july" in conds:

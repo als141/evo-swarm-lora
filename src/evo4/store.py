@@ -5,6 +5,7 @@
   GCS FUSE 上のファイルへの追記は毎回オブジェクト全体を書き直すため、直接は追記しない。
 - 起動時はリモートとローカルの全シャードを読み込む。キー重複は既定で先勝ち（シャード名の順）、
   オフライン解析では resolve="earliest"（生成開始時刻 t_start が最も早い記録）を使う。
+  感度分析には resolve="latest"（最も遅い記録＝生成し直した記録）を使う。
 - 読み込み中に他のジョブがシャードを置き換えると読み込みが失敗しうる（2026-10 に系統 N・A1 が
   系統 S のシャードを黙って読み飛ばし、同じ呼び出しを生成し直した）。失敗は再試行し、最後は警告を出す。
 """
@@ -30,10 +31,11 @@ class CallStore:
         self._remote_dir = Path(remote_dir) if remote_dir else None
         if self._remote_dir is not None:
             self._remote_dir.mkdir(parents=True, exist_ok=True)
-        if resolve not in ("first", "earliest"):
+        if resolve not in ("first", "earliest", "latest"):
             raise ValueError(resolve)
         self._resolve = resolve
-        self.duplicates = 0  # 同じキーの記録が複数あった数（解析で報告する）
+        self.duplicates = 0  # 同じキーの異なる記録の余分な数（解析で報告する。解決規則に依らない）
+        self._seen = set()  # 読み込んだ記録の (key, t_start)。同じ記録の再読み込みを数えないため
         self._records: Dict[str, dict] = {}
         self._lock = threading.Lock()
         self._sync_every = sync_every
@@ -78,14 +80,19 @@ class CallStore:
 
     def _add_loaded(self, record: dict) -> None:
         key = record["key"]
+        t_start = record.get("t_start")
+        ident = (key, t_start, record.get("text") if t_start is None else None)
+        if ident in self._seen:
+            return  # 同じ記録の再読み込み（再試行時など）
+        self._seen.add(ident)
         current = self._records.get(key)
         if current is None:
             self._records[key] = record
             return
-        if current.get("t_start") == record.get("t_start") and current.get("text") == record.get("text"):
-            return  # 同じ記録の再読み込み（再試行時など）
         self.duplicates += 1
         if self._resolve == "earliest" and (record.get("t_start") or float("inf")) < (current.get("t_start") or float("inf")):
+            self._records[key] = record
+        elif self._resolve == "latest" and (record.get("t_start") or float("-inf")) > (current.get("t_start") or float("-inf")):
             self._records[key] = record
 
     def __len__(self) -> int:
