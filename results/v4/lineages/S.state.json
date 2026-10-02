@@ -1,0 +1,776 @@
+{
+ "lineage": "S",
+ "select": "shapley",
+ "generations": {
+  "0": {
+   "steps": {
+    "dev": true,
+    "test": true
+   },
+   "reps": {
+    "implementer": {
+     "agent_id": "p.implementer",
+     "role": "implementer",
+     "model": "Qwen/Qwen3-4B-Instruct-2507",
+     "persona": "You are a disciplined implementer. Apply the most standard, direct method systematically, keep every step concrete, and sanity-check the result with a quick estimate.",
+     "adapter": null
+    },
+    "monitor_evaluator": {
+     "agent_id": "p.monitor_evaluator",
+     "role": "monitor_evaluator",
+     "model": "Qwen/Qwen3-4B-Instruct-2507",
+     "persona": "You are a critical evaluator. Test each answer option or intermediate claim against the conditions of the problem one by one, and eliminate those that fail before committing to an answer.",
+     "adapter": null
+    },
+    "plant": {
+     "agent_id": "p.plant",
+     "role": "plant",
+     "model": "Qwen/Qwen3-4B-Instruct-2507",
+     "persona": "You are a creative idea generator. Before settling on an answer, consider at least two different interpretations of the question or two different ways to solve it, then choose the best-supported one.",
+     "adapter": null
+    }
+   },
+   "dev_team": {
+    "mmlu_pro": 0.6933333333333334,
+    "supergpqa": 0.7466666666666667,
+    "math": 0.93,
+    "macro": 0.79,
+    "micro": 0.7725
+   },
+   "test_team": {
+    "mmlu_pro": 0.742,
+    "supergpqa": 0.486,
+    "math": 0.94,
+    "macro": 0.7226666666666667,
+    "micro": 0.6892307692307692
+   },
+   "test_team_by_seed": {
+    "1": {
+     "mmlu_pro": 0.742,
+     "supergpqa": 0.486,
+     "math": 0.94,
+     "macro": 0.7226666666666667,
+     "micro": 0.6892307692307692
+    },
+    "2": {
+     "mmlu_pro": 0.746,
+     "supergpqa": 0.494,
+     "math": 0.96,
+     "macro": 0.7333333333333334,
+     "micro": 0.6984615384615385
+    }
+   }
+  },
+  "1": {
+   "steps": {
+    "debate": true,
+    "train": true,
+    "cross": true,
+    "select": true,
+    "dev_team": true,
+    "test": true
+   },
+   "train_team": {
+    "mmlu_pro": 0.735,
+    "supergpqa": 0.4775,
+    "math": 0.945,
+    "macro": 0.7191666666666666,
+    "micro": 0.7191666666666666
+   },
+   "children": {
+    "implementer": {
+     "a": {
+      "agent_id": "shared.g1.implementer.a",
+      "role": "implementer",
+      "model": "shared_g1_implementer_a",
+      "persona": "You are a disciplined implementer. Apply the most standard, direct method systematically, keep every step concrete, and sanity-check the result with a quick estimate.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.implementer.a"
+     },
+     "b": {
+      "agent_id": "shared.g1.implementer.b",
+      "role": "implementer",
+      "model": "shared_g1_implementer_b",
+      "persona": "You are a disciplined implementer. Apply the most standard, direct method systematically, keep every step concrete, and sanity-check the result with a quick estimate.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.implementer.b"
+     },
+     "c": {
+      "agent_id": "shared.g1.implementer.c",
+      "role": "implementer",
+      "model": "shared_g1_implementer_c",
+      "persona": "You are a disciplined implementer. Apply the most standard, direct method systematically, keep every step concrete, and sanity-check the result with a quick estimate.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.implementer.c"
+     }
+    },
+    "monitor_evaluator": {
+     "a": {
+      "agent_id": "shared.g1.monitor_evaluator.a",
+      "role": "monitor_evaluator",
+      "model": "shared_g1_monitor_evaluator_a",
+      "persona": "You are a critical evaluator. Test each answer option or intermediate claim against the conditions of the problem one by one, and eliminate those that fail before committing to an answer.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.monitor_evaluator.a"
+     },
+     "b": {
+      "agent_id": "shared.g1.monitor_evaluator.b",
+      "role": "monitor_evaluator",
+      "model": "shared_g1_monitor_evaluator_b",
+      "persona": "You are a critical evaluator. Test each answer option or intermediate claim against the conditions of the problem one by one, and eliminate those that fail before committing to an answer.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.monitor_evaluator.b"
+     },
+     "c": {
+      "agent_id": "shared.g1.monitor_evaluator.c",
+      "role": "monitor_evaluator",
+      "model": "shared_g1_monitor_evaluator_c",
+      "persona": "You are a critical evaluator. Test each answer option or intermediate claim against the conditions of the problem one by one, and eliminate those that fail before committing to an answer.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.monitor_evaluator.c"
+     }
+    },
+    "plant": {
+     "a": {
+      "agent_id": "shared.g1.plant.a",
+      "role": "plant",
+      "model": "shared_g1_plant_a",
+      "persona": "You are a creative idea generator. Before settling on an answer, consider at least two different interpretations of the question or two different ways to solve it, then choose the best-supported one.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.plant.a"
+     },
+     "b": {
+      "agent_id": "shared.g1.plant.b",
+      "role": "plant",
+      "model": "shared_g1_plant_b",
+      "persona": "You are a creative idea generator. Before settling on an answer, consider at least two different interpretations of the question or two different ways to solve it, then choose the best-supported one.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.plant.b"
+     },
+     "c": {
+      "agent_id": "shared.g1.plant.c",
+      "role": "plant",
+      "model": "shared_g1_plant_c",
+      "persona": "You are a creative idea generator. Before settling on an answer, consider at least two different interpretations of the question or two different ways to solve it, then choose the best-supported one.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.plant.c"
+     }
+    }
+   },
+   "data_counts": {
+    "implementer": {
+     "a": 972,
+     "b": 1000
+    },
+    "monitor_evaluator": {
+     "a": 970,
+     "b": 1000
+    },
+    "plant": {
+     "a": 990,
+     "b": 1000
+    }
+   },
+   "fitness": {
+    "p.implementer": {
+     "role": "implementer",
+     "shapley": 0.25277777777777777,
+     "banzhaf": 0.2,
+     "solo": 0.7166666666666667,
+     "team": 0.79
+    },
+    "shared.g1.implementer.a": {
+     "role": "implementer",
+     "shapley": 0.24666666666666667,
+     "banzhaf": 0.19138888888888891,
+     "solo": 0.7233333333333333,
+     "team": 0.7811111111111111
+    },
+    "shared.g1.implementer.b": {
+     "role": "implementer",
+     "shapley": 0.26685185185185184,
+     "banzhaf": 0.2116666666666667,
+     "solo": 0.741111111111111,
+     "team": 0.8033333333333333
+    },
+    "shared.g1.implementer.c": {
+     "role": "implementer",
+     "shapley": 0.24796296296296297,
+     "banzhaf": 0.19583333333333336,
+     "solo": 0.7155555555555555,
+     "team": 0.778888888888889
+    },
+    "p.monitor_evaluator": {
+     "role": "monitor_evaluator",
+     "shapley": 0.26555555555555566,
+     "banzhaf": 0.21277777777777784,
+     "solo": 0.7433333333333333,
+     "team": 0.79
+    },
+    "shared.g1.monitor_evaluator.a": {
+     "role": "monitor_evaluator",
+     "shapley": 0.2605555555555556,
+     "banzhaf": 0.2094444444444445,
+     "solo": 0.7355555555555555,
+     "team": 0.7811111111111111
+    },
+    "shared.g1.monitor_evaluator.b": {
+     "role": "monitor_evaluator",
+     "shapley": 0.24444444444444452,
+     "banzhaf": 0.19305555555555562,
+     "solo": 0.6977777777777777,
+     "team": 0.7877777777777778
+    },
+    "shared.g1.monitor_evaluator.c": {
+     "role": "monitor_evaluator",
+     "shapley": 0.257962962962963,
+     "banzhaf": 0.2077777777777778,
+     "solo": 0.71,
+     "team": 0.7977777777777778
+    },
+    "p.plant": {
+     "role": "plant",
+     "shapley": 0.2716666666666666,
+     "banzhaf": 0.21888888888888886,
+     "solo": 0.7233333333333333,
+     "team": 0.79
+    },
+    "shared.g1.plant.a": {
+     "role": "plant",
+     "shapley": 0.24703703703703708,
+     "banzhaf": 0.19138888888888891,
+     "solo": 0.7111111111111111,
+     "team": 0.7644444444444445
+    },
+    "shared.g1.plant.b": {
+     "role": "plant",
+     "shapley": 0.24203703703703702,
+     "banzhaf": 0.18833333333333332,
+     "solo": 0.7000000000000001,
+     "team": 0.7577777777777778
+    },
+    "shared.g1.plant.c": {
+     "role": "plant",
+     "shapley": 0.272037037037037,
+     "banzhaf": 0.215,
+     "solo": 0.7355555555555555,
+     "team": 0.7955555555555556
+    }
+   },
+   "reps": {
+    "implementer": {
+     "agent_id": "shared.g1.implementer.b",
+     "role": "implementer",
+     "model": "shared_g1_implementer_b",
+     "persona": "You are a disciplined implementer. Apply the most standard, direct method systematically, keep every step concrete, and sanity-check the result with a quick estimate.",
+     "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.implementer.b"
+    },
+    "monitor_evaluator": {
+     "agent_id": "p.monitor_evaluator",
+     "role": "monitor_evaluator",
+     "model": "Qwen/Qwen3-4B-Instruct-2507",
+     "persona": "You are a critical evaluator. Test each answer option or intermediate claim against the conditions of the problem one by one, and eliminate those that fail before committing to an answer.",
+     "adapter": null
+    },
+    "plant": {
+     "agent_id": "shared.g1.plant.c",
+     "role": "plant",
+     "model": "shared_g1_plant_c",
+     "persona": "You are a creative idea generator. Before settling on an answer, consider at least two different interpretations of the question or two different ways to solve it, then choose the best-supported one.",
+     "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.plant.c"
+    }
+   },
+   "dev_team": {
+    "mmlu_pro": 0.6933333333333334,
+    "supergpqa": 0.76,
+    "math": 0.97,
+    "macro": 0.8077777777777778,
+    "micro": 0.7875
+   },
+   "test_team": {
+    "mmlu_pro": 0.738,
+    "supergpqa": 0.476,
+    "math": 0.9566666666666667,
+    "macro": 0.7235555555555555,
+    "micro": 0.6876923076923077
+   },
+   "test_team_by_seed": {
+    "1": {
+     "mmlu_pro": 0.738,
+     "supergpqa": 0.476,
+     "math": 0.9566666666666667,
+     "macro": 0.7235555555555555,
+     "micro": 0.6876923076923077
+    }
+   }
+  },
+  "2": {
+   "steps": {
+    "debate": true,
+    "train": true,
+    "cross": true,
+    "select": true,
+    "dev_team": true,
+    "test": true
+   },
+   "train_team": {
+    "mmlu_pro": 0.7675,
+    "supergpqa": 0.4575,
+    "math": 0.955,
+    "macro": 0.7266666666666666,
+    "micro": 0.7266666666666667
+   },
+   "children": {
+    "implementer": {
+     "a": {
+      "agent_id": "S.g2.implementer.a",
+      "role": "implementer",
+      "model": "S_g2_implementer_a",
+      "persona": "You are a disciplined implementer. Apply the most standard, direct method systematically, keep every step concrete, and sanity-check the result with a quick estimate.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g2.implementer.a"
+     },
+     "b": {
+      "agent_id": "S.g2.implementer.b",
+      "role": "implementer",
+      "model": "S_g2_implementer_b",
+      "persona": "You are a disciplined implementer. Apply the most standard, direct method systematically, keep every step concrete, and sanity-check the result with a quick estimate.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g2.implementer.b"
+     },
+     "c": {
+      "agent_id": "S.g2.implementer.c",
+      "role": "implementer",
+      "model": "S_g2_implementer_c",
+      "persona": "You are a disciplined implementer. Apply the most standard, direct method systematically, keep every step concrete, and sanity-check the result with a quick estimate.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g2.implementer.c"
+     }
+    },
+    "monitor_evaluator": {
+     "a": {
+      "agent_id": "S.g2.monitor_evaluator.a",
+      "role": "monitor_evaluator",
+      "model": "S_g2_monitor_evaluator_a",
+      "persona": "You are a critical evaluator. Test each answer option or intermediate claim against the conditions of the problem one by one, and eliminate those that fail before committing to an answer.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g2.monitor_evaluator.a"
+     },
+     "b": {
+      "agent_id": "S.g2.monitor_evaluator.b",
+      "role": "monitor_evaluator",
+      "model": "S_g2_monitor_evaluator_b",
+      "persona": "You are a critical evaluator. Test each answer option or intermediate claim against the conditions of the problem one by one, and eliminate those that fail before committing to an answer.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g2.monitor_evaluator.b"
+     },
+     "c": {
+      "agent_id": "S.g2.monitor_evaluator.c",
+      "role": "monitor_evaluator",
+      "model": "S_g2_monitor_evaluator_c",
+      "persona": "You are a critical evaluator. Test each answer option or intermediate claim against the conditions of the problem one by one, and eliminate those that fail before committing to an answer.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g2.monitor_evaluator.c"
+     }
+    },
+    "plant": {
+     "a": {
+      "agent_id": "S.g2.plant.a",
+      "role": "plant",
+      "model": "S_g2_plant_a",
+      "persona": "You are a creative idea generator. Before settling on an answer, consider at least two different interpretations of the question or two different ways to solve it, then choose the best-supported one.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g2.plant.a"
+     },
+     "b": {
+      "agent_id": "S.g2.plant.b",
+      "role": "plant",
+      "model": "S_g2_plant_b",
+      "persona": "You are a creative idea generator. Before settling on an answer, consider at least two different interpretations of the question or two different ways to solve it, then choose the best-supported one.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g2.plant.b"
+     },
+     "c": {
+      "agent_id": "S.g2.plant.c",
+      "role": "plant",
+      "model": "S_g2_plant_c",
+      "persona": "You are a creative idea generator. Before settling on an answer, consider at least two different interpretations of the question or two different ways to solve it, then choose the best-supported one.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g2.plant.c"
+     }
+    }
+   },
+   "data_counts": {
+    "implementer": {
+     "a": 970,
+     "b": 1000
+    },
+    "monitor_evaluator": {
+     "a": 984,
+     "b": 1000
+    },
+    "plant": {
+     "a": 978,
+     "b": 1000
+    }
+   },
+   "fitness": {
+    "shared.g1.implementer.b": {
+     "role": "implementer",
+     "shapley": 0.27314814814814814,
+     "banzhaf": 0.21861111111111112,
+     "solo": 0.741111111111111,
+     "team": 0.8077777777777778
+    },
+    "S.g2.implementer.a": {
+     "role": "implementer",
+     "shapley": 0.25999999999999995,
+     "banzhaf": 0.20499999999999996,
+     "solo": 0.7277777777777777,
+     "team": 0.7966666666666665
+    },
+    "S.g2.implementer.b": {
+     "role": "implementer",
+     "shapley": 0.2537037037037037,
+     "banzhaf": 0.20027777777777778,
+     "solo": 0.7177777777777777,
+     "team": 0.7877777777777778
+    },
+    "S.g2.implementer.c": {
+     "role": "implementer",
+     "shapley": 0.26092592592592584,
+     "banzhaf": 0.2063888888888889,
+     "solo": 0.7322222222222222,
+     "team": 0.7922222222222222
+    },
+    "p.monitor_evaluator": {
+     "role": "monitor_evaluator",
+     "shapley": 0.26592592592592595,
+     "banzhaf": 0.21138888888888893,
+     "solo": 0.7433333333333333,
+     "team": 0.8077777777777778
+    },
+    "S.g2.monitor_evaluator.a": {
+     "role": "monitor_evaluator",
+     "shapley": 0.25129629629629635,
+     "banzhaf": 0.2005555555555556,
+     "solo": 0.7111111111111111,
+     "team": 0.7955555555555556
+    },
+    "S.g2.monitor_evaluator.b": {
+     "role": "monitor_evaluator",
+     "shapley": 0.24055555555555555,
+     "banzhaf": 0.1875,
+     "solo": 0.7200000000000001,
+     "team": 0.7744444444444444
+    },
+    "S.g2.monitor_evaluator.c": {
+     "role": "monitor_evaluator",
+     "shapley": 0.23629629629629634,
+     "banzhaf": 0.18611111111111117,
+     "solo": 0.7066666666666667,
+     "team": 0.7677777777777778
+    },
+    "shared.g1.plant.c": {
+     "role": "plant",
+     "shapley": 0.2687037037037037,
+     "banzhaf": 0.2141666666666667,
+     "solo": 0.7355555555555555,
+     "team": 0.8077777777777778
+    },
+    "S.g2.plant.a": {
+     "role": "plant",
+     "shapley": 0.26425925925925925,
+     "banzhaf": 0.21083333333333337,
+     "solo": 0.7200000000000001,
+     "team": 0.8099999999999999
+    },
+    "S.g2.plant.b": {
+     "role": "plant",
+     "shapley": 0.24962962962962962,
+     "banzhaf": 0.19666666666666668,
+     "solo": 0.7066666666666667,
+     "team": 0.7922222222222222
+    },
+    "S.g2.plant.c": {
+     "role": "plant",
+     "shapley": 0.24462962962962964,
+     "banzhaf": 0.18944444444444447,
+     "solo": 0.69,
+     "team": 0.8077777777777778
+    }
+   },
+   "reps": {
+    "implementer": {
+     "agent_id": "shared.g1.implementer.b",
+     "role": "implementer",
+     "model": "shared_g1_implementer_b",
+     "persona": "You are a disciplined implementer. Apply the most standard, direct method systematically, keep every step concrete, and sanity-check the result with a quick estimate.",
+     "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.implementer.b"
+    },
+    "monitor_evaluator": {
+     "agent_id": "p.monitor_evaluator",
+     "role": "monitor_evaluator",
+     "model": "Qwen/Qwen3-4B-Instruct-2507",
+     "persona": "You are a critical evaluator. Test each answer option or intermediate claim against the conditions of the problem one by one, and eliminate those that fail before committing to an answer.",
+     "adapter": null
+    },
+    "plant": {
+     "agent_id": "shared.g1.plant.c",
+     "role": "plant",
+     "model": "shared_g1_plant_c",
+     "persona": "You are a creative idea generator. Before settling on an answer, consider at least two different interpretations of the question or two different ways to solve it, then choose the best-supported one.",
+     "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.plant.c"
+    }
+   },
+   "dev_team": {
+    "mmlu_pro": 0.6933333333333334,
+    "supergpqa": 0.76,
+    "math": 0.97,
+    "macro": 0.8077777777777778,
+    "micro": 0.7875
+   },
+   "test_team": {
+    "mmlu_pro": 0.738,
+    "supergpqa": 0.476,
+    "math": 0.9566666666666667,
+    "macro": 0.7235555555555555,
+    "micro": 0.6876923076923077
+   },
+   "test_team_by_seed": {
+    "1": {
+     "mmlu_pro": 0.738,
+     "supergpqa": 0.476,
+     "math": 0.9566666666666667,
+     "macro": 0.7235555555555555,
+     "micro": 0.6876923076923077
+    }
+   }
+  },
+  "3": {
+   "steps": {
+    "debate": true,
+    "train": true,
+    "cross": true,
+    "select": true,
+    "dev_team": true,
+    "test": true
+   },
+   "train_team": {
+    "mmlu_pro": 0.7475,
+    "supergpqa": 0.4725,
+    "math": 0.96,
+    "macro": 0.7266666666666667,
+    "micro": 0.7266666666666667
+   },
+   "children": {
+    "implementer": {
+     "a": {
+      "agent_id": "S.g3.implementer.a",
+      "role": "implementer",
+      "model": "S_g3_implementer_a",
+      "persona": "You are a disciplined implementer. Apply the most standard, direct method systematically, keep every step concrete, and sanity-check the result with a quick estimate.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g3.implementer.a"
+     },
+     "b": {
+      "agent_id": "S.g3.implementer.b",
+      "role": "implementer",
+      "model": "S_g3_implementer_b",
+      "persona": "You are a disciplined implementer. Apply the most standard, direct method systematically, keep every step concrete, and sanity-check the result with a quick estimate.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g3.implementer.b"
+     },
+     "c": {
+      "agent_id": "S.g3.implementer.c",
+      "role": "implementer",
+      "model": "S_g3_implementer_c",
+      "persona": "You are a disciplined implementer. Apply the most standard, direct method systematically, keep every step concrete, and sanity-check the result with a quick estimate.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g3.implementer.c"
+     }
+    },
+    "monitor_evaluator": {
+     "a": {
+      "agent_id": "S.g3.monitor_evaluator.a",
+      "role": "monitor_evaluator",
+      "model": "S_g3_monitor_evaluator_a",
+      "persona": "You are a critical evaluator. Test each answer option or intermediate claim against the conditions of the problem one by one, and eliminate those that fail before committing to an answer.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g3.monitor_evaluator.a"
+     },
+     "b": {
+      "agent_id": "S.g3.monitor_evaluator.b",
+      "role": "monitor_evaluator",
+      "model": "S_g3_monitor_evaluator_b",
+      "persona": "You are a critical evaluator. Test each answer option or intermediate claim against the conditions of the problem one by one, and eliminate those that fail before committing to an answer.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g3.monitor_evaluator.b"
+     },
+     "c": {
+      "agent_id": "S.g3.monitor_evaluator.c",
+      "role": "monitor_evaluator",
+      "model": "S_g3_monitor_evaluator_c",
+      "persona": "You are a critical evaluator. Test each answer option or intermediate claim against the conditions of the problem one by one, and eliminate those that fail before committing to an answer.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g3.monitor_evaluator.c"
+     }
+    },
+    "plant": {
+     "a": {
+      "agent_id": "S.g3.plant.a",
+      "role": "plant",
+      "model": "S_g3_plant_a",
+      "persona": "You are a creative idea generator. Before settling on an answer, consider at least two different interpretations of the question or two different ways to solve it, then choose the best-supported one.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g3.plant.a"
+     },
+     "b": {
+      "agent_id": "S.g3.plant.b",
+      "role": "plant",
+      "model": "S_g3_plant_b",
+      "persona": "You are a creative idea generator. Before settling on an answer, consider at least two different interpretations of the question or two different ways to solve it, then choose the best-supported one.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g3.plant.b"
+     },
+     "c": {
+      "agent_id": "S.g3.plant.c",
+      "role": "plant",
+      "model": "S_g3_plant_c",
+      "persona": "You are a creative idea generator. Before settling on an answer, consider at least two different interpretations of the question or two different ways to solve it, then choose the best-supported one.",
+      "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/S.g3.plant.c"
+     }
+    }
+   },
+   "data_counts": {
+    "implementer": {
+     "a": 970,
+     "b": 1000
+    },
+    "monitor_evaluator": {
+     "a": 958,
+     "b": 1000
+    },
+    "plant": {
+     "a": 976,
+     "b": 1000
+    }
+   },
+   "fitness": {
+    "shared.g1.implementer.b": {
+     "role": "implementer",
+     "shapley": 0.27314814814814814,
+     "banzhaf": 0.21861111111111112,
+     "solo": 0.741111111111111,
+     "team": 0.8077777777777778
+    },
+    "S.g3.implementer.a": {
+     "role": "implementer",
+     "shapley": 0.25740740740740736,
+     "banzhaf": 0.20166666666666663,
+     "solo": 0.7222222222222222,
+     "team": 0.7999999999999999
+    },
+    "S.g3.implementer.b": {
+     "role": "implementer",
+     "shapley": 0.25592592592592595,
+     "banzhaf": 0.20138888888888892,
+     "solo": 0.7255555555555556,
+     "team": 0.7888888888888889
+    },
+    "S.g3.implementer.c": {
+     "role": "implementer",
+     "shapley": 0.23611111111111108,
+     "banzhaf": 0.18666666666666665,
+     "solo": 0.6977777777777777,
+     "team": 0.7566666666666667
+    },
+    "p.monitor_evaluator": {
+     "role": "monitor_evaluator",
+     "shapley": 0.26592592592592595,
+     "banzhaf": 0.21138888888888893,
+     "solo": 0.7433333333333333,
+     "team": 0.8077777777777778
+    },
+    "S.g3.monitor_evaluator.a": {
+     "role": "monitor_evaluator",
+     "shapley": 0.2503703703703704,
+     "banzhaf": 0.19750000000000004,
+     "solo": 0.7366666666666667,
+     "team": 0.7766666666666667
+    },
+    "S.g3.monitor_evaluator.b": {
+     "role": "monitor_evaluator",
+     "shapley": 0.26240740740740737,
+     "banzhaf": 0.20944444444444446,
+     "solo": 0.7522222222222222,
+     "team": 0.7855555555555555
+    },
+    "S.g3.monitor_evaluator.c": {
+     "role": "monitor_evaluator",
+     "shapley": 0.25388888888888894,
+     "banzhaf": 0.20250000000000004,
+     "solo": 0.7188888888888889,
+     "team": 0.7955555555555556
+    },
+    "shared.g1.plant.c": {
+     "role": "plant",
+     "shapley": 0.2687037037037037,
+     "banzhaf": 0.2141666666666667,
+     "solo": 0.7355555555555555,
+     "team": 0.8077777777777778
+    },
+    "S.g3.plant.a": {
+     "role": "plant",
+     "shapley": 0.24444444444444446,
+     "banzhaf": 0.19194444444444447,
+     "solo": 0.7055555555555556,
+     "team": 0.7811111111111111
+    },
+    "S.g3.plant.b": {
+     "role": "plant",
+     "shapley": 0.2612962962962963,
+     "banzhaf": 0.20638888888888887,
+     "solo": 0.7233333333333333,
+     "team": 0.8066666666666666
+    },
+    "S.g3.plant.c": {
+     "role": "plant",
+     "shapley": 0.2535185185185185,
+     "banzhaf": 0.1991666666666667,
+     "solo": 0.7066666666666667,
+     "team": 0.8055555555555555
+    }
+   },
+   "reps": {
+    "implementer": {
+     "agent_id": "shared.g1.implementer.b",
+     "role": "implementer",
+     "model": "shared_g1_implementer_b",
+     "persona": "You are a disciplined implementer. Apply the most standard, direct method systematically, keep every step concrete, and sanity-check the result with a quick estimate.",
+     "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.implementer.b"
+    },
+    "monitor_evaluator": {
+     "agent_id": "p.monitor_evaluator",
+     "role": "monitor_evaluator",
+     "model": "Qwen/Qwen3-4B-Instruct-2507",
+     "persona": "You are a critical evaluator. Test each answer option or intermediate claim against the conditions of the problem one by one, and eliminate those that fail before committing to an answer.",
+     "adapter": null
+    },
+    "plant": {
+     "agent_id": "shared.g1.plant.c",
+     "role": "plant",
+     "model": "shared_g1_plant_c",
+     "persona": "You are a creative idea generator. Before settling on an answer, consider at least two different interpretations of the question or two different ways to solve it, then choose the best-supported one.",
+     "adapter": "/gcs/evo-swarm-lora-v4-pro-plasma-510112-m7/v4/adapters/shared.g1.plant.c"
+    }
+   },
+   "dev_team": {
+    "mmlu_pro": 0.6933333333333334,
+    "supergpqa": 0.76,
+    "math": 0.97,
+    "macro": 0.8077777777777778,
+    "micro": 0.7875
+   },
+   "test_team": {
+    "mmlu_pro": 0.738,
+    "supergpqa": 0.476,
+    "math": 0.9566666666666667,
+    "macro": 0.7235555555555555,
+    "micro": 0.6876923076923077
+   },
+   "test_team_by_seed": {
+    "1": {
+     "mmlu_pro": 0.738,
+     "supergpqa": 0.476,
+     "math": 0.9566666666666667,
+     "macro": 0.7235555555555555,
+     "micro": 0.6876923076923077
+    },
+    "2": {
+     "mmlu_pro": 0.73,
+     "supergpqa": 0.476,
+     "math": 0.9533333333333334,
+     "macro": 0.7197777777777778,
+     "micro": 0.6838461538461539
+    }
+   }
+  }
+ },
+ "finished": "2026-10-01 17:37:18",
+ "elapsed_s": 166626
+}

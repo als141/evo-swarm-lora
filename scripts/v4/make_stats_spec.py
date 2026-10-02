@@ -59,6 +59,10 @@ def main() -> None:
                 conds[label] = team(agents, seeds if t == last else [1])
         finals[name] = f"{name}_final"
 
+    # 議論なし（構成員の round0 の多数決）: 議論の上積みを分ける（事前登録 §5 の副次）
+    conds["g0_r0vote"] = {"type": "team_r0vote", "agents": conds["g0"]["agents"], "gen_seeds": h1_seeds}
+    if "S_final" in conds:
+        conds["S_final_r0vote"] = {"type": "team_r0vote", "agents": conds["S_final"]["agents"], "gen_seeds": h1_seeds}
     conds["base_single"] = {"type": "single", "agent": "base", "k": 9, "gen_seeds": [1]}
     for k in SC_KS:
         conds[f"base_sc{k}"] = {"type": "sc", "agent": "base", "k": k, "gen_seeds": [1]}
@@ -74,9 +78,12 @@ def main() -> None:
     for other in ["base_single", "base_sc3", "base_sc6", "base_sc9", *match, "rft_single", "rft_sc9", "c7_july"]:
         if other in conds:
             comparisons.append([s, other])
-    for other in ["base_single", "base_sc3", "base_sc9", "c7_july"]:
+    for other in ["base_single", "base_sc3", "base_sc6", "base_sc9", *match, "c7_july"]:
         if other in conds:
             comparisons.append(["g0", other])
+    comparisons.append(["g0", "g0_r0vote"])
+    if "S_final_r0vote" in conds:
+        comparisons.append([s, "S_final_r0vote"])
     comparisons.append(["rft_single", "base_single"])
     comparisons.append(["rft_sc9", "base_sc9"])
     for x in ("N", "A1"):

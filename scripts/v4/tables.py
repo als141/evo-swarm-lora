@@ -21,7 +21,9 @@ NAMES = {"plant": "Plant", "monitor_evaluator": "Monitor Evaluator", "specialist
 SHORT = {"plant": "PL", "monitor_evaluator": "ME", "specialist": "SP", "shaper": "SH", "implementer": "IMP",
          "completer_finisher": "CF", "coordinator": "CO", "teamworker": "TW", "resource_investigator": "RI",
          "plain": "plain", "plain_b": "plain", "plain_c": "plain"}
-COND = {"g0": "世代0の社会", "S_final": "系統S（最終世代）", "N_final": "系統N（最終世代）",
+COND = {"g0": "世代0の社会", "S_final": "系統S（最終世代）", "S_final_s12": "系統S（最終世代，seed 1・2）",
+        "N_final": "系統N（最終世代）", "S_g1": "系統S（世代1）", "S_g2": "系統S（世代2）",
+        "g0_r0vote": "世代0のround0多数決（議論なし）", "S_final_r0vote": "系統S最終のround0多数決（議論なし）",
         "A1_final": "系統A1（最終世代）", "base_single": "ベースモデル単体", "base_sc3": "SC@3",
         "base_sc4": "SC@4", "base_sc5": "SC@5", "base_sc6": "SC@6", "base_sc9": "SC@9",
         "rft_single": "RFT単体", "rft_sc9": "RFTのSC@9", "c7_july": "7月のチーム"}

@@ -88,6 +88,7 @@ def team_dynamics(cond: dict, ids, scorer: Scorer, bench_of: dict) -> dict:
     disagree = []
     solo = {a.agent_id: {} for a in agents}  # 構成員の round0 の単独正答（問題ごと、生成 seed 平均）
     r0_vote = {}
+    oracle_item, final_item = {}, {}
     for seed in cond["gen_seeds"]:
         for item_id in ids:
             r0 = [scorer.correct_of(soc.r0_key(a, item_id, seed)) for a in agents]
@@ -111,6 +112,7 @@ def team_dynamics(cond: dict, ids, scorer: Scorer, bench_of: dict) -> dict:
             disagree.append(np.mean([ans0[a] != ans0[b] for a, b in itertools.combinations(range(3), 2)]))
             n_ok0 = sum(ok0)
             c["oracle3"] += n_ok0 > 0
+            oracle_item.setdefault(item_id, []).append(float(n_ok0 > 0))
             c["majority0_correct"] += n_ok0 >= 2
             c[f"r0_correct_{n_ok0}"] += 1
             tok = sum(r.get("n_out", 0) for r in recs0)
@@ -118,6 +120,7 @@ def team_dynamics(cond: dict, ids, scorer: Scorer, bench_of: dict) -> dict:
             n_call = 3
             res = soc.coalition_result(agents, item_id, seed)
             c["final_correct"] += bool(res["correct"])
+            final_item.setdefault(item_id, []).append(float(bool(res["correct"])))
             if unanimous:
                 c["gated"] += 1
             else:
@@ -148,6 +151,8 @@ def team_dynamics(cond: dict, ids, scorer: Scorer, bench_of: dict) -> dict:
         "member_solo_macro": solo_macro,
         "member_solo_mean": float(np.mean(list(solo_macro.values()))),
         "r0_majority_macro": macro_of({i: float(np.mean(v)) for i, v in r0_vote.items()}, bench_of),
+        "oracle3_macro": macro_of({i: float(np.mean(v)) for i, v in oracle_item.items()}, bench_of),
+        "final_macro": macro_of({i: float(np.mean(v)) for i, v in final_item.items()}, bench_of),
         "calls_per_item": float(np.mean(calls)), "out_tokens_per_item": float(np.mean(out_tokens)),
         "in_tokens_per_item": float(np.mean(in_tokens)),
         "gated_rate": c["gated"] / n_items, "oracle3": c["oracle3"] / n_items,

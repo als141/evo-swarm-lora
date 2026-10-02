@@ -4,7 +4,8 @@
   {"conditions": {
      "S_final": {"type": "team", "agents": ["S.g3.critic.b", ...], "gen_seeds": [1, 2], "protocol": "v4"},
      "base_single": {"type": "single", "agent": "base", "k": 9, "gen_seeds": [1, 2]},
-     "sc9": {"type": "sc", "agent": "base", "k": 9, "gen_seeds": [1, 2]}},
+     "sc9": {"type": "sc", "agent": "base", "k": 9, "gen_seeds": [1, 2]},
+     "g0_r0vote": {"type": "team_r0vote", "agents": [...], "gen_seeds": [1, 2]}},
    "comparisons": [["S_final", "g0"], ...],
    "holm": [["S_final", "g0"], ["S_final", "N_final"], ["S_final", "A1_final"]]}
 
@@ -73,6 +74,14 @@ def per_item(cond: dict, ids: list, scorer: Scorer, soc_by_protocol: dict) -> di
                     if not all(scorer.store.get(k) for k in keys):
                         continue
                 vals.append(float(soc.coalition_result(agents, item_id, seed)["correct"]))
+            elif cond["type"] == "team_r0vote":  # 議論なし: 構成員の round0 の多数決（議論の上積みを分ける）
+                agents = [Agent(a, a.split(".")[-2] if a.count(".") >= 2 else a.split(".")[-1], "", "")
+                          for a in cond["agents"]]
+                keys = [Society.r0_key(a, item_id, seed) for a in agents]
+                if not all(scorer.store.get(k) for k in keys):
+                    continue
+                votes = [(scorer.correct_of(k)[0], scorer.correct_of(k)[1], a.role) for k, a in zip(keys, agents)]
+                vals.append(float(is_correct(aggregate(votes), item.gold, item.answer_type)))
             elif cond["type"] in ("sc", "single"):
                 keys = [Society.sc_key(Agent(cond["agent"], "base", "", ""), item_id, seed, k)
                         for k in range(cond["k"])]

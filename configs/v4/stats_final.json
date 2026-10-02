@@ -1,0 +1,331 @@
+{
+ "conditions": {
+  "g0": {
+   "type": "team",
+   "agents": [
+    "p.implementer",
+    "p.monitor_evaluator",
+    "p.plant"
+   ],
+   "gen_seeds": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "protocol": "v4t",
+   "gate": true
+  },
+  "S_g1": {
+   "type": "team",
+   "agents": [
+    "shared.g1.implementer.b",
+    "p.monitor_evaluator",
+    "shared.g1.plant.c"
+   ],
+   "gen_seeds": [
+    1
+   ],
+   "protocol": "v4t",
+   "gate": true
+  },
+  "S_g2": {
+   "type": "team",
+   "agents": [
+    "shared.g1.implementer.b",
+    "p.monitor_evaluator",
+    "shared.g1.plant.c"
+   ],
+   "gen_seeds": [
+    1
+   ],
+   "protocol": "v4t",
+   "gate": true
+  },
+  "S_final": {
+   "type": "team",
+   "agents": [
+    "shared.g1.implementer.b",
+    "p.monitor_evaluator",
+    "shared.g1.plant.c"
+   ],
+   "gen_seeds": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "protocol": "v4t",
+   "gate": true
+  },
+  "S_final_s12": {
+   "type": "team",
+   "agents": [
+    "shared.g1.implementer.b",
+    "p.monitor_evaluator",
+    "shared.g1.plant.c"
+   ],
+   "gen_seeds": [
+    1,
+    2
+   ],
+   "protocol": "v4t",
+   "gate": true
+  },
+  "N_final": {
+   "type": "team",
+   "agents": [
+    "N.g3.implementer.b",
+    "N.g3.monitor_evaluator.b",
+    "N.g3.plant.b"
+   ],
+   "gen_seeds": [
+    1,
+    2
+   ],
+   "protocol": "v4t",
+   "gate": true
+  },
+  "g0_r0vote": {
+   "type": "team_r0vote",
+   "agents": [
+    "p.implementer",
+    "p.monitor_evaluator",
+    "p.plant"
+   ],
+   "gen_seeds": [
+    1,
+    2,
+    3,
+    4
+   ]
+  },
+  "S_final_r0vote": {
+   "type": "team_r0vote",
+   "agents": [
+    "shared.g1.implementer.b",
+    "p.monitor_evaluator",
+    "shared.g1.plant.c"
+   ],
+   "gen_seeds": [
+    1,
+    2,
+    3,
+    4
+   ]
+  },
+  "base_single": {
+   "type": "single",
+   "agent": "base",
+   "k": 9,
+   "gen_seeds": [
+    1
+   ]
+  },
+  "base_sc1": {
+   "type": "sc",
+   "agent": "base",
+   "k": 1,
+   "gen_seeds": [
+    1
+   ]
+  },
+  "base_sc2": {
+   "type": "sc",
+   "agent": "base",
+   "k": 2,
+   "gen_seeds": [
+    1
+   ]
+  },
+  "base_sc3": {
+   "type": "sc",
+   "agent": "base",
+   "k": 3,
+   "gen_seeds": [
+    1
+   ]
+  },
+  "base_sc4": {
+   "type": "sc",
+   "agent": "base",
+   "k": 4,
+   "gen_seeds": [
+    1
+   ]
+  },
+  "base_sc5": {
+   "type": "sc",
+   "agent": "base",
+   "k": 5,
+   "gen_seeds": [
+    1
+   ]
+  },
+  "base_sc6": {
+   "type": "sc",
+   "agent": "base",
+   "k": 6,
+   "gen_seeds": [
+    1
+   ]
+  },
+  "base_sc7": {
+   "type": "sc",
+   "agent": "base",
+   "k": 7,
+   "gen_seeds": [
+    1
+   ]
+  },
+  "base_sc8": {
+   "type": "sc",
+   "agent": "base",
+   "k": 8,
+   "gen_seeds": [
+    1
+   ]
+  },
+  "base_sc9": {
+   "type": "sc",
+   "agent": "base",
+   "k": 9,
+   "gen_seeds": [
+    1
+   ]
+  },
+  "rft_single": {
+   "type": "single",
+   "agent": "rft.base",
+   "k": 9,
+   "gen_seeds": [
+    1
+   ]
+  },
+  "rft_sc9": {
+   "type": "sc",
+   "agent": "rft.base",
+   "k": 9,
+   "gen_seeds": [
+    1
+   ]
+  },
+  "c7_july": {
+   "type": "team",
+   "agents": [
+    "c7.critic",
+    "c7.pragmatist",
+    "c7.explorer"
+   ],
+   "gen_seeds": [
+    1
+   ],
+   "protocol": "july",
+   "gate": false
+  }
+ },
+ "comparisons": [
+  [
+   "S_final",
+   "g0"
+  ],
+  [
+   "S_final_s12",
+   "N_final"
+  ],
+  [
+   "S_final",
+   "base_single"
+  ],
+  [
+   "S_final",
+   "base_sc3"
+  ],
+  [
+   "S_final",
+   "base_sc6"
+  ],
+  [
+   "S_final",
+   "base_sc9"
+  ],
+  [
+   "S_final",
+   "base_sc4"
+  ],
+  [
+   "S_final",
+   "rft_single"
+  ],
+  [
+   "S_final",
+   "rft_sc9"
+  ],
+  [
+   "S_final",
+   "c7_july"
+  ],
+  [
+   "g0",
+   "base_single"
+  ],
+  [
+   "g0",
+   "base_sc3"
+  ],
+  [
+   "g0",
+   "base_sc6"
+  ],
+  [
+   "g0",
+   "base_sc9"
+  ],
+  [
+   "g0",
+   "base_sc4"
+  ],
+  [
+   "g0",
+   "c7_july"
+  ],
+  [
+   "g0",
+   "g0_r0vote"
+  ],
+  [
+   "S_final",
+   "S_final_r0vote"
+  ],
+  [
+   "rft_single",
+   "base_single"
+  ],
+  [
+   "rft_sc9",
+   "base_sc9"
+  ],
+  [
+   "N_final",
+   "g0"
+  ],
+  [
+   "S_g1",
+   "g0"
+  ],
+  [
+   "S_g2",
+   "g0"
+  ]
+ ],
+ "holm": [
+  [
+   "S_final",
+   "g0"
+  ],
+  [
+   "S_final_s12",
+   "N_final"
+  ]
+ ]
+}
